@@ -76,8 +76,8 @@
 
     <section id="verificationSentCard" class="mb-10 hidden rounded-2xl border border-red-900/60 bg-red-950/20 p-7 text-center" role="status" aria-live="polite">
       <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">✉</div>
-      <h2 class="text-xl font-bold text-red-300">Verification email sent!</h2>
-      <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-zinc-300">Check your inbox and click 'Sign In' or 'Confirm' to complete your sign-up.</p>
+      <h2 class="text-xl font-bold text-red-300">Check your email!</h2>
+      <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-zinc-300">Click the magic link to confirm your spot.</p>
     </section>
 
     <section id="successCard" class="mb-10 hidden rounded-2xl border border-emerald-900/70 bg-emerald-950/20 p-7 text-center" role="status" aria-live="polite">
@@ -180,7 +180,7 @@
 
       const { data, error } = await supabaseClient
         .from('signups')
-        .select('id, name, instagram, created_at')
+        .select('*')
         .eq('is_verified', true)
         .order('created_at', { ascending: true });
 
@@ -212,19 +212,6 @@
       submitButton.textContent = 'Sending Verification…';
       formMessage.classList.add('hidden');
 
-      const { error: otpError } = await supabaseClient.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: window.location.href }
-      });
-
-      if (otpError) {
-        console.error('Unable to send OTP:', otpError);
-        showFormMessage('Could not send the verification email. Please try again.', true);
-        submitButton.disabled = false;
-        submitButton.textContent = 'Submit & Verify Email';
-        return;
-      }
-
       const signupRecord = {
         name: String(formData.get('name')).trim(),
         email,
@@ -237,11 +224,31 @@
         is_verified: false
       };
 
-      const { error: insertError } = await supabaseClient.from('signups').insert(signupRecord);
+      const { data: newRow, error: insertError } = await supabaseClient
+        .from('signups')
+        .insert(signupRecord)
+        .select()
+        .single();
 
       if (insertError) {
         console.error('Unable to save sign-up:', insertError);
-        showFormMessage('The verification email was sent, but we could not save your submission. Please contact the host.', true);
+        showFormMessage("We couldn't complete your signup. Please try again. If you've already used this email, you may already be on the verified list.", true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      localStorage.setItem('pending_signup_id', String(newRow.id));
+
+      const { error: authError } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href }
+      });
+
+      if (authError) {
+        console.error('Unable to send magic link:', authError);
+        localStorage.removeItem('pending_signup_id');
+        showFormMessage('Your submission was saved, but the verification email could not be sent. Please try again.', true);
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -258,21 +265,48 @@
       const userEmail = session?.user?.email;
       if (!userEmail || !supabaseClient) return;
 
-      const { error: updateError } = await supabaseClient
-        .from('signups')
-        .update({ is_verified: true })
-        .eq('email', userEmail)
-        .eq('is_verified', false);
+      const pendingSignupId = localStorage.getItem('pending_signup_id');
+      let updatedRows = [];
+      let updateError = null;
+
+      if (pendingSignupId) {
+        const result = await supabaseClient
+          .from('signups')
+          .update({ is_verified: true })
+          .eq('id', pendingSignupId)
+          .select('id');
+        updatedRows = result.data || [];
+        updateError = result.error;
+      }
+
+      if (!updateError && updatedRows.length === 0) {
+        const fallbackResult = await supabaseClient
+          .from('signups')
+          .update({ is_verified: true })
+          .eq('email', userEmail)
+          .eq('is_verified', false)
+          .select('id');
+        updatedRows = fallbackResult.data || [];
+        updateError = fallbackResult.error;
+      }
 
       if (updateError) {
         console.error('Unable to update sign-up:', updateError);
         return;
       }
 
+      if (updatedRows.length === 0) {
+        await loadSignups();
+        return;
+      }
+
+      localStorage.removeItem('pending_signup_id');
+
       signupCard.classList.add('hidden');
       verificationSentCard.classList.add('hidden');
       successCard.classList.remove('hidden');
       await loadSignups();
+      await supabaseClient.auth.signOut();
     }
 
     async function initializeApp() {
