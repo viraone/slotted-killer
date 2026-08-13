@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090b">
+  <title>Rickshaw Open Mic Sign-Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-red-600 selection:text-white">
+  <main class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+    <header class="mb-8 border-b border-zinc-800 pb-8 text-center sm:mb-10">
+      <p class="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-red-500">Every Friday Night</p>
+      <h1 class="text-4xl font-black tracking-tight sm:text-5xl">Rickshaw Open Mic</h1>
+      <p class="mx-auto mt-4 max-w-xl text-sm leading-6 text-zinc-400 sm:text-base">
+        Submit for Read The Room. Verify your email to officially join the list.
+      </p>
+    </header>
+
+    <section id="signupCard" aria-labelledby="signupHeading" class="mb-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 shadow-2xl shadow-black/20 sm:p-7">
+      <div class="mb-6">
+        <h2 id="signupHeading" class="text-2xl font-bold">Get on the list</h2>
+        <p class="mt-1 text-sm text-zinc-400">Complete every required field, then verify your email.</p>
+      </div>
+
+      <form id="signupForm" class="space-y-5">
+        <div>
+          <label for="name" class="mb-2 block text-sm font-medium">Stage Name / Full Name <span class="text-red-500">*</span></label>
+          <input id="name" name="name" type="text" required maxlength="100" autocomplete="name" placeholder="Your name" class="field">
+        </div>
+
+        <div>
+          <label for="email" class="mb-2 block text-sm font-medium">Email Address <span class="text-red-500">*</span></label>
+          <input id="email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com" class="field">
+          <p class="mt-2 text-xs text-zinc-500">We’ll send a secure verification link to this address.</p>
+        </div>
+
+        <div>
+          <label for="instagram" class="mb-2 block text-sm font-medium">Instagram Handle <span class="font-normal text-zinc-500">(optional)</span></label>
+          <input id="instagram" name="instagram" type="text" maxlength="100" autocomplete="off" placeholder="@handle" class="field">
+        </div>
+
+        <fieldset>
+          <legend class="mb-3 text-sm font-medium">Have you performed at this show in the past? <span class="text-red-500">*</span></legend>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
+              <input type="radio" name="performed_before" value="true" required class="h-4 w-4 accent-red-600">
+              <span class="text-sm">Yes</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
+              <input type="radio" name="performed_before" value="false" required class="h-4 w-4 accent-red-600">
+              <span class="text-sm">No</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="space-y-3 border-t border-zinc-800 pt-5">
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
+            <input id="noShowAgreement" name="no_show_agreement" type="checkbox" required class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
+            <span class="text-sm leading-6 text-zinc-300">I understand that if I miss my spot without notifying the host, it may affect future bookings. <span class="text-red-500">*</span></span>
+          </label>
+
+          <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
+            <input id="guaranteeAgreement" name="guarantee_agreement" type="checkbox" required class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
+            <span class="text-sm leading-6 text-zinc-300">I understand that submission to this showcase does not guarantee a spot. Notifications go out on Thursday. If you're not selected, come to the show and join the standby list. <span class="text-red-500">*</span></span>
+          </label>
+        </div>
+
+        <button id="submitButton" type="submit" class="w-full rounded-lg bg-red-600 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-red-950/30 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-60">
+          Submit &amp; Verify Email
+        </button>
+        <p id="formMessage" role="status" aria-live="polite" class="hidden text-center text-sm"></p>
+      </form>
+    </section>
+
+    <section id="verificationSentCard" class="mb-10 hidden rounded-2xl border border-red-900/60 bg-red-950/20 p-7 text-center" role="status" aria-live="polite">
+      <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">✉</div>
+      <h2 class="text-xl font-bold text-red-300">Verification email sent!</h2>
+      <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-zinc-300">Check your inbox and click 'Sign In' or 'Confirm' to complete your sign-up.</p>
+    </section>
+
+    <section id="successCard" class="mb-10 hidden rounded-2xl border border-emerald-900/70 bg-emerald-950/20 p-7 text-center" role="status" aria-live="polite">
+      <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-950 text-2xl text-emerald-400">✓</div>
+      <h2 class="text-xl font-bold text-emerald-300">Your email is verified! You are on the live lineup.</h2>
+    </section>
+
+    <section aria-labelledby="rosterHeading">
+      <div class="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <h2 id="rosterHeading" class="text-2xl font-bold">Verified Comics</h2>
+        </div>
+        <span id="slotCounter" class="shrink-0 rounded-full border border-red-900 bg-red-950/40 px-3 py-1.5 text-sm font-bold text-red-300">0 / 50 Filled</span>
+      </div>
+
+      <div id="rosterStatus" role="status" aria-live="polite" class="rounded-2xl border border-zinc-800 bg-zinc-900/30 px-5 py-10 text-center text-zinc-500">Loading the roster…</div>
+      <ol id="rosterList" class="hidden space-y-3"></ol>
+    </section>
+  </main>
+
+  <style type="text/tailwindcss">
+    @layer components {
+      .field {
+        @apply w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-base text-zinc-100 placeholder-zinc-600 outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20;
+      }
+    }
+  </style>
+
+  <script>
+    const SUPABASE_URL = 'https://ldodkbdzljfpbnzrpxpu.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
+    const MAX_MAIN_SLOTS = 50;
+
+    const signupCard = document.getElementById('signupCard');
+    const signupForm = document.getElementById('signupForm');
+    const submitButton = document.getElementById('submitButton');
+    const formMessage = document.getElementById('formMessage');
+    const verificationSentCard = document.getElementById('verificationSentCard');
+    const successCard = document.getElementById('successCard');
+    const rosterList = document.getElementById('rosterList');
+    const rosterStatus = document.getElementById('rosterStatus');
+    const slotCounter = document.getElementById('slotCounter');
+
+    let supabaseClient = null;
+
+    function escapeHtml(value) {
+      const element = document.createElement('div');
+      element.textContent = value ?? '';
+      return element.innerHTML;
+    }
+
+    function normalizeInstagram(value) {
+      const handle = value.trim().replace(/^@+/, '');
+      return handle ? `@${handle}` : '';
+    }
+
+    function showFormMessage(message, isError = false) {
+      formMessage.textContent = message;
+      formMessage.className = `text-center text-sm ${isError ? 'text-red-400' : 'text-emerald-400'}`;
+    }
+
+    function renderRoster(data = []) {
+      const filledCount = Math.min(data.length, MAX_MAIN_SLOTS);
+      slotCounter.textContent = `${filledCount} / ${MAX_MAIN_SLOTS} Filled`;
+      slotCounter.className = `shrink-0 rounded-full border px-3 py-1.5 text-sm font-bold ${
+        filledCount === MAX_MAIN_SLOTS
+          ? 'border-amber-900 bg-amber-950/20 text-amber-400'
+          : 'border-red-900 bg-red-950/40 text-red-300'
+      }`;
+
+      if (!data.length) {
+        rosterList.innerHTML = '';
+        rosterList.classList.add('hidden');
+        rosterStatus.textContent = 'No verified sign-ups yet. Be the first comic on the roster.';
+        rosterStatus.classList.remove('hidden');
+        return;
+      }
+
+      rosterStatus.classList.add('hidden');
+      rosterList.classList.remove('hidden');
+      rosterList.innerHTML = data.map((signup, index) => {
+        const waitlisted = index >= MAX_MAIN_SLOTS;
+        return `
+          <li class="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${waitlisted ? 'bg-amber-950/20 text-amber-400' : 'bg-red-600 text-white'} text-sm font-black">${index + 1}</span>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="truncate font-bold text-zinc-100">${escapeHtml(signup.name)}</h3>
+                ${waitlisted ? '<span class="rounded-full bg-amber-950/20 px-2 py-0.5 text-xs font-bold text-amber-400 ring-1 ring-inset ring-amber-900/50">Waitlist / Standby</span>' : ''}
+              </div>
+              ${signup.instagram ? `<p class="mt-1 truncate text-sm text-zinc-400">${escapeHtml(normalizeInstagram(signup.instagram))}</p>` : ''}
+            </div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    async function loadSignups() {
+      if (!supabaseClient) return;
+
+      const { data, error } = await supabaseClient
+        .from('signups')
+        .select('id, name, instagram, created_at')
+        .eq('is_verified', true)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Unable to load sign-ups:', error);
+        rosterList.classList.add('hidden');
+        rosterStatus.textContent = 'Unable to load the roster right now. Please try again shortly.';
+        rosterStatus.classList.remove('hidden');
+        return;
+      }
+
+      renderRoster(data);
+    }
+
+    signupForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!signupForm.reportValidity()) return;
+      if (!supabaseClient) {
+        showFormMessage('Add your Supabase URL and anon key in index.html before submitting.', true);
+        return;
+      }
+
+      const formData = new FormData(signupForm);
+      const email = String(formData.get('email')).trim().toLowerCase();
+      const instagram = normalizeInstagram(String(formData.get('instagram')));
+      const performedBefore = formData.get('performed_before') === 'true';
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending Verification…';
+      formMessage.classList.add('hidden');
+
+      const { error: otpError } = await supabaseClient.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href }
+      });
+
+      if (otpError) {
+        console.error('Unable to send OTP:', otpError);
+        showFormMessage('Could not send the verification email. Please try again.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      const signupRecord = {
+        name: String(formData.get('name')).trim(),
+        email,
+        phone: null,
+        instagram: instagram || null,
+        performed_before: performedBefore,
+        no_show_agreement: formData.get('no_show_agreement') === 'on',
+        guarantee_agreement: formData.get('guarantee_agreement') === 'on',
+        slot_type: 'First Available',
+        is_verified: false
+      };
+
+      const { error: insertError } = await supabaseClient.from('signups').insert(signupRecord);
+
+      if (insertError) {
+        console.error('Unable to save sign-up:', insertError);
+        showFormMessage('The verification email was sent, but we could not save your submission. Please contact the host.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      signupForm.reset();
+      signupCard.classList.add('hidden');
+      verificationSentCard.classList.remove('hidden');
+      submitButton.disabled = false;
+      submitButton.textContent = 'Submit & Verify Email';
+    });
+
+    async function verifyPendingSignup(session) {
+      const userEmail = session?.user?.email;
+      if (!userEmail || !supabaseClient) return;
+
+      const { error: updateError } = await supabaseClient
+        .from('signups')
+        .update({ is_verified: true })
+        .eq('email', userEmail)
+        .eq('is_verified', false);
+
+      if (updateError) {
+        console.error('Unable to update sign-up:', updateError);
+        return;
+      }
+
+      signupCard.classList.add('hidden');
+      verificationSentCard.classList.add('hidden');
+      successCard.classList.remove('hidden');
+      await loadSignups();
+    }
+
+    async function initializeApp() {
+      const configured = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
+      if (!configured) {
+        rosterStatus.textContent = 'Add your Supabase URL and anon key in index.html to connect the verified list.';
+        return;
+      }
+
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await loadSignups();
+
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user?.email) {
+          window.setTimeout(() => verifyPendingSignup(session), 0);
+        }
+      });
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.user?.email) await verifyPendingSignup(session);
+
+      supabaseClient
+        .channel('schema-db-changes')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'signups' },
+          () => loadSignups()
+        )
+        .subscribe();
+    }
+
+    initializeApp();
+  </script>
+</body>
+</html>
