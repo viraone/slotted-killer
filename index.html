@@ -127,6 +127,7 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
     const signupCard = document.getElementById('signupCard');
     const signupForm = document.getElementById('signupForm');
+    const emailInput = document.getElementById('email');
     const submitButton = document.getElementById('submitButton');
     const formMessage = document.getElementById('formMessage');
     const verificationSentCard = document.getElementById('verificationSentCard');
@@ -161,6 +162,11 @@
       if (event.key === 'Escape') closeInstagramInfo();
     });
 
+    emailInput.addEventListener('input', () => {
+      formMessage.textContent = '';
+      formMessage.classList.add('hidden');
+    });
+
 
     signupForm.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -171,7 +177,7 @@
       }
 
       const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
+      const email = emailInput.value.trim().toLowerCase();
       const phone = document.getElementById('phone')?.value.trim() || '';
       const instagram = document.getElementById('instagram')?.value.trim() || '@n/a';
       const slot_type = document.getElementById('slotType')?.value || 'First Available';
@@ -179,6 +185,28 @@
       submitButton.disabled = true;
       submitButton.textContent = 'Sending Verification…';
       formMessage.classList.add('hidden');
+
+      const { data: verifiedSignups, error: duplicateCheckError } = await supabaseClient
+        .from('signups')
+        .select('email')
+        .ilike('email', email)
+        .eq('is_verified', true)
+        .limit(1);
+
+      if (duplicateCheckError) {
+        console.error('Unable to check for an existing verified sign-up:', duplicateCheckError);
+        showFormMessage('Could not check this email address. Please try again.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      if (verifiedSignups.length > 0) {
+        showFormMessage('An account has already been verified with this email address. Please use a different email to continue.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
 
       const signupRecord = {
         name,
