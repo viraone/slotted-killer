@@ -136,6 +136,8 @@
     const instagramInfoTooltip = document.getElementById('instagramInfoTooltip');
 
     let supabaseClient = null;
+    let verificationInProgress = false;
+    let verificationHandled = false;
 
     function showFormMessage(message, isError = false) {
       formMessage.textContent = message;
@@ -186,12 +188,10 @@
       submitButton.textContent = 'Sending Verification…';
       formMessage.classList.add('hidden');
 
-      const { data: verifiedSignups, error: duplicateCheckError } = await supabaseClient
-        .from('signups')
-        .select('email')
-        .ilike('email', email)
-        .eq('is_verified', true)
-        .limit(1);
+      const { data: hasActiveVerifiedSignup, error: duplicateCheckError } = await supabaseClient.rpc(
+        'has_active_verified_signup',
+        { p_email: email }
+      );
 
       if (duplicateCheckError) {
         console.error('Unable to check for an existing verified sign-up:', duplicateCheckError);
@@ -201,7 +201,15 @@
         return;
       }
 
-      if (verifiedSignups.length > 0) {
+      if (typeof hasActiveVerifiedSignup !== 'boolean') {
+        console.error('Unable to check for an existing verified sign-up: RPC returned an invalid response.');
+        showFormMessage('Could not check this email address. Please try again.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      if (hasActiveVerifiedSignup === true) {
         showFormMessage('An account has already been verified with this email address. Please use a different email to continue.', true);
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
@@ -220,9 +228,11 @@
         is_verified: false
       };
 
-      const { error: insertError } = await supabaseClient
+      const { data: insertedSignup, error: insertError } = await supabaseClient
         .from('signups')
-        .insert([signupRecord]);
+        .insert([signupRecord])
+        .select('id')
+        .single();
 
       if (insertError) {
         console.error('Unable to save sign-up:', insertError);
@@ -232,7 +242,16 @@
         return;
       }
 
-      localStorage.setItem('pending_signup_email', email);
+      if (insertedSignup?.id == null) {
+        console.error('Unable to save sign-up: no signup ID was returned.');
+        showFormMessage('Could not save your submission. Please try again.', true);
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit & Verify Email';
+        return;
+      }
+
+      localStorage.removeItem('pending_signup_email');
+      localStorage.setItem('pending_signup_id', String(insertedSignup.id));
 
       const { error: authError } = await supabaseClient.auth.signInWithOtp({
         email,
@@ -241,7 +260,7 @@
 
       if (authError) {
         console.error('Unable to send magic link:', authError);
-        localStorage.removeItem('pending_signup_email');
+        localStorage.removeItem('pending_signup_id');
         showFormMessage(`Your submission was saved, but the verification email could not be sent: ${authError.message}`, true);
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
@@ -257,29 +276,52 @@
 
     async function verifyPendingSignup(session) {
       const userEmail = session?.user?.email;
-      if (!userEmail || !supabaseClient) return;
+      if (!userEmail || !supabaseClient || verificationInProgress || verificationHandled) return;
 
-      const pendingSignupEmail = localStorage.getItem('pending_signup_email') || userEmail;
-      const { error: updateError } = await supabaseClient
-        .from('signups')
-        .update({ is_verified: true })
-        .eq('email', pendingSignupEmail)
-        .eq('is_verified', false);
-
-      if (updateError) {
-        console.error('Unable to update sign-up:', updateError);
+      const pendingSignupId = localStorage.getItem('pending_signup_id');
+      if (!pendingSignupId || !/^[1-9]\d*$/.test(pendingSignupId)) {
+        verificationHandled = true;
+        console.error('Unable to claim sign-up: pending signup ID is missing or invalid.');
         signupCard.classList.remove('hidden');
         verificationSentCard.classList.add('hidden');
-        showFormMessage(`Your email was verified, but the lineup could not be updated: ${updateError.message}`, true);
+        showFormMessage("We couldn't match this verification to your signup request. Please try submitting again.", true);
         return;
       }
 
-      localStorage.removeItem('pending_signup_email');
+      verificationInProgress = true;
+      verificationHandled = true;
 
-      signupCard.classList.add('hidden');
-      verificationSentCard.classList.add('hidden');
-      successCard.classList.remove('hidden');
-      await supabaseClient.auth.signOut();
+      try {
+        const { data: claimSucceeded, error: claimError } = await supabaseClient.rpc(
+          'claim_pending_signup',
+          { p_signup_id: pendingSignupId }
+        );
+
+        if (claimError) {
+          console.error('Unable to claim verified sign-up:', claimError);
+          signupCard.classList.remove('hidden');
+          verificationSentCard.classList.add('hidden');
+          showFormMessage('We could not complete your verification. Please try submitting again.', true);
+          return;
+        }
+
+        if (claimSucceeded !== true) {
+          console.error('Unable to claim verified sign-up: RPC returned false.');
+          signupCard.classList.remove('hidden');
+          verificationSentCard.classList.add('hidden');
+          showFormMessage("We couldn't match this verification to your signup request. Please try submitting again.", true);
+          return;
+        }
+
+        localStorage.removeItem('pending_signup_id');
+        localStorage.removeItem('pending_signup_email');
+        signupCard.classList.add('hidden');
+        verificationSentCard.classList.add('hidden');
+        successCard.classList.remove('hidden');
+        await supabaseClient.auth.signOut();
+      } finally {
+        verificationInProgress = false;
+      }
     }
 
     async function initializeApp() {
