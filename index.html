@@ -134,6 +134,12 @@
     const successCard = document.getElementById('successCard');
     const instagramInfoButton = document.getElementById('instagramInfoButton');
     const instagramInfoTooltip = document.getElementById('instagramInfoTooltip');
+    const verificationRedirectDetected = (() => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      return ['code', 'error', 'error_code'].some((key) => queryParams.has(key))
+        || ['access_token', 'error', 'error_code'].some((key) => hashParams.has(key));
+    })();
 
     let supabaseClient = null;
     let verificationInProgress = false;
@@ -279,8 +285,10 @@
       if (!userEmail || !supabaseClient || verificationInProgress || verificationHandled) return;
 
       const pendingSignupId = localStorage.getItem('pending_signup_id');
+      console.log('Verification session available:', Boolean(userEmail));
+      console.log('Pending signup ID present:', Boolean(pendingSignupId));
+
       if (!pendingSignupId || !/^[1-9]\d*$/.test(pendingSignupId)) {
-        verificationHandled = true;
         console.error('Unable to claim sign-up: pending signup ID is missing or invalid.');
         signupCard.classList.remove('hidden');
         verificationSentCard.classList.add('hidden');
@@ -289,7 +297,6 @@
       }
 
       verificationInProgress = true;
-      verificationHandled = true;
 
       try {
         const { data: claimSucceeded, error: claimError } = await supabaseClient.rpc(
@@ -305,6 +312,8 @@
           return;
         }
 
+        console.log('Claim pending signup succeeded:', claimSucceeded === true);
+
         if (claimSucceeded !== true) {
           console.error('Unable to claim verified sign-up: RPC returned false.');
           signupCard.classList.remove('hidden');
@@ -313,6 +322,7 @@
           return;
         }
 
+        verificationHandled = true;
         localStorage.removeItem('pending_signup_id');
         localStorage.removeItem('pending_signup_email');
         signupCard.classList.add('hidden');
@@ -334,13 +344,33 @@
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       supabaseClient.auth.onAuthStateChange(async (event, session) => {
-        if (session?.user?.email) {
+        const hasVerificationSession = Boolean(session?.user?.email);
+        console.log('Auth event:', event);
+        console.log('Verification session available:', hasVerificationSession);
+        console.log('Pending signup ID present:', Boolean(localStorage.getItem('pending_signup_id')));
+
+        if (event === 'SIGNED_IN' && hasVerificationSession) {
           window.setTimeout(() => verifyPendingSignup(session), 0);
         }
       });
 
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session?.user?.email) await verifyPendingSignup(session);
+      const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+      const hasVerificationSession = Boolean(session?.user?.email);
+      console.log('Startup verification session available:', hasVerificationSession);
+      console.log('Pending signup ID present:', Boolean(localStorage.getItem('pending_signup_id')));
+
+      if (sessionError) {
+        console.error('Unable to read the authentication session:', sessionError);
+      }
+
+      if (hasVerificationSession) {
+        await verifyPendingSignup(session);
+      } else if (verificationRedirectDetected && localStorage.getItem('pending_signup_id')) {
+        console.error('Verification redirect detected without a usable authenticated session.');
+        signupCard.classList.remove('hidden');
+        verificationSentCard.classList.add('hidden');
+        showFormMessage("We couldn't complete your email verification. Please try the verification link again.", true);
+      }
 
     }
 
