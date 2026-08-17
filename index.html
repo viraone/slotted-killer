@@ -231,7 +231,7 @@
     }
 
     .lineup-poster__logo {
-      width: clamp(180px, 18vw, 360px);
+      width: clamp(315px, 31vw, 630px);
       height: auto;
       object-fit: contain;
       filter: contrast(1.08) saturate(0.88);
@@ -282,14 +282,6 @@
       position: relative;
       border-top: 1px solid #766b53;
       padding: clamp(12px, 1.15vw, 21px) clamp(10px, 1.4vw, 24px);
-    }
-
-    .lineup-row::before {
-      content: attr(data-number);
-      position: absolute;
-      left: clamp(-15px, -1vw, -8px);
-      color: #942019;
-      font: 900 clamp(12px, 1vw, 17px)/1 Impact, sans-serif;
     }
 
     .lineup-row__name {
@@ -348,7 +340,7 @@
 
     @media (max-width: 480px) {
       .lineup-poster__title-area { gap: 12px; }
-      .lineup-poster__logo { width: 110px; height: auto; }
+      .lineup-poster__logo { width: 180px; height: auto; }
       .lineup-board__header,
       .lineup-row { grid-template-columns: minmax(0, 1fr) 52px 72px; }
       .lineup-row__set,
@@ -427,10 +419,9 @@
     function renderLineup(rows) {
       lineupRows.replaceChildren();
 
-      rows.forEach((performer, index) => {
+      rows.forEach((performer) => {
         const row = document.createElement('div');
         row.className = 'lineup-row';
-        row.dataset.number = String(index + 1).padStart(2, '0');
 
         const name = document.createElement('div');
         name.className = 'lineup-row__name';
