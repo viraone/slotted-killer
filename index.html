@@ -109,6 +109,32 @@
       <h2 class="text-xl font-bold text-emerald-300">Email verified! Request received—we’ll email you if you make the official Friday lineup.</h2>
     </section>
 
+    </section><!-- home-section -->
+
+    <section id="lineup-section" hidden aria-labelledby="lineup-title">
+      <div class="lineup-poster">
+        <div class="lineup-poster__inner">
+          <div class="lineup-poster__billing" aria-hidden="true">LIVE AT THE RICKSHAW LOUNGE</div>
+          <header class="lineup-poster__title-area">
+            <img src="new_rickshaw_lolo.png" alt="Rickshaw" class="lineup-poster__logo">
+            <div>
+              <h1 id="lineup-title">TONIGHT'S <span>LINEUP</span></h1>
+            </div>
+          </header>
+
+          <div class="lineup-board" aria-live="polite" aria-busy="true">
+            <div class="lineup-board__header" aria-hidden="true">
+              <span>COMEDIAN</span>
+              <span>SET</span>
+              <span>TIME</span>
+            </div>
+            <div id="lineupRows"></div>
+            <p id="lineupStatus" class="lineup-status">Loading tonight's lineup...</p>
+          </div>
+
+          <footer class="lineup-poster__footer">READ THE ROOM <span>◆</span> FRIDAY NIGHT</footer>
+        </div>
+      </div>
     </section>
 
    </div>
@@ -122,9 +148,221 @@
     }
   </style>
 
+  <style>
+    #lineup-section {
+      min-height: 100vh;
+      padding: clamp(12px, 1.8vw, 30px);
+      background:
+        radial-gradient(circle at 50% 15%, rgba(143, 23, 18, 0.14), transparent 38%),
+        #d9cfb4;
+      color: #f4edd8;
+    }
+
+    #lineup-section[hidden] {
+      display: none;
+    }
+
+    body.lineup-mode {
+      padding-bottom: 0;
+      background: #d9cfb4;
+    }
+
+    body.lineup-mode > aside {
+      display: none;
+    }
+
+    body.lineup-mode > main {
+      margin-left: 0;
+    }
+
+    body.lineup-mode > main > div {
+      max-width: none;
+      padding: 0;
+    }
+
+    .lineup-poster {
+      position: relative;
+      min-height: calc(100vh - clamp(24px, 3.6vw, 60px));
+      border: clamp(4px, 0.55vw, 9px) solid #191716;
+      outline: 2px solid #9f1d18;
+      outline-offset: -10px;
+      background: #11100f;
+      box-shadow: 0 0 0 2px #9a895e, 0 14px 45px rgba(22, 15, 10, 0.38);
+      overflow: hidden;
+    }
+
+    .lineup-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.035) 3px 4px),
+        radial-gradient(ellipse at center, transparent 35%, #000 100%);
+      mix-blend-mode: screen;
+    }
+
+    .lineup-poster__inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: inherit;
+      flex-direction: column;
+      padding: clamp(20px, 2.8vw, 52px) clamp(18px, 4vw, 72px) clamp(16px, 2vw, 34px);
+    }
+
+    .lineup-poster__billing {
+      border-bottom: 1px solid #766b53;
+      padding-bottom: 9px;
+      color: #b8aa83;
+      font: 700 clamp(9px, 0.75vw, 13px)/1.2 Arial, sans-serif;
+      letter-spacing: 0.27em;
+      text-align: center;
+    }
+
+    .lineup-poster__title-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(18px, 2.5vw, 42px);
+      padding: clamp(20px, 2.2vw, 38px) 0 clamp(18px, 2vw, 32px);
+      text-align: left;
+    }
+
+    .lineup-poster__logo {
+      width: clamp(180px, 18vw, 360px);
+      height: auto;
+      object-fit: contain;
+      filter: contrast(1.08) saturate(0.88);
+    }
+
+    .lineup-poster__kicker {
+      margin: 0 0 2px;
+      color: #b8aa83;
+      font: 800 clamp(10px, 1vw, 16px)/1.2 Arial, sans-serif;
+      letter-spacing: 0.32em;
+    }
+
+    .lineup-poster h1 {
+      margin: 0;
+      color: #f4edd8;
+      font: 950 clamp(42px, 6.4vw, 112px)/0.86 Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 #2b2722;
+    }
+
+    .lineup-poster h1 span {
+      color: #d42a21;
+    }
+
+    .lineup-board {
+      flex: 1;
+      border-top: clamp(4px, 0.45vw, 7px) solid #b3211b;
+      border-bottom: 2px solid #766b53;
+    }
+
+    .lineup-board__header,
+    .lineup-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(105px, 0.16fr) minmax(145px, 0.19fr);
+      column-gap: clamp(16px, 3vw, 52px);
+      align-items: center;
+    }
+
+    .lineup-board__header {
+      padding: 12px clamp(10px, 1.4vw, 24px) 10px;
+      color: #d42a21;
+      font: 900 clamp(12px, 1.25vw, 21px)/1 Arial, sans-serif;
+      letter-spacing: 0.2em;
+    }
+
+    .lineup-row {
+      position: relative;
+      border-top: 1px solid #766b53;
+      padding: clamp(12px, 1.15vw, 21px) clamp(10px, 1.4vw, 24px);
+    }
+
+    .lineup-row::before {
+      content: attr(data-number);
+      position: absolute;
+      left: clamp(-15px, -1vw, -8px);
+      color: #942019;
+      font: 900 clamp(12px, 1vw, 17px)/1 Impact, sans-serif;
+    }
+
+    .lineup-row__name {
+      min-width: 0;
+      color: #f4edd8;
+      font: 900 clamp(27px, 3.15vw, 56px)/0.95 Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing: 0.035em;
+      overflow-wrap: anywhere;
+      text-transform: uppercase;
+    }
+
+    .lineup-row__set,
+    .lineup-row__time {
+      color: #d8cba8;
+      font: 900 clamp(19px, 1.8vw, 32px)/1 "Arial Narrow", Arial, sans-serif;
+      letter-spacing: 0.045em;
+      white-space: nowrap;
+    }
+
+    .lineup-status {
+      margin: 0;
+      border-top: 1px solid #766b53;
+      padding: clamp(42px, 8vh, 100px) 20px;
+      color: #d8cba8;
+      font: 800 clamp(20px, 2vw, 34px)/1.35 "Arial Narrow", Arial, sans-serif;
+      letter-spacing: 0.05em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .lineup-poster__footer {
+      padding-top: clamp(13px, 1.5vw, 24px);
+      color: #b8aa83;
+      font: 800 clamp(10px, 0.9vw, 15px)/1 Arial, sans-serif;
+      letter-spacing: 0.3em;
+      text-align: center;
+    }
+
+    .lineup-poster__footer span {
+      color: #d42a21;
+      padding: 0 0.8em;
+    }
+
+    @media (max-width: 700px) {
+      .lineup-poster__billing { letter-spacing: 0.12em; }
+      .lineup-poster__title-area { align-items: center; }
+      .lineup-poster__kicker { letter-spacing: 0.16em; }
+      .lineup-board__header,
+      .lineup-row {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        column-gap: 12px;
+      }
+      .lineup-board__header { letter-spacing: 0.08em; }
+      .lineup-row__name { overflow-wrap: break-word; }
+    }
+
+    @media (max-width: 480px) {
+      .lineup-poster__title-area { gap: 12px; }
+      .lineup-poster__logo { width: 110px; height: auto; }
+      .lineup-board__header,
+      .lineup-row { grid-template-columns: minmax(0, 1fr) 52px 72px; }
+      .lineup-row__set,
+      .lineup-row__time { white-space: normal; }
+    }
+  </style>
+
   <script>
     const SUPABASE_URL = 'https://ldodkbdzljfpbnzrpxpu.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
+    const homeSection = document.getElementById('home-section');
+    const lineupSection = document.getElementById('lineup-section');
+    const lineupRows = document.getElementById('lineupRows');
+    const lineupStatus = document.getElementById('lineupStatus');
     const signupCard = document.getElementById('signupCard');
     const signupForm = document.getElementById('signupForm');
     const emailInput = document.getElementById('email');
@@ -140,10 +378,105 @@
       return ['code', 'error', 'error_code'].some((key) => queryParams.has(key))
         || ['access_token', 'error', 'error_code'].some((key) => hashParams.has(key));
     })();
+    const lineupRequested =
+      new URLSearchParams(window.location.search).get('lineup') === '1';
 
     let supabaseClient = null;
     let verificationInProgress = false;
     let verificationHandled = false;
+    let verificationViewRequired = verificationRedirectDetected
+      || Boolean(localStorage.getItem('pending_signup_id'));
+
+    function showHomeView() {
+      homeSection.hidden = false;
+      lineupSection.hidden = true;
+      document.body.classList.remove('lineup-mode');
+    }
+
+    function showLineupView() {
+      if (verificationViewRequired) return;
+      homeSection.hidden = true;
+      lineupSection.hidden = false;
+      document.body.classList.add('lineup-mode');
+    }
+
+    function prioritizeVerificationView() {
+      verificationViewRequired = true;
+      showHomeView();
+    }
+
+    function formatSetLength(value) {
+      if (value == null || String(value).trim() === '') return '—';
+      const text = String(value).trim();
+      return /^\d+(?:\.\d+)?$/.test(text) ? `${text} MIN` : text.toUpperCase();
+    }
+
+    function formatStartTime(value) {
+      if (value == null || String(value).trim() === '') return '—';
+      const text = String(value).trim();
+      const timeMatch = text.match(/^(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?$/);
+      if (!timeMatch) return text;
+
+      const hours = Number(timeMatch[1]);
+      if (hours > 23) return text;
+      const suffix = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      return `${displayHours}:${timeMatch[2]} ${suffix}`;
+    }
+
+    function renderLineup(rows) {
+      lineupRows.replaceChildren();
+
+      rows.forEach((performer, index) => {
+        const row = document.createElement('div');
+        row.className = 'lineup-row';
+        row.dataset.number = String(index + 1).padStart(2, '0');
+
+        const name = document.createElement('div');
+        name.className = 'lineup-row__name';
+        name.textContent = performer.name || 'TBA';
+
+        const setLength = document.createElement('div');
+        setLength.className = 'lineup-row__set';
+        setLength.textContent = formatSetLength(performer.set_length);
+
+        const startTime = document.createElement('div');
+        startTime.className = 'lineup-row__time';
+        startTime.textContent = formatStartTime(performer.start_time);
+
+        row.append(name, setLength, startTime);
+        lineupRows.append(row);
+      });
+    }
+
+    async function loadLineup() {
+      if (verificationViewRequired) return;
+
+      showLineupView();
+      lineupRows.replaceChildren();
+      lineupStatus.hidden = false;
+      lineupStatus.textContent = "Loading tonight's lineup...";
+      lineupStatus.closest('.lineup-board').setAttribute('aria-busy', 'true');
+
+      const { data, error } = await supabaseClient
+        .from('show_lineup')
+        .select('name, set_length, start_time, sort_order')
+        .order('sort_order', { ascending: true });
+
+      if (verificationViewRequired) return;
+
+      if (error) {
+        console.error('Unable to load lineup:', error);
+        lineupStatus.textContent = 'The lineup could not be loaded. Please refresh the page.';
+      } else if (!data?.length) {
+        lineupStatus.textContent = "Tonight's lineup has not been posted yet.";
+      } else {
+        renderLineup(data);
+        lineupStatus.hidden = true;
+      }
+
+      lineupStatus.closest('.lineup-board').setAttribute('aria-busy', 'false');
+    }
 
     function showFormMessage(message, isError = false) {
       formMessage.textContent = message;
@@ -283,6 +616,7 @@
     async function verifyPendingSignup(session) {
       const userEmail = session?.user?.email;
       if (!userEmail || !supabaseClient || verificationInProgress || verificationHandled) return;
+      prioritizeVerificationView();
 
       const pendingSignupId = localStorage.getItem('pending_signup_id');
       console.log('Verification session available:', Boolean(userEmail));
@@ -350,6 +684,7 @@
         console.log('Pending signup ID present:', Boolean(localStorage.getItem('pending_signup_id')));
 
         if (event === 'SIGNED_IN' && hasVerificationSession) {
+          prioritizeVerificationView();
           window.setTimeout(() => verifyPendingSignup(session), 0);
         }
       });
@@ -364,12 +699,20 @@
       }
 
       if (hasVerificationSession) {
+        prioritizeVerificationView();
         await verifyPendingSignup(session);
       } else if (verificationRedirectDetected && localStorage.getItem('pending_signup_id')) {
+        prioritizeVerificationView();
         console.error('Verification redirect detected without a usable authenticated session.');
         signupCard.classList.remove('hidden');
         verificationSentCard.classList.add('hidden');
         showFormMessage("We couldn't complete your email verification. Please try the verification link again.", true);
+      }
+
+      if (lineupRequested && !verificationViewRequired) {
+        await loadLineup();
+      } else {
+        showHomeView();
       }
 
     }
