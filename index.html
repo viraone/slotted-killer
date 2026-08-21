@@ -351,6 +351,7 @@
   <script>
     const SUPABASE_URL = 'https://ldodkbdzljfpbnzrpxpu.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
+    const LINEUP_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
     const homeSection = document.getElementById('home-section');
     const lineupSection = document.getElementById('lineup-section');
     const lineupRows = document.getElementById('lineupRows');
@@ -376,8 +377,26 @@
     let supabaseClient = null;
     let verificationInProgress = false;
     let verificationHandled = false;
+    let lineupRefreshTimer = null;
     let verificationViewRequired = verificationRedirectDetected
       || Boolean(localStorage.getItem('pending_signup_id'));
+
+    function stopLineupRefreshTimer() {
+      if (lineupRefreshTimer === null) return;
+      window.clearInterval(lineupRefreshTimer);
+      lineupRefreshTimer = null;
+    }
+
+    function startLineupRefreshTimer() {
+      if (lineupRefreshTimer !== null || verificationViewRequired || lineupSection.hidden) return;
+      lineupRefreshTimer = window.setInterval(() => {
+        if (verificationViewRequired || lineupSection.hidden) {
+          stopLineupRefreshTimer();
+          return;
+        }
+        window.location.reload();
+      }, LINEUP_REFRESH_INTERVAL_MS);
+    }
 
     function showHomeView() {
       homeSection.hidden = false;
@@ -394,6 +413,7 @@
 
     function prioritizeVerificationView() {
       verificationViewRequired = true;
+      stopLineupRefreshTimer();
       showHomeView();
     }
 
@@ -702,6 +722,7 @@
 
       if (!signupRequested && !verificationViewRequired) {
         await loadLineup();
+        startLineupRefreshTimer();
       } else {
         showHomeView();
       }
