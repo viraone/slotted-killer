@@ -370,8 +370,8 @@
       return ['code', 'error', 'error_code'].some((key) => queryParams.has(key))
         || ['access_token', 'error', 'error_code'].some((key) => hashParams.has(key));
     })();
-    const lineupRequested =
-      new URLSearchParams(window.location.search).get('lineup') === '1';
+    const signupRequested =
+      new URLSearchParams(window.location.search).get('signup') === '1';
 
     let supabaseClient = null;
     let verificationInProgress = false;
@@ -700,7 +700,7 @@
         showFormMessage("We couldn't complete your email verification. Please try the verification link again.", true);
       }
 
-      if (lineupRequested && !verificationViewRequired) {
+      if (!signupRequested && !verificationViewRequired) {
         await loadLineup();
       } else {
         showHomeView();
