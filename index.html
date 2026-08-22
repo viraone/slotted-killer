@@ -20,6 +20,10 @@
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z"/></svg>
         <span class="text-xs font-semibold md:text-base">Home</span>
       </button>
+      <button type="button" data-view="openmicmap" class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:justify-start">
+        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"/></svg>
+        <span class="text-xs font-semibold md:text-base">Open Mic Map</span>
+      </button>
     </nav>
   </aside>
 
@@ -111,6 +115,64 @@
 
     </section><!-- home-section -->
 
+    <section id="openmicmap-section" hidden aria-labelledby="openmicmap-title" class="min-w-0">
+      <header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
+        <div>
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-red-500">Open Mics Today</p>
+            <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h1 id="openmicmap-title" class="text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl"><span id="openMicMapDayLabel">Today</span></h1>
+              <p id="openMicMapDateLabel" class="text-xs font-semibold uppercase tracking-wide text-zinc-500"></p>
+            </div>
+            <p class="mt-1 text-sm font-semibold text-zinc-300">Find open mic near you</p>
+          </div>
+
+        </div>
+
+        <div class="mt-4 overflow-x-auto pb-1">
+          <div id="openMicDaySelector" class="flex min-w-max gap-1.5" role="group" aria-label="Choose a day">
+            <button type="button" data-open-mic-day="Sunday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Sun</button>
+            <button type="button" data-open-mic-day="Monday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Mon</button>
+            <button type="button" data-open-mic-day="Tuesday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Tue</button>
+            <button type="button" data-open-mic-day="Wednesday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Wed</button>
+            <button type="button" data-open-mic-day="Thursday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Thu</button>
+            <button type="button" data-open-mic-day="Friday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Fri</button>
+            <button type="button" data-open-mic-day="Saturday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200" aria-pressed="false">Sat</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
+        <div class="min-w-0">
+          <p id="openMicMapStatus" role="status" aria-live="polite" class="mb-4 hidden rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300"></p>
+          <div id="openMicMapList" class="space-y-3"></div>
+        </div>
+
+        <aside id="openMicTonightPanel" class="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 xl:sticky xl:top-5 xl:self-start" aria-labelledby="openMicTonightTitle">
+          <div class="flex items-center justify-between gap-3 border-b border-zinc-800 pb-3">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-red-500">Selected day</p>
+              <h2 id="openMicTonightTitle" class="mt-0.5 text-base font-black text-zinc-100">Tonight's Mics</h2>
+            </div>
+            <span id="openMicTonightCount" class="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-[10px] font-bold text-zinc-400">0 mics</span>
+          </div>
+
+          <dl class="grid grid-cols-2 gap-2 border-b border-zinc-800 py-3">
+            <div class="rounded-lg bg-zinc-950/80 p-2.5">
+              <dt class="text-[10px] font-bold uppercase tracking-wide text-zinc-600">Next</dt>
+              <dd id="openMicTonightNext" class="mt-1 text-sm font-bold text-zinc-200">—</dd>
+            </div>
+            <div class="rounded-lg bg-zinc-950/80 p-2.5">
+              <dt class="text-[10px] font-bold uppercase tracking-wide text-zinc-600">Last</dt>
+              <dd id="openMicTonightLast" class="mt-1 text-sm font-bold text-zinc-200">—</dd>
+            </div>
+          </dl>
+
+          <div id="openMicTonightList" class="mt-2 space-y-1"></div>
+        </aside>
+      </div>
+    </section><!-- openmicmap-section -->
+
     <section id="lineup-section" hidden aria-labelledby="lineup-title">
       <div class="lineup-poster">
         <div class="lineup-poster__inner">
@@ -149,6 +211,16 @@
   </style>
 
   <style>
+    body.openmicmap-mode > main > div {
+      max-width: 1600px;
+      padding-left: clamp(16px, 2vw, 32px);
+      padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    .open-mic-card {
+      scroll-margin-top: 24px;
+    }
+
     #lineup-section {
       min-height: 100vh;
       padding: clamp(12px, 1.8vw, 30px);
@@ -353,6 +425,16 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
     const LINEUP_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
     const homeSection = document.getElementById('home-section');
+    const openMicMapSection = document.getElementById('openmicmap-section');
+    const openMicMapDayLabel = document.getElementById('openMicMapDayLabel');
+    const openMicMapDateLabel = document.getElementById('openMicMapDateLabel');
+    const openMicDayButtons = document.querySelectorAll('.open-mic-day-button');
+    const openMicMapStatus = document.getElementById('openMicMapStatus');
+    const openMicMapList = document.getElementById('openMicMapList');
+    const openMicTonightCount = document.getElementById('openMicTonightCount');
+    const openMicTonightNext = document.getElementById('openMicTonightNext');
+    const openMicTonightLast = document.getElementById('openMicTonightLast');
+    const openMicTonightList = document.getElementById('openMicTonightList');
     const lineupSection = document.getElementById('lineup-section');
     const lineupRows = document.getElementById('lineupRows');
     const lineupStatus = document.getElementById('lineupStatus');
@@ -403,16 +485,535 @@
     function showHomeView() {
       stopLineupRefreshTimer();
       homeSection.hidden = false;
+      openMicMapSection.hidden = true;
       lineupSection.hidden = true;
       document.body.classList.remove('lineup-mode');
+      document.body.classList.remove('openmicmap-mode');
+    }
+
+    function showOpenMicMapView() {
+      stopLineupRefreshTimer();
+      homeSection.hidden = true;
+      openMicMapSection.hidden = false;
+      lineupSection.hidden = true;
+      document.body.classList.remove('lineup-mode');
+      document.body.classList.add('openmicmap-mode');
     }
 
     function showLineupView() {
       if (verificationViewRequired) return;
       homeSection.hidden = true;
+      openMicMapSection.hidden = true;
       lineupSection.hidden = false;
       document.body.classList.add('lineup-mode');
+      document.body.classList.remove('openmicmap-mode');
     }
+
+    function setActiveNav(view) {
+      document.querySelectorAll('.nav-button').forEach((btn) => {
+        const isActive = btn.dataset.view === view;
+        btn.classList.toggle('text-red-400', isActive);
+        btn.classList.toggle('text-zinc-400', !isActive);
+        if (isActive) {
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    document.querySelectorAll('.nav-button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        setActiveNav(view);
+        if (view === 'openmicmap') {
+          showOpenMicMapView();
+          renderOpenMicMapView();
+        } else {
+          showHomeView();
+        }
+      });
+    });
+
+    // --- Open Mic Map (isolated feature: reads static JSON, no effect on signup/lineup) ---
+    const OPEN_MIC_JSON_URL = 'data/open-mics.json';
+    const OPEN_MIC_DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const OPEN_MIC_CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let selectedOpenMicDayName = null;
+
+    function isOpenMicDayActive(value) {
+      return /^y/i.test(String(value || '').trim());
+    }
+
+    function parseTimeStringToMinutes(text) {
+      const value = String(text || '').trim();
+      if (!value) return null;
+      const ampmMatch = /(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m?\.?/i.exec(value);
+      if (ampmMatch) {
+        let hour = Number(ampmMatch[1]) % 12;
+        const minute = ampmMatch[2] ? Number(ampmMatch[2]) : 0;
+        if (/p/i.test(ampmMatch[3])) hour += 12;
+        return hour * 60 + minute;
+      }
+      const militaryMatch = /^(\d{1,2}):(\d{2})$/.exec(value);
+      if (militaryMatch) {
+        const hour = Number(militaryMatch[1]);
+        const minute = Number(militaryMatch[2]);
+        if (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) return hour * 60 + minute;
+      }
+      return null;
+    }
+
+    // Column format is "Signup/Start" (e.g. "7pm/7:30pm", "/9pm"); falls back to signup time if start is unparsable.
+    function parseSignupStartTimes(rawTime) {
+      const text = String(rawTime || '').trim();
+      if (!text) return { signupMinutes: null, startMinutes: null };
+      const slashIndex = text.indexOf('/');
+      const signupPart = slashIndex === -1 ? '' : text.slice(0, slashIndex);
+      const startPart = slashIndex === -1 ? text : text.slice(slashIndex + 1);
+      const signupMinutes = parseTimeStringToMinutes(signupPart);
+      const startMinutes = parseTimeStringToMinutes(startPart) ?? signupMinutes;
+      return { signupMinutes, startMinutes };
+    }
+
+    function normalizeOpenMicRecord(record) {
+      if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
+      const name = String(record.name || '').trim();
+      if (!name) return null;
+
+      const rawTime = String(record.timeSignupStart || '').trim();
+      const { signupMinutes, startMinutes } = parseSignupStartTimes(rawTime);
+
+      const days = {};
+      OPEN_MIC_DAY_NAMES.forEach((day) => {
+        days[day] = isOpenMicDayActive(record[day.toLowerCase()]);
+      });
+
+      const website = String(record.webSignup || '').trim();
+      const contact = String(record.contact || '').trim();
+      const listLabel = String(record.listLabel || '').trim();
+      const listUrl = String(record.listUrl || '').trim();
+
+      return {
+        id: String(record.id || '').trim(),
+        name,
+        venue: String(record.venue || '').trim(),
+        address: String(record.location || '').trim(),
+        rawTime,
+        signupMinutes,
+        startMinutes,
+        days,
+        recurrence: record.recurrence && typeof record.recurrence === 'object' && !Array.isArray(record.recurrence)
+          ? record.recurrence
+          : null,
+        recurrenceText: String(record.recurrenceText || '').trim(),
+        signupType: String(record.signupType || '').trim().toLowerCase(),
+        price: String(record.priceForTime || '').trim(),
+        micType: String(record.openMicType || '').trim(),
+        ageRequirement: String(record.ageRequirement || '').trim(),
+        notes: String(record.requirementsInfo || '').trim(),
+        host: String(record.host || '').trim(),
+        wheelchairAccessible: record.wheelchairAccessible === true,
+        website: /^https?:\/\//i.test(website) ? website : '',
+        contact: /^https?:\/\//i.test(contact) ? contact : '',
+        listLabel,
+        listUrl: /^https?:\/\//i.test(listUrl) ? listUrl : ''
+      };
+    }
+
+    let openMicDataPromise = null;
+    function loadOpenMicData() {
+      if (!openMicDataPromise) {
+        openMicDataPromise = (async () => {
+          const response = await fetch(OPEN_MIC_JSON_URL);
+          if (!response.ok) throw new Error(`Failed to fetch open mic JSON: HTTP ${response.status}`);
+          const records = await response.json();
+          if (!Array.isArray(records)) throw new Error('Open mic JSON must contain an array of records');
+          return records.map(normalizeOpenMicRecord).filter(Boolean);
+        })().catch((err) => {
+          openMicDataPromise = null; // allow retry on next open
+          throw err;
+        });
+      }
+      return openMicDataPromise;
+    }
+
+    // Testable in isolation: pass a mocked `date` to simulate any Seattle day/time.
+    function getSeattleNow(date = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+      }).formatToParts(date);
+      const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+      return {
+        dayName: values.weekday,
+        year: Number(values.year),
+        month: Number(values.month),
+        dayOfMonth: Number(values.day),
+        minutesSinceMidnight: Number(values.hour) * 60 + Number(values.minute)
+      };
+    }
+
+    function getWeekdayOccurrenceInMonth(dayOfMonth) {
+      return Math.floor((Number(dayOfMonth) - 1) / 7) + 1;
+    }
+
+    function getNextSeattleWeekdayDate(dayName, date = new Date()) {
+      const seattleNow = getSeattleNow(date);
+      const currentDayIndex = OPEN_MIC_CALENDAR_DAYS.indexOf(seattleNow.dayName);
+      const selectedDayIndex = OPEN_MIC_CALENDAR_DAYS.indexOf(dayName);
+      const daysAhead = (selectedDayIndex - currentDayIndex + 7) % 7;
+      return {
+        date: new Date(Date.UTC(seattleNow.year, seattleNow.month - 1, seattleNow.dayOfMonth + daysAhead, 20)),
+        isToday: daysAhead === 0
+      };
+    }
+
+    function formatSeattleCalendarDate(date) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      }).format(date);
+    }
+
+    function updateOpenMicDaySelector(dayName) {
+      openMicDayButtons.forEach((button) => {
+        const isSelected = button.dataset.openMicDay === dayName;
+        button.setAttribute('aria-pressed', String(isSelected));
+        button.classList.toggle('border-red-600', isSelected);
+        button.classList.toggle('bg-red-600', isSelected);
+        button.classList.toggle('text-white', isSelected);
+        button.classList.toggle('border-zinc-700', !isSelected);
+        button.classList.toggle('text-zinc-400', !isSelected);
+      });
+    }
+
+    function openMicOccursOnSeattleDate(mic, seattleNow) {
+      const recurrence = mic.recurrence;
+      if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
+      if (String(recurrence.weekday || '').toLowerCase() !== seattleNow.dayName.toLowerCase()) return false;
+
+      const occurrence = getWeekdayOccurrenceInMonth(seattleNow.dayOfMonth);
+      const daysInMonth = new Date(Date.UTC(seattleNow.year, seattleNow.month, 0)).getUTCDate();
+      const isLastWeekdayOfMonth = seattleNow.dayOfMonth + 7 > daysInMonth;
+
+      switch (recurrence.type) {
+        case 'weekly':
+          return true;
+        case 'monthly-nth-weekday':
+          return occurrence === Number(recurrence.nth);
+        case 'monthly-multiple-nth-weekdays':
+          return Array.isArray(recurrence.nth)
+            && recurrence.nth.some((nth) => occurrence === Number(nth));
+        case 'monthly-last-weekday':
+          return isLastWeekdayOfMonth;
+        case 'monthly-first-and-last-weekday':
+          return occurrence === 1 || isLastWeekdayOfMonth;
+        default:
+          return false;
+      }
+    }
+
+    function selectOpenMicsForSeattleDate(allMics, date, compareCurrentTime) {
+      const seattleNow = getSeattleNow(date);
+      const { dayName, minutesSinceMidnight } = seattleNow;
+      const todays = allMics
+        .filter((mic) => openMicOccursOnSeattleDate(mic, seattleNow))
+        .slice()
+        .sort((a, b) => {
+          if (a.startMinutes === null) return 1;
+          if (b.startMinutes === null) return -1;
+          return a.startMinutes - b.startMinutes;
+        });
+      const nextMic = compareCurrentTime
+        ? todays.find((mic) => mic.startMinutes !== null && mic.startMinutes >= minutesSinceMidnight) || null
+        : todays.find((mic) => mic.startMinutes !== null) || null;
+      return { dayName, todays, nextMic };
+    }
+
+    // Testable in isolation: pass a mocked `date` to verify today's filtering + next-mic selection.
+    function selectTodayOpenMics(allMics, date = new Date()) {
+      return selectOpenMicsForSeattleDate(allMics, date, true);
+    }
+
+    function formatMinutesToClock(minutes) {
+      if (minutes === null || minutes === undefined) return null;
+      const hour24 = Math.floor(minutes / 60);
+      const minute = minutes % 60;
+      const suffix = hour24 >= 12 ? 'PM' : 'AM';
+      const hour12 = hour24 % 12 || 12;
+      return `${hour12}:${String(minute).padStart(2, '0')} ${suffix}`;
+    }
+
+    function buildOpenMicTimeLabel(mic) {
+      const startLabel = formatMinutesToClock(mic.startMinutes);
+      const signupLabel = formatMinutesToClock(mic.signupMinutes);
+      if (startLabel && mic.signupType === 'online') return `Start ${startLabel} · Online Signup`;
+      if (startLabel && signupLabel && mic.startMinutes !== mic.signupMinutes) {
+        return `Start ${startLabel} · Signup ${signupLabel}`;
+      }
+      if (startLabel) return `Start ${startLabel}`;
+      if (signupLabel) return `Signup ${signupLabel}`;
+      return mic.rawTime || 'Time not listed';
+    }
+
+    function buildOpenMicListButtonLabel(listLabel) {
+      const month = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ].find((name) => new RegExp(`\\b${name}\\b`, 'i').test(String(listLabel || '')));
+      return month ? `See ${month} List` : 'See List';
+    }
+
+    function renderOpenMicTonightPanel(mics, nextMic) {
+      openMicTonightCount.textContent = `${mics.length} ${mics.length === 1 ? 'mic' : 'mics'}`;
+      openMicTonightNext.textContent = nextMic
+        ? `${formatMinutesToClock(nextMic.startMinutes) || 'Time TBD'} · ${nextMic.name}`
+        : '—';
+
+      const lastMic = mics.slice().reverse().find((mic) => mic.startMinutes !== null) || null;
+      openMicTonightLast.textContent = lastMic
+        ? `${formatMinutesToClock(lastMic.startMinutes)} · ${lastMic.name}`
+        : '—';
+
+      const items = mics.map((mic) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-red-600';
+
+        const time = document.createElement('span');
+        time.className = `w-16 shrink-0 text-xs font-black ${mic === nextMic ? 'text-red-400' : 'text-zinc-500'}`;
+        time.textContent = formatMinutesToClock(mic.startMinutes) || 'TBD';
+
+        const name = document.createElement('span');
+        name.className = 'min-w-0 flex-1 truncate text-sm font-semibold text-zinc-300 group-hover:text-white';
+        name.textContent = mic.name;
+
+        const arrow = document.createElement('span');
+        arrow.className = 'text-zinc-700 transition group-hover:translate-x-0.5 group-hover:text-red-400';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+
+        button.append(time, name, arrow);
+        button.addEventListener('click', () => {
+          const card = document.getElementById(`open-mic-card-${mic.id}`);
+          if (!card) return;
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.focus({ preventScroll: true });
+        });
+        return button;
+      });
+      openMicTonightList.replaceChildren(...items);
+    }
+
+    function renderOpenMicCard(mic, isNext, isToday = true) {
+      const card = document.createElement('article');
+      card.id = `open-mic-card-${mic.id}`;
+      card.tabIndex = -1;
+      card.className = isNext
+        ? 'open-mic-card relative rounded-xl border border-red-900/80 border-l-4 border-l-red-600 bg-gradient-to-r from-red-950/25 to-zinc-900/50 p-4 shadow-lg shadow-black/20'
+        : 'open-mic-card rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
+
+      const badges = document.createElement('div');
+      badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
+
+      if (isNext) {
+        const badge = document.createElement('span');
+        badge.className = 'inline-block rounded bg-red-600 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-white';
+        badge.textContent = 'Next Open Mic';
+        badges.append(badge);
+      }
+
+      if (mic.recurrence && isToday) {
+        const todayBadge = document.createElement('span');
+        todayBadge.className = 'inline-block rounded border border-red-900 bg-red-950/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300';
+        todayBadge.textContent = 'Happening Today';
+        badges.append(todayBadge);
+      }
+      card.append(badges);
+
+      const headingRow = document.createElement('div');
+      headingRow.className = 'flex items-start justify-between gap-4';
+
+      const name = document.createElement('h3');
+      name.className = 'min-w-0 text-base font-black leading-tight text-zinc-50 sm:text-lg';
+      name.textContent = mic.name;
+
+      const startTime = document.createElement('p');
+      startTime.className = `shrink-0 text-sm font-black ${isNext ? 'text-red-400' : 'text-zinc-200'}`;
+      startTime.textContent = formatMinutesToClock(mic.startMinutes) || 'Time TBD';
+      headingRow.append(name, startTime);
+      card.append(headingRow);
+
+      if (mic.venue) {
+        const venue = document.createElement('p');
+        venue.className = 'mt-1 text-sm font-semibold text-zinc-300';
+        venue.textContent = mic.venue;
+        card.append(venue);
+      }
+
+      if (mic.recurrenceText) {
+        const recurrence = document.createElement('p');
+        recurrence.className = 'mt-1 text-[10px] font-bold uppercase tracking-wide text-red-400';
+        recurrence.textContent = mic.recurrenceText;
+        card.append(recurrence);
+      }
+
+      const timeLine = document.createElement('p');
+      timeLine.className = 'mt-1 text-xs font-semibold text-zinc-500';
+      timeLine.textContent = buildOpenMicTimeLabel(mic);
+      card.append(timeLine);
+
+      if (mic.address) {
+        const address = document.createElement('p');
+        address.className = 'mt-2 text-sm leading-5 text-zinc-400';
+        address.textContent = mic.address;
+        card.append(address);
+      }
+
+      const metaBits = [mic.price, mic.micType, mic.ageRequirement].filter(Boolean);
+      if (metaBits.length) {
+        const meta = document.createElement('p');
+        meta.className = 'mt-2 text-xs text-zinc-500';
+        meta.textContent = metaBits.join(' · ');
+        card.append(meta);
+      }
+
+      if (mic.notes) {
+        const notes = document.createElement('p');
+        notes.className = 'mt-2 text-xs leading-5 text-zinc-400';
+        notes.textContent = mic.notes;
+        card.append(notes);
+      }
+
+      const detailBits = [
+        mic.host ? `Host: ${mic.host}` : '',
+        mic.wheelchairAccessible ? 'Wheelchair accessible' : ''
+      ].filter(Boolean);
+      if (detailBits.length) {
+        const details = document.createElement('p');
+        details.className = 'mt-2 text-xs leading-5 text-zinc-400';
+        details.textContent = detailBits.join(' · ');
+        card.append(details);
+      }
+
+      if (mic.address || mic.website || mic.contact || mic.listUrl) {
+        const actions = document.createElement('div');
+        actions.className = 'mt-3 flex flex-wrap gap-2 border-t border-zinc-800/80 pt-3';
+
+        if (mic.address) {
+          const mapLink = document.createElement('a');
+          mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mic.address)}`;
+          mapLink.target = '_blank';
+          mapLink.rel = 'noopener noreferrer';
+          mapLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-red-600 hover:text-red-400';
+          mapLink.textContent = 'Open in Google Maps';
+          actions.append(mapLink);
+        }
+
+        if (mic.website) {
+          const websiteLink = document.createElement('a');
+          websiteLink.href = mic.website;
+          websiteLink.target = '_blank';
+          websiteLink.rel = 'noopener noreferrer';
+          websiteLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-red-600 hover:text-red-400';
+          websiteLink.textContent = mic.signupType === 'online' ? 'Online Signup' : 'Website / Signup';
+          actions.append(websiteLink);
+        }
+
+        if (mic.listUrl) {
+          const listLink = document.createElement('a');
+          listLink.href = mic.listUrl;
+          listLink.target = '_blank';
+          listLink.rel = 'noopener noreferrer';
+          listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-red-600 hover:text-red-400';
+          listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
+          actions.append(listLink);
+        }
+
+        if (mic.contact) {
+          const contactLink = document.createElement('a');
+          contactLink.href = mic.contact;
+          contactLink.target = '_blank';
+          contactLink.rel = 'noopener noreferrer';
+          contactLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-red-600 hover:text-red-400';
+          contactLink.textContent = 'Contact';
+          actions.append(contactLink);
+        }
+
+        card.append(actions);
+      }
+
+      return card;
+    }
+
+    openMicDayButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        selectedOpenMicDayName = button.dataset.openMicDay;
+        renderOpenMicMapView();
+      });
+    });
+
+    let openMicMapRenderToken = 0;
+    async function renderOpenMicMapView() {
+      const renderToken = ++openMicMapRenderToken; // guard against overlapping renders from rapid clicks
+      openMicMapList.replaceChildren();
+      openMicMapStatus.hidden = true;
+      const now = new Date();
+      if (!selectedOpenMicDayName) selectedOpenMicDayName = getSeattleNow(now).dayName;
+      const selectedDate = getNextSeattleWeekdayDate(selectedOpenMicDayName, now);
+      const selectedDateParts = getSeattleNow(selectedDate.date);
+      openMicMapDayLabel.textContent = selectedDateParts.dayName;
+      openMicMapDateLabel.textContent = formatSeattleCalendarDate(selectedDate.date);
+      updateOpenMicDaySelector(selectedDateParts.dayName);
+
+      try {
+        const allMics = await loadOpenMicData();
+        if (renderToken !== openMicMapRenderToken) return;
+
+        const { dayName, todays, nextMic } = selectOpenMicsForSeattleDate(
+          allMics,
+          selectedDate.isToday ? now : selectedDate.date,
+          selectedDate.isToday
+        );
+        openMicMapDayLabel.textContent = dayName;
+
+        renderOpenMicTonightPanel(todays, nextMic);
+
+        if (todays.length === 0) {
+          openMicMapStatus.textContent = selectedDate.isToday
+            ? 'No open mics listed for today.'
+            : 'No open mics listed for this day.';
+          openMicMapStatus.hidden = false;
+          return;
+        }
+
+        if (selectedDate.isToday && !nextMic) {
+          openMicMapStatus.textContent = 'No more open mics scheduled for today.';
+          openMicMapStatus.hidden = false;
+        }
+
+        todays.forEach((mic) => {
+          openMicMapList.append(renderOpenMicCard(mic, mic === nextMic, selectedDate.isToday));
+        });
+      } catch (err) {
+        if (renderToken !== openMicMapRenderToken) return;
+        console.error('Unable to load open mic listings:', err);
+        openMicMapList.replaceChildren();
+        renderOpenMicTonightPanel([], null);
+        openMicMapStatus.textContent = 'Open mic listings are temporarily unavailable.';
+        openMicMapStatus.hidden = false;
+      }
+    }
+    // --- End Open Mic Map feature ---
 
     function getSeattleScheduleMode(date = new Date()) {
       const parts = new Intl.DateTimeFormat('en-US', {
