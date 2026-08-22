@@ -373,6 +373,8 @@
     })();
     const signupRequested =
       new URLSearchParams(window.location.search).get('signup') === '1';
+    const lineupRequested =
+      new URLSearchParams(window.location.search).get('lineup') === '1';
 
     let supabaseClient = null;
     let verificationInProgress = false;
@@ -399,6 +401,7 @@
     }
 
     function showHomeView() {
+      stopLineupRefreshTimer();
       homeSection.hidden = false;
       lineupSection.hidden = true;
       document.body.classList.remove('lineup-mode');
@@ -409,6 +412,26 @@
       homeSection.hidden = true;
       lineupSection.hidden = false;
       document.body.classList.add('lineup-mode');
+    }
+
+    function getSeattleScheduleMode(date = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+      }).formatToParts(date);
+      const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+      const minutesSinceMidnight = Number(values.hour) * 60 + Number(values.minute);
+
+      if (values.weekday === 'Fri' && minutesSinceMidnight >= 13 * 60) {
+        return 'lineup';
+      }
+      if (values.weekday === 'Sat' && minutesSinceMidnight < 6 * 60) {
+        return 'lineup';
+      }
+      return 'signup';
     }
 
     function prioritizeVerificationView() {
@@ -720,7 +743,10 @@
         showFormMessage("We couldn't complete your email verification. Please try the verification link again.", true);
       }
 
-      if (!signupRequested && !verificationViewRequired) {
+      const scheduledMode = getSeattleScheduleMode();
+      const lineupModeRequested = lineupRequested && !signupRequested;
+
+      if (!verificationViewRequired && (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup'))) {
         await loadLineup();
         startLineupRefreshTimer();
       } else {
