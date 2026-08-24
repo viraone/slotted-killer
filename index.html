@@ -857,6 +857,7 @@
     const openMicLocationStatus = document.getElementById('openMicLocationStatus');
     const openMicMapStatus = document.getElementById('openMicMapStatus');
     const openMicMapList = document.getElementById('openMicMapList');
+    const openMicTonightTitle = document.getElementById('openMicTonightTitle');
     const openMicTonightCount = document.getElementById('openMicTonightCount');
     const openMicTonightNext = document.getElementById('openMicTonightNext');
     const openMicTonightLast = document.getElementById('openMicTonightLast');
@@ -1954,6 +1955,7 @@
       const selectedDateParts = getSeattleNow(selectedDate.date);
       openMicMapDayLabel.textContent = selectedDateParts.dayName;
       openMicMapDateLabel.textContent = formatSeattleCalendarDate(selectedDate.date);
+      openMicTonightTitle.textContent = `${selectedDateParts.dayName}'s Mics`;
       updateOpenMicDaySelector(selectedDateParts.dayName);
 
       try {
