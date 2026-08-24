@@ -1,9 +1,9 @@
 [
   {
-    "id": "uisce-irish-pub-1409-cornwall-ave-bellingham-wa-98225",
-    "name": "Uisce Irish Pub",
-    "location": "1409 Cornwall Ave, Bellingham, WA 98225",
-    "timeSignupStart": "/9pm",
+    "id": "donnells-bar-813-main-st-vancouver-wa-98660",
+    "name": "Donnell’s Bar",
+    "location": "813 Main St, Vancouver, WA 98660",
+    "timeSignupStart": "6pm/6:30pm-8pm",
     "monday": "Yes",
     "tuesday": "no",
     "wednesday": "no",
@@ -11,11 +11,70 @@
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Donnell's Don't Tell Open Mic. Show starts at 6:30 PM. Hosted by Mike Lowry.",
+    "host": "Mike Lowry",
+    "webSignup": "",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 45.62772,
+    "longitude": -122.671429
+  },
+  {
+    "id": "uisce-irish-pub-1409-cornwall-ave-bellingham-wa-98225",
+    "name": "Uisce Irish Pub",
+    "location": "1409 Cornwall Ave, Bellingham, WA 98225",
+    "timeSignupStart": "8:30pm/9pm",
+    "monday": "Yes",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Guffawingham Comedy Open Mic. Bellingham's longest-running comedy mic.",
+    "webSignup": "",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 48.751284,
+    "longitude": -122.477135
+  },
+  {
+    "id": "slim-s-last-chance-5606-1st-ave-s-seattle-wa-98108",
+    "name": "Slim's Last chance",
+    "location": "5606 1st Ave S, Seattle, WA 98108",
+    "timeSignupStart": "5:30pm/6pm-9pm",
+    "monday": "Yes",
+    "tuesday": "No",
+    "wednesday": "No",
+    "thursday": "No",
+    "friday": "No",
+    "saturday": "No",
+    "sunday": "No",
+    "priceForTime": "Free",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Music, comedy, or anything to share! 15-minute slots. Hosted by Levi said.",
+    "host": "Levi said.",
+    "webSignup": "",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.55249,
+    "longitude": -122.3339
   },
   {
     "id": "saint-john-s-bar-and-eatery-719-e-pike-st-seattle-wa-98122",
@@ -32,34 +91,23 @@
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "",
+    "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Open Mic of the Absurd!",
+    "requirementsInfo": "Open Mic of the Absurd! Signup online via Google Form.",
     "host": "rotating",
     "wheelchairAccessible": true,
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLScG3Awhr5UipPax9K7EpXMU6tzIHVZZ-RyvQPnl7MfkMqAW0A/viewform?fbclid=PAb21jcARBEAlleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafFPxPnubLojFIRt14fYTXkG6aKfiByXQ9UYZXIqPxUP5UW3MfMJNIIbGdxwg_aem_KvIBGr_gMwlIawFke3XF8A&utm_source=ig&utm_medium=social&utm_content=link_in_bio"
-  },
-  {
-    "id": "slim-s-last-chance-5606-1st-ave-s-seattle-wa-98108",
-    "name": "Slim's Last chance",
-    "location": "5606 1st Ave S, Seattle, WA 98108",
-    "timeSignupStart": "7pm/7:30pm",
-    "monday": "Yes",
-    "tuesday": "No",
-    "wednesday": "No",
-    "thursday": "No",
-    "friday": "No",
-    "saturday": "No",
-    "sunday": "No",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLScG3Awhr5UipPax9K7EpXMU6tzIHVZZ-RyvQPnl7MfkMqAW0A/viewform?fbclid=PAb21jcARBEAlleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafFPxPnubLojFIRt14fYTXkG6aKfiByXQ9UYZXIqPxUP5UW3MfMJNIIbGdxwg_aem_KvIBGr_gMwlIawFke3XF8A&utm_source=ig&utm_medium=social&utm_content=link_in_bio",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.613951,
+    "longitude": -122.322565
   },
   {
     "id": "post-pike-gerogetown-5701-airport-wy-s-seattle-wa-98108",
-    "name": "Post Pike Gerogetown",
+    "name": "Post Pike Georgetown",
     "location": "5701 Airport Wy S, Seattle, WA 98108",
     "timeSignupStart": "6:30pm/7pm",
     "monday": "Yes",
@@ -70,10 +118,17 @@
     "saturday": "No",
     "sunday": "No",
     "priceForTime": "Free",
-    "openMicType": "Anything is allowed",
+    "openMicType": "Variety / Mix Mic / Anything is allowed",
     "ageRequirement": "21+",
-    "requirementsInfo": "",
-    "webSignup": "N/A"
+    "requirementsInfo": "Variety mix mic: comedy, music, spoken word, anything allowed. In-person signups at 6:30 PM.",
+    "webSignup": "N/A",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.551192,
+    "longitude": -122.319023
   },
   {
     "id": "the-local-907-907-s-3rd-st-renton-wa-98057",
@@ -90,46 +145,45 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "The longest running comedy mic in Washington",
+    "requirementsInfo": "The longest running comedy mic in Washington. Signups at 9:00 PM.",
     "host": "rotating",
     "wheelchairAccessible": true,
-    "webSignup": ""
+    "webSignup": "",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.479584,
+    "longitude": -122.205005
   },
   {
-    "id": "donnells-bar-813-main-st-vancouver-wa-98660",
-    "name": "Donnell’s Bar",
-    "location": "813 Main St, Vancouver, WA 98660",
-    "timeSignupStart": "5:45pm/6pm",
+    "id": "tacoma-comedy-6th-3829-6th-ave-tacoma-wa-98406",
+    "name": "Tacoma Comedy Club – 6th & Proctor",
+    "location": "3829 6th Ave, Tacoma, WA 98406",
+    "timeSignupStart": "6:30pm/7:30pm",
     "monday": "Yes",
     "tuesday": "no",
     "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
-  },
-  {
-    "id": "common-objects-2601-1st-ave-seattle-wa-98121",
-    "name": "Common Objects",
-    "location": "2601 1st Ave, Seattle, WA 98121",
-    "timeSignupStart": "/7:30pm",
-    "monday": "no",
-    "tuesday": "REQ. ->",
-    "wednesday": "no",
-    "thursday": "no",
+    "thursday": "Yes",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "1st. and Last Mon.",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSclMR5ahrrV-6wQENTpe2GODapJLAxV2fH2IIe3onxazDKXTg/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPNTY3MDY3MzQzMzUyNDI3AAGn8rsjNxJ4bQGDqrmzmUv2GFXsN5YWHkHbgKa3q6_7MWIrHpCj_MfgGseNJ2w_aem_NbMoZoU4ml9fnPWYGcWNwA"
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Sign up in person or check monthly list online.",
+    "webSignup": "https://www.barkentertainment.com/open-mic",
+    "listLabel": "6th & Proctor August List",
+    "listUrl": "https://www.barkentertainment.com/copy-of-tcc2-june-list",
+    "listSourceUrl": "https://www.barkentertainment.com/open-mic",
+    "recurrenceText": "Every Monday & Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.255369,
+    "longitude": -122.48735
   },
   {
     "id": "the-growler-guys-8500-lake-city-way-ne-seattle-wa-98115",
@@ -143,29 +197,44 @@
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Guest tips rewarded to 1st and 2nd best voted comics",
-    "webSignup": ""
+    "requirementsInfo": "Guest tips rewarded to 1st and 2nd best voted comics. Signups at 9:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.690604,
+    "longitude": -122.307285
   },
   {
-    "id": "emerald-city-comedy-club-210-broadway-e-seattle-wa-98102",
-    "name": "Emerald City Comedy Club",
-    "location": "210 Broadway E, Seattle, WA 98102",
-    "timeSignupStart": "6pm/7pm",
+    "id": "comedy-nest-2601-1st-ave-seattle-wa-98121",
+    "name": "The Comedy Nest",
+    "venue": "Common Objects Art Studio",
+    "location": "2601 1st Ave, Seattle, WA 98121",
+    "timeSignupStart": "online/7:30pm",
     "monday": "no",
-    "tuesday": "REQ. ->",
+    "tuesday": "Yes",
     "wednesday": "no",
     "thursday": "no",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "(Check Website for dates)",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSffjaueI0Vs8YUz5usDNRwLSItL0qjjuflCMSDcU0TvItE5TQ/viewform"
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Womxn, trans, queer, POC & disabled focused comedy open mic. Doors 7:00 PM, show 7:30 PM. Signups open Sundays via Google Form.",
+    "webSignup": "https://forms.gle/rGM312cHanBT3GC9A",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.615234,
+    "longitude": -122.349976
   },
   {
     "id": "tacoma-comedy-downtown-933-market-st-tacoma-wa-98402",
@@ -180,28 +249,189 @@
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Only Comedy",
+    "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "(Check Website for dates)",
-    "webSignup": "https://www.barkentertainment.com/open-mic"
+    "requirementsInfo": "Stand-up comedy open mic. Sign up online via Bark Entertainment or at the door at 6:30 PM.",
+    "webSignup": "https://www.barkentertainment.com/open-mic",
+    "recurrenceText": "Every Tuesday & Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.253971,
+    "longitude": -122.441551
   },
   {
-    "id": "molly-maguires-610-nw-65th-st-seattle-wa-98117",
-    "name": "Molly Maguires",
-    "location": "610 NW 65th St, Seattle, WA 98117",
-    "timeSignupStart": "8:30pm/9pm",
-    "monday": "No",
-    "tuesday": "No",
-    "wednesday": "Yes",
-    "thursday": "No",
-    "friday": "No",
-    "saturday": "No",
-    "sunday": "No",
+    "id": "super-funny-comedy-8402-s-hosmer-st-annex-building-tacoma-wa-98444",
+    "name": "Super funny comedy",
+    "location": "8402 S Hosmer St Annex Building, Tacoma, WA 98444",
+    "timeSignupStart": "7pm/8pm",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Only Comedy",
+    "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "",
-    "webSignup": "N/A"
+    "requirementsInfo": "Stand-up comedy open mic. 2 drink minimum. On-site signups available at doors (limited spots).",
+    "webSignup": "",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.180225,
+    "longitude": -122.463749
+  },
+  {
+    "id": "otter-on-the-rocks-4210-sw-admiral-way-seattle-wa-98116",
+    "name": "Otter on the Rocks",
+    "location": "4210 SW Admiral Way, Seattle, WA 98116",
+    "timeSignupStart": "6:30pm/7pm",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety / Mix Mic / All Voices Welcome",
+    "ageRequirement": "21+",
+    "requirementsInfo": "All voices welcome: comedy, music, storytelling, and poetry. Every other Tuesday at 7:00 PM.",
+    "webSignup": "https://www.otterontherocks.com",
+    "contact": "https://www.instagram.com/otterontherocks/",
+    "recurrenceText": "Every Other Tuesday",
+    "latitude": 47.5813,
+    "longitude": -122.386
+  },
+{
+  "id": "lukas-sit-sip-and-roll-2219-4th-ave-seattle-wa-98121",
+  "name": "Luka’s Sit, Sip & Roll",
+  "location": "2219 4th Ave, Seattle, WA 98121",
+  "timeSignupStart": "7pm/7:30pm",
+  "monday": "no",
+  "tuesday": "Yes",
+  "wednesday": "no",
+  "thursday": "no",
+  "friday": "no",
+  "saturday": "no",
+  "sunday": "no",
+  "priceForTime": "Free",
+  "openMicType": "Mix Mic / Comedy is allowed",
+  "ageRequirement": "21+",
+  "requirementsInfo": "Mix mic where comedy and performances are allowed. Signups at 7:00 PM, show at 7:30 PM.",
+  "contact": "https://www.instagram.com/lukasbelltown/",
+  "webSignup": "",
+  "recurrenceText": "Every Tuesday",
+  "recurrence": {
+    "type": "weekly",
+    "weekday": "Tuesday"
+  },
+  "latitude": 47.614885,
+  "longitude": -122.343579
+},
+  {
+    "id": "emerald-city-comedy-club-210-broadway-e-seattle-wa-98102",
+    "name": "Emerald City Comedy Club",
+    "location": "210 Broadway E, Seattle, WA 98102",
+    "timeSignupStart": "6pm/7pm",
+    "monday": "no",
+    "tuesday": "REQ. ->",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Sign up online via Google Form (check dates).",
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSffjaueI0Vs8YUz5usDNRwLSItL0qjjuflCMSDcU0TvItE5TQ/viewform",
+    "recurrenceText": "Selected Tuesdays",
+    "latitude": 47.62026,
+    "longitude": -122.320449
+  },
+  {
+    "id": "mountain-room-bar-3100-airport-way-s-seattle-wa-98134",
+    "name": "Mountain Room Bar",
+    "venue": "Old Rainier Brewery",
+    "location": "3100 Airport Way S, Seattle, WA 98134",
+    "timeSignupStart": "7pm/7:30pm",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Mix Mic / Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Full backline provided (drums, bass amp, guitar amp). Music, comedy, spoken word, and all acts welcome. Free parking.",
+    "webSignup": "",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.5756,
+    "longitude": -122.3218
+  },
+  {
+    "id": "the-kraken-bar-5828-roosevelt-way-ne-seattle-wa-98105",
+    "name": "The Kraken Bar & Lounge",
+    "location": "5828 Roosevelt Way NE, Seattle, WA 98105",
+    "timeSignupStart": "7:30pm/8pm",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Music Mic / Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Music mic with comedy allowed. Signups at 7:30 PM, show starts at 8:00 PM.",
+    "webSignup": "https://linktr.ee/krakenseattle",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.6715,
+    "longitude": -122.3174
+  },
+  {
+    "id": "darrells-tavern-18041-aurora-ave-n-shoreline-wa-98133",
+    "name": "Darrell's Tavern",
+    "location": "18041 Aurora Ave N, Shoreline, WA 98133",
+    "timeSignupStart": "7pm/8pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Mix Music Mic / Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Mix music and comedy open mic. Signups at 7:00 PM, show at 8:00 PM.",
+    "website": "https://darrellstavern.com",
+    "phone": "(206) 542-6688",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.7601,
+    "longitude": -122.3457
   },
   {
     "id": "skylark-3803-delridge-way-sw-seattle-wa-98106",
@@ -216,10 +446,172 @@
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Mostly music",
+    "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "",
-    "webSignup": ""
+    "requirementsInfo": "Mix music and comedy open mic. Signups at 7:30 PM, show starts at 8:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.570004,
+    "longitude": -122.362523
+  },
+  {
+    "id": "peace-of-mind-18411-hwy-99-lynnwood-wa-98037",
+    "name": "Peace of Mind Brewing",
+    "location": "18411 Hwy 99, Lynnwood, WA 98037",
+    "timeSignupStart": "6:30pm/7pm-9+pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Mix Music Mic / Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Mix music and comedy open mic. Signups at 6:30 PM, show starts at 7:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.831601,
+    "longitude": -122.305379
+  },
+  {
+    "id": "molly-maguires-610-nw-65th-st-seattle-wa-98117",
+    "name": "Molly Maguires",
+    "location": "610 NW 65th St, Seattle, WA 98117",
+    "timeSignupStart": "8:30pm/9pm",
+    "monday": "No",
+    "tuesday": "No",
+    "wednesday": "Yes",
+    "thursday": "No",
+    "friday": "No",
+    "saturday": "No",
+    "sunday": "No",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:30 PM, show starts at 9:00 PM.",
+    "webSignup": "N/A",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.676108,
+    "longitude": -122.364076
+  },
+  {
+    "id": "flight-path-1832-s-120th-st-burien-wa-98168",
+    "name": "Flight Path",
+    "location": "1832 S 120th St, Burien, WA 98168",
+    "timeSignupStart": "8pm/8:30pm-10pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:00 PM, show 8:30 PM – 10:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.496024,
+    "longitude": -122.308718
+  },
+  {
+    "id": "remedy-speakeasy-602-4th-st-bremerton-wa-98337",
+    "name": "Remedy Speakeasy",
+    "location": "602 4th St, Bremerton, WA 98337",
+    "timeSignupStart": "8:30pm/9pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:30 PM, show starts at 9:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.565973,
+    "longitude": -122.628384
+  },
+  {
+    "id": "hill-city-tapp-house-5303-rainier-ave-s-seattle-wa-98118",
+    "name": "Hill City Tap House / Open Mic Collective PNW",
+    "location": "5303 Rainier Ave S, Seattle, WA 98118",
+    "timeSignupStart": "online/7pm",
+    "monday": "",
+    "tuesday": "",
+    "wednesday": "REQ. ->",
+    "thursday": "",
+    "friday": "",
+    "saturday": "",
+    "sunday": "",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. 1st and 3rd Wednesday of every month. Online signups.",
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSdOELox5NHhOTNc-1KolAhhHtwXkLcq2-0YvqleKhVRdtfalA/viewform",
+    "recurrenceText": "Every 1st & 3rd Wednesday",
+    "recurrence": {
+      "type": "monthly-multiple-nth-weekdays",
+      "weekday": "Wednesday",
+      "nth": [
+        1,
+        3
+      ]
+    },
+    "latitude": 47.55354,
+    "longitude": -122.280464
+  },
+  {
+    "id": "camp-bar-1310-tacoma-ave-s-tacoma-wa-98402",
+    "name": "Camp Bar",
+    "location": "1310 Tacoma Ave S, Tacoma, WA 98402",
+    "timeSignupStart": "/8pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "REQ. ->",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Stand-up comedy open mic. Last Wednesday of every month. Show at 8:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Last Wednesday of the Month",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Wednesday",
+      "nth": -1
+    },
+    "latitude": 47.250237,
+    "longitude": -122.444162
   },
   {
     "id": "slip-gallery-2301-1st-ave-seattle-wa-98121",
@@ -237,97 +629,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": ""
-  },
-  {
-    "id": "hill-city-tapp-house-5303-rainier-ave-s-seattle-wa-98118",
-    "name": "Hill City tapp house",
-    "location": "5303 Rainier Ave S, Seattle, WA 98118",
-    "timeSignupStart": "/8pm",
-    "monday": "",
-    "tuesday": "",
-    "wednesday": "REQ. ->",
-    "thursday": "",
-    "friday": "",
-    "saturday": "",
-    "sunday": "",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "1st and 3rd Wed.",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSdOELox5NHhOTNc-1KolAhhHtwXkLcq2-0YvqleKhVRdtfalA/viewform"
-  },
-  {
-    "id": "flight-path-1832-s-120th-st-burien-wa-98168",
-    "name": "Flight path",
-    "location": "1832 S 120th St, Burien, WA 98168",
-    "timeSignupStart": "8pm/8:30pm-10pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "Yes",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
-  },
-  {
-    "id": "camp-bar-1310-tacoma-ave-s-tacoma-wa-98402",
-    "name": "Camp bar",
-    "location": "1310 Tacoma Ave S, Tacoma, WA 98402",
-    "timeSignupStart": "/8pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "REQ. ->",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "Last Wed.",
-    "webSignup": ""
-  },
-  {
-    "id": "le-vouyer-404-4th-ave-e-olympia-wa-98501",
-    "name": "Le Vouyer",
-    "location": "404 4th Ave E, Olympia, WA 98501",
-    "timeSignupStart": "8pm/8:15pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "REQ. ->",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "2nd. and Last Wed.",
-    "webSignup": ""
-  },
-  {
-    "id": "remedy-speakeasy-602-4th-st-bremerton-wa-98337",
-    "name": "Remedy speakeasy",
-    "location": "602 4th St, Bremerton, WA 98337",
-    "timeSignupStart": "8:30pm/9pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "Yes",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "",
-    "ageRequirement": "21+",
-    "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.613358,
+    "longitude": -122.34678
   },
   {
     "id": "north-end-5037-n-pearl-st-ruston-wa-98407",
@@ -345,7 +649,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "Last Thurs.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.297298,
+    "longitude": -122.515136
   },
   {
     "id": "footie-on-first-313-1st-ave-s-seattle-wa-98104",
@@ -363,7 +669,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.599605,
+    "longitude": -122.334387
   },
   {
     "id": "beach-cat-brewing-7876-birch-bay-dr-101-blaine-wa-98230",
@@ -381,7 +689,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "1st Fri.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 48.928901,
+    "longitude": -122.74538
   },
   {
     "id": "a1-hop-shop-144th-14401-greenwood-ave-n-seattle-wa-98133",
@@ -399,7 +709,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "1st Fri.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.733335,
+    "longitude": -122.355986
   },
   {
     "id": "rickshaw-322-n-105th-st-seattle-wa-98133",
@@ -417,7 +729,9 @@
     "openMicType": "comedy",
     "ageRequirement": "",
     "requirementsInfo": "1st Sun. (Sun Sign up on spot)",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.705273,
+    "longitude": -122.354452
   },
   {
     "id": "inner-visions-4548-university-way-ne-seattle-wa-98105",
@@ -435,7 +749,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "all ages",
     "requirementsInfo": "1st Fri.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.662703,
+    "longitude": -122.312932
   },
   {
     "id": "post-pike-georgetown-5701-airport-wy-s-seattle-wa-98108",
@@ -453,7 +769,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "signups close Thursday night",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSegZaxAmiMBUhiyCw84q6vasm58gBh5_FxrokO20Wj9_tqSeA/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAb21jcAQhsl5leHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAae3Na4hNc4K3JGv90oJz6X_YxaX3Zfa9SYULZc2aNI09jhm3dkkgSHtYXDdcA_aem_BuSihF8eA_3MqQqVz-4SBQ"
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSegZaxAmiMBUhiyCw84q6vasm58gBh5_FxrokO20Wj9_tqSeA/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAb21jcAQhsl5leHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAae3Na4hNc4K3JGv90oJz6X_YxaX3Zfa9SYULZc2aNI09jhm3dkkgSHtYXDdcA_aem_BuSihF8eA_3MqQqVz-4SBQ",
+    "latitude": 47.551192,
+    "longitude": -122.319023
   },
   {
     "id": "locust-cider-3207-57th-st-ct-gig-harbor-wa-98335",
@@ -471,7 +789,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "",
     "requirementsInfo": "2nd Fri.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.310352,
+    "longitude": -122.585209
   },
   {
     "id": "tarasco-1452-nw-70th-st-seattle-wa-98117",
@@ -488,8 +808,10 @@
     "priceForTime": "Free",
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSfGId1vxT4Hn88vufd15lpNs7biki4uoUpK8XsxBU7o6lcR0A/viewform"
+    "requirementsInfo": "Comedy, music, spoken word, etc.",
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSfGId1vxT4Hn88vufd15lpNs7biki4uoUpK8XsxBU7o6lcR0A/viewform",
+    "latitude": 47.679649,
+    "longitude": -122.374907
   },
   {
     "id": "sandwhich-starr-705-n-1st-st-tacoma-wa-98403",
@@ -507,7 +829,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "",
     "requirementsInfo": "Last Sun.",
-    "webSignup": "https://www.instagram.com/starrpowercomedy?igsh=Mjd0ZmlmdjM0OWpq"
+    "webSignup": "https://www.instagram.com/starrpowercomedy?igsh=Mjd0ZmlmdjM0OWpq",
+    "latitude": 47.263477,
+    "longitude": -122.449506
   },
   {
     "id": "st-andrews-pub-7406-aurora-ave-n-seattle-wa-98103",
@@ -525,43 +849,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "Last Sun.",
-    "webSignup": ""
-  },
-  {
-    "id": "crave-80-s-arcade-8628-36th-ave-ne-suite-100-marysville-wa-98270",
-    "name": "Crave 80's Arcade",
-    "location": "8628 36th Ave NE Suite #100, Marysville, WA 98270",
-    "timeSignupStart": "6:30pm/7pm",
-    "monday": "no",
-    "tuesday": "REQ. ->",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "21+",
-    "requirementsInfo": "1st, 3rd Tue.",
-    "webSignup": ""
-  },
-  {
-    "id": "comedy-nest-2322-2nd-ave-seattle-wa-98121",
-    "name": "Comedy Nest",
-    "location": "2322 2nd Ave, Seattle, WA 98121",
-    "timeSignupStart": "(see REQ.->)/7pm",
-    "monday": "no",
-    "tuesday": "Yes",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "21+",
-    "requirementsInfo": "Sun. open signups 12pm-4pm",
-    "webSignup": "https://www.therendezvous.rocks/calendar/category/comedy/"
+    "webSignup": "",
+    "latitude": 47.683172,
+    "longitude": -122.344276
   },
   {
     "id": "naked-brunch-2322-2nd-ave-seattle-wa-98121",
@@ -579,43 +869,10 @@
     "openMicType": "Improv Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "Happy hour specials",
-    "webSignup": ""
-  },
-  {
-    "id": "karate-church-519-e-maple-st-bellingham-wa-98225",
-    "name": "Karate Church",
-    "location": "519 E Maple St Bellingham, WA 98225",
-    "timeSignupStart": "6:30pm/7pm",
-    "monday": "no",
-    "tuesday": "REQ. ->",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "2nd, 4th Tue.",
-    "webSignup": ""
-  },
-  {
-    "id": "draft-choice-32201-kent-black-diamond-rd-se-auburn-wa-98092",
-    "name": "Draft choice",
-    "location": "32201 Kent Black Diamond Rd SE , Auburn, WA 98092",
-    "timeSignupStart": "/7pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "REQ. ->",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "21+",
-    "requirementsInfo": "Last Wed.",
-    "webSignup": ""
+    "webSignup": "",
+    "contact": "https://www.instagram.com/riverdog556/",
+    "latitude": 47.622546,
+    "longitude": -122.320704
   },
   {
     "id": "nacho-problems-1425-railroad-ave-bellingham-wa-98225",
@@ -633,7 +890,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "2nd, 4th Thurs.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 48.75045,
+    "longitude": -122.476268
   },
   {
     "id": "three-magnets-600-franklin-st-se-ste-105-olympia-wa-98501",
@@ -651,7 +910,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "1st, 3rd Sat.",
-    "webSignup": "https://linktr.ee/openmiccollectivepnw?fbclid=PAAabdH21h8IxZty7UZMxOZ5D7SF1-mSEH3IpI-sVchRouTX4oJy-IUPhgV88"
+    "webSignup": "https://linktr.ee/openmiccollectivepnw?fbclid=PAAabdH21h8IxZty7UZMxOZ5D7SF1-mSEH3IpI-sVchRouTX4oJy-IUPhgV88",
+    "latitude": 47.043115,
+    "longitude": -122.898564
   },
   {
     "id": "la-santa-18205-des-moines-memorial-dr-seatac-wa-98148",
@@ -669,133 +930,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "all ages",
     "requirementsInfo": "3rd Sat.",
-    "webSignup": ""
-  },
-  {
-    "id": "green-lady-3044-pacific-ave-se-suite-a-olympia-wa-98501",
-    "name": "Green Lady",
-    "location": "3044 Pacific Ave SE suite a, Olympia, WA 98501",
-    "timeSignupStart": "7:40pm/8pm",
-    "monday": "REQ->",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "2nd Monday",
-    "webSignup": ""
-  },
-  {
-    "id": "vermillion-1508-11th-ave-seattle-wa",
-    "name": "Vermillion",
-    "location": "1508 11th AVE Seattle, WA",
-    "timeSignupStart": "/9pm",
-    "monday": "REQ->",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "Anything is allowed",
-    "ageRequirement": "21+",
-    "requirementsInfo": "mask strongly encouraged",
-    "webSignup": ""
-  },
-  {
-    "id": "substation-seattle-645-nw-45th-st-seattle-wa-98107",
-    "name": "Substation Seattle",
-    "location": "645 NW 45th St, Seattle, WA 98107",
-    "timeSignupStart": "7:30pm/8pm",
-    "monday": "REQ->",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "21+",
-    "requirementsInfo": "22nd May",
-    "webSignup": ""
-  },
-  {
-    "id": "mckay-s-taphouse-1118-e-maple-st-bellingham-wa-98225",
-    "name": "McKay's Taphouse",
-    "location": "1118 E Maple St, Bellingham, WA 98225",
-    "timeSignupStart": "7pm/7:30pm",
-    "monday": "no",
-    "tuesday": "REQ->",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "2nd Tuesday",
-    "webSignup": ""
-  },
-  {
-    "id": "vessel-taphouse-15615-pacific-hwy-lynnwood-wa-98087",
-    "name": "Vessel Taphouse",
-    "location": "15615 Pacific Hwy, Lynnwood, WA 98087",
-    "timeSignupStart": "7pm/7:30pm",
-    "monday": "no",
-    "tuesday": "REQ->",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "",
-    "ageRequirement": "21+",
-    "requirementsInfo": "2nd, 4th Tuesday",
-    "webSignup": ""
-  },
-  {
-    "id": "8201-launge-8201-pacific-ave-tacoma-wa-98408",
-    "name": "8201 launge",
-    "location": "8201 Pacific Ave, Tacoma, WA 98408",
-    "timeSignupStart": "/7:30pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "REQ->",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "1st, 3rd Wednesdays",
-    "webSignup": ""
-  },
-  {
-    "id": "ssc-alki-cofe-6000-16th-ave-sw-seattle-wa-98106",
-    "name": "SSC Alki Cofe",
-    "location": "6000 16th Ave SW, Seattle, WA 98106",
-    "timeSignupStart": "/3pm-6pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "REQ->",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only comedy",
-    "ageRequirement": "all ages",
-    "requirementsInfo": "04/12/23, 05/17/23",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.441146,
+    "longitude": -122.326537
   },
   {
     "id": "looking-glass-coffee-801-1st-st-201-snohomish-wa-98290",
@@ -813,7 +950,9 @@
     "openMicType": "",
     "ageRequirement": "13+",
     "requirementsInfo": "2nd, 4th Thu.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.911064,
+    "longitude": -122.09296
   },
   {
     "id": "waterland-arcade-22306-marine-view-dr-s-des-moines-wa-98198",
@@ -831,7 +970,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "all ages",
     "requirementsInfo": "2nd, 4th Thu. ($10 cover fee for bucket list)",
-    "webSignup": "https://linktr.ee/openmiccollectivepnw?fbclid=PAAabdH21h8IxZty7UZMxOZ5D7SF1-mSEH3IpI-sVchRouTX4oJy-IUPhgV88"
+    "webSignup": "https://linktr.ee/openmiccollectivepnw?fbclid=PAAabdH21h8IxZty7UZMxOZ5D7SF1-mSEH3IpI-sVchRouTX4oJy-IUPhgV88",
+    "latitude": 47.401601,
+    "longitude": -122.324281
   },
   {
     "id": "entheo-society-209-1-2-1st-ave-s-seattle-wa-98104",
@@ -849,7 +990,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
     "requirementsInfo": "3rd Thursday",
-    "webSignup": "entheosocietywa.org"
+    "webSignup": "entheosocietywa.org",
+    "latitude": 47.603832,
+    "longitude": -122.330062
   },
   {
     "id": "prohibition-bar-cannabis-city-421-s-lander-st-seattle-wa-98134",
@@ -867,7 +1010,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "21+",
     "requirementsInfo": "1st Saturday",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.579579,
+    "longitude": -122.32875
   },
   {
     "id": "poindexter-coffee-4507-brooklyn-ave-ne-nw-seattle-wa-98105",
@@ -885,7 +1030,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.661658,
+    "longitude": -122.31463
   },
   {
     "id": "geeky-comedy-seattle-1313-4th-ave-seattle-wa-98119",
@@ -903,25 +1050,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "all ages",
     "requirementsInfo": "1st Sat., \"geeky\" material focus",
-    "webSignup": ""
-  },
-  {
-    "id": "super-funny-comedy-8402-s-hosmer-st-annex-building-tacoma-wa-98444",
-    "name": "Super funny comedy",
-    "location": "8402 S Hosmer St Annex Building, Tacoma, WA 98444",
-    "timeSignupStart": "7pm/8pm",
-    "monday": "no",
-    "tuesday": "Yes",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "21+",
-    "requirementsInfo": "2 drink minimum, on-site signup available at opening (limited spots)",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.608579,
+    "longitude": -122.335409
   },
   {
     "id": "everett-improv-2610-colby-ave-units-a-b-everett-wa-98201",
@@ -939,7 +1070,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
     "requirementsInfo": "Last Sat.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.982814,
+    "longitude": -122.208798
   },
   {
     "id": "souvannys-tavern-9501-rainier-ave-s-seattle-wa-98118",
@@ -957,7 +1090,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
     "requirementsInfo": "1st and 3rd Thurs.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.520338,
+    "longitude": -122.261662
   },
   {
     "id": "the-whit-s-end-6510-phinney-ave-n-seattle-wa-98103",
@@ -975,7 +1110,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
     "requirementsInfo": "2nd, 4th Thurs.",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.676351,
+    "longitude": -122.354123
   },
   {
     "id": "inside-1313-4th-ave-seattle-wa-98101",
@@ -993,73 +1130,9 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "21+",
     "requirementsInfo": "2nd Sat.",
-    "webSignup": ""
-  },
-  {
-    "id": "cottontail-2219-4th-ave-seattle-wa-98121",
-    "name": "Cottontail",
-    "location": "2219 4th Ave, Seattle, WA 98121",
-    "timeSignupStart": "7pm/7:30pm",
-    "monday": "no",
-    "tuesday": "Yes",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "Anything is allowed",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
-  },
-  {
-    "id": "peace-of-mind-18411-hwy-99-lynnwood-wa-98037",
-    "name": "Peace of mind",
-    "location": "18411 Hwy 99, Lynnwood, WA 98037",
-    "timeSignupStart": "6:30pm/7pm-9+pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "Yes",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "",
-    "ageRequirement": "",
-    "requirementsInfo": "",
-    "webSignup": ""
-  },
-  {
-    "id": "tapped-in-5303-rainier-ave-s-seattle-wa-98118",
-    "name": "Tapped In",
-    "location": "5303 Rainier Ave S, Seattle, WA 98118",
-    "timeSignupStart": "online/7pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "Yes",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "Every 1st and 3rd Wednesday. Host: rotating. Wheelchair accessible.",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSeUHNTMSYbHLL1XyPOKS-wZH-gE-ixeCCu5bRFWYTP15mrDPQ/viewform?fbclid=IwY2xjawOEjcdleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEe6zxZK2BeFdPOkodMbjFSYDSOpQXm9th6DwbI-xBARf3KfuYZCjKV5gx0CIE_aem_t6tR4pAcRu2eWzOBzTl7oA",
-    "recurrence": {
-      "type": "monthly-multiple-nth-weekdays",
-      "weekday": "Wednesday",
-      "nth": [
-        1,
-        3
-      ]
-    },
-    "source": {
-      "name": "Killer Set Productions",
-      "url": "https://www.killersetproductions.com/open-mic-in-pnw#saturday"
-    }
+    "webSignup": "",
+    "latitude": 47.608579,
+    "longitude": -122.335409
   },
   {
     "id": "comedy-open-mic-309-ne-45th-st-seattle-wa-98105",
@@ -1086,7 +1159,9 @@
     "source": {
       "name": "Killer Set Productions",
       "url": "https://www.killersetproductions.com/open-mic-in-pnw#saturday"
-    }
+    },
+    "latitude": 47.661232,
+    "longitude": -122.324629
   },
   {
     "id": "halcyon-8564-greenwood-ave-n-seattle-wa-98103",
@@ -1118,7 +1193,9 @@
     "source": {
       "name": "Killer Set Productions",
       "url": "https://www.killersetproductions.com/open-mic-in-pnw#saturday"
-    }
+    },
+    "latitude": 47.691822,
+    "longitude": -122.355083
   },
   {
     "id": "rickshaw-sunday-open-mic-322-n-105th-st-seattle-wa-98133",
@@ -1143,7 +1220,9 @@
       "type": "monthly-nth-weekday",
       "weekday": "Sunday",
       "nth": 1
-    }
+    },
+    "latitude": 47.705273,
+    "longitude": -122.354452
   },
   {
     "id": "spice-of-life-variety-open-mic-darren-s-speakeasy-renton-wa",
@@ -1167,28 +1246,9 @@
     "recurrence": {
       "type": "weekly",
       "weekday": "Sunday"
-    }
-  },
-  {
-    "id": "tacoma-comedy-6th-3829-6th-ave-tacoma-wa-98406",
-    "name": "Tacoma Comedy Club – 6th & Proctor",
-    "location": "3829 6th Ave, Tacoma, WA 98406",
-    "timeSignupStart": "6:30pm/7:30pm",
-    "monday": "Yes",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "Yes",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "21+",
-    "requirementsInfo": "",
-    "webSignup": "",
-    "listLabel": "6th & Proctor August List",
-    "listUrl": "https://www.barkentertainment.com/copy-of-tcc2-june-list",
-    "listSourceUrl": "https://www.barkentertainment.com/open-mic"
+    },
+    "latitude": 47.4797,
+    "longitude": -122.2031
   },
   {
     "id": "rooney-s-food-and-spirits-17626-140th-ave-ne-woodinville-wa-98072",
@@ -1206,7 +1266,9 @@
     "openMicType": "Only Comedy",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.755732,
+    "longitude": -122.152678
   },
   {
     "id": "ballard-mandarin-5500-8th-ave-nw-seattle-wa-98107",
@@ -1224,7 +1286,9 @@
     "openMicType": "",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": ""
+    "webSignup": "",
+    "latitude": 47.669044,
+    "longitude": -122.365986
   },
   {
     "id": "cheat-day-2322-2nd-ave-seattle-wa-98121",
@@ -1242,6 +1306,8 @@
     "openMicType": "Improv Comedy",
     "ageRequirement": "",
     "requirementsInfo": "",
-    "webSignup": "https://www.facebook.com/events/1404587630068721/1404587643402053/"
+    "webSignup": "https://www.facebook.com/events/1404587630068721/1404587643402053/",
+    "latitude": 47.614624,
+    "longitude": -122.346296
   }
 ]
