@@ -1275,5 +1275,35 @@
     },
     "latitude": 47.86315,
     "longitude": -121.98064
+  },
+{
+    "id": "bulldog-news-4208-university-way-ne-seattle-wa-98105",
+    "name": "Bulldog News Open Mic",
+    "venue": "Bulldog News",
+    "location": "4208 University Way NE, Seattle, WA 98105",
+    "timeSignupStart": "6:00 PM",
+    "signupType": "online",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "Yes",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "VARIETY (MUSIC, COMEDY, ETC.)",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Open mic for poetry, spoken word, music, and performance. Sign up online via event page.",
+    "host": "Bulldog News",
+    "wheelchairAccessible": true,
+    "webSignup": "https://www.bulldognews.com/events#TEnGgi",
+    "contact": "https://www.instagram.com/bulldog_news/",
+    "recurrenceText": "Every Saturday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Saturday"
+    },
+    "latitude": 47.658249,
+    "longitude": -122.313123
   }
 ]
