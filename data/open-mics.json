@@ -582,7 +582,8 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:30 PM, show starts at 9:00 PM.",
+    "requirementsInfo": "Stand-up comedy open mic.",
+    "signupDetails": "Signups in person at 9:00 PM",
     "webSignup": "N/A",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
@@ -607,7 +608,8 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:00 PM, show 8:30 PM – 10:00 PM.",
+    "requirementsInfo": "Stand-up comedy open mic.",
+    "signupDetails": "Signups in person at 8:00 PM",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
@@ -632,7 +634,8 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Stand-up comedy open mic. Signups at 8:30 PM, show starts at 9:00 PM.",
+    "requirementsInfo": "Stand-up comedy open mic.",
+    "signupDetails": "Signups in person at 6:30 PM",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
