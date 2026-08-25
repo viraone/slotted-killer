@@ -261,6 +261,24 @@
     </section>
   </div>
 
+  <div id="signupDetailsModal" class="trip-intel-modal" hidden aria-hidden="true">
+    <div class="trip-intel-modal__backdrop" data-signup-details-close></div>
+    <section class="trip-intel-modal__panel signup-details-modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupDetailsTitle" aria-describedby="signupDetailsText">
+      <header class="trip-intel-modal__header">
+        <div class="min-w-0">
+          <p class="trip-intel-modal__eyebrow"><span id="signupDetailsVenueName">Venue</span><span aria-hidden="true">•</span> Sign-up details</p>
+          <h2 id="signupDetailsTitle" class="sr-only">Sign-up details</h2>
+        </div>
+        <button id="signupDetailsClose" type="button" class="trip-intel-modal__close" aria-label="Close sign-up details">✕ <span>Close</span></button>
+      </header>
+      <div class="trip-intel-modal__content">
+        <section class="trip-intel-section">
+          <p id="signupDetailsText" class="m-0 text-sm font-semibold leading-7 text-zinc-100"></p>
+        </section>
+      </div>
+    </section>
+  </div>
+
   <style type="text/tailwindcss">
     @layer components {
       .field {
@@ -362,6 +380,14 @@
 
     #tripIntelVenueName {
       color: #fafafa;
+    }
+
+    #signupDetailsVenueName {
+      color: #fafafa;
+    }
+
+    .signup-details-modal__panel {
+      width: min(560px, 100%);
     }
 
     .trip-intel-modal__close {
@@ -876,6 +902,10 @@
     const tripIntelGoogleMaps = document.getElementById('tripIntelGoogleMaps');
     const tripIntelAlarm = document.getElementById('tripIntelAlarm');
     const tripIntelFeedback = document.getElementById('tripIntelFeedback');
+    const signupDetailsModal = document.getElementById('signupDetailsModal');
+    const signupDetailsClose = document.getElementById('signupDetailsClose');
+    const signupDetailsVenueName = document.getElementById('signupDetailsVenueName');
+    const signupDetailsText = document.getElementById('signupDetailsText');
     const lineupSection = document.getElementById('lineup-section');
     const lineupRows = document.getElementById('lineupRows');
     const lineupStatus = document.getElementById('lineupStatus');
@@ -1118,6 +1148,8 @@
           : null,
         recurrenceText: String(record.recurrenceText || '').trim(),
         signupType: String(record.signupType || '').trim().toLowerCase(),
+        signupDetails: String(record.signupDetails || record.signupInstructions || '').trim(),
+        showWhenInactive: record.showWhenInactive === true,
         price: String(record.priceForTime || '').trim(),
         micType: String(record.openMicType || '').trim(),
         ageRequirement: String(record.ageRequirement || '').trim(),
@@ -1237,6 +1269,26 @@
         default:
           return false;
       }
+    }
+
+    function getNextOpenMicOccurrenceDate(mic, afterDate) {
+      const start = getSeattleNow(afterDate);
+      for (let daysAhead = 1; daysAhead <= 370; daysAhead += 1) {
+        const candidate = new Date(Date.UTC(
+          start.year,
+          start.month - 1,
+          start.dayOfMonth + daysAhead,
+          20
+        ));
+        if (openMicOccursOnSeattleDate(mic, getSeattleNow(candidate))) return candidate;
+      }
+      return null;
+    }
+
+    function formatUpcomingOpenMicDate(date) {
+      const { year, month, dayOfMonth } = getSeattleNow(date);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+      return `${months[month - 1]} ${dayOfMonth} ${year}`;
     }
 
     function selectOpenMicsForSeattleDate(allMics, date, compareCurrentTime) {
@@ -1493,6 +1545,33 @@
       }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180);
     }
 
+    let signupDetailsReturnFocus = null;
+
+    function openSignupDetailsModal(mic, trigger) {
+      signupDetailsReturnFocus = trigger;
+      signupDetailsVenueName.textContent = mic.venue || mic.name;
+      signupDetailsText.textContent = mic.signupDetails;
+      signupDetailsModal.hidden = false;
+      signupDetailsModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('trip-intel-open');
+      requestAnimationFrame(() => {
+        signupDetailsModal.classList.add('is-open');
+        signupDetailsClose.focus({ preventScroll: true });
+      });
+    }
+
+    function closeSignupDetailsModal() {
+      if (signupDetailsModal.hidden) return;
+      signupDetailsModal.classList.remove('is-open');
+      signupDetailsModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('trip-intel-open');
+      window.setTimeout(() => {
+        signupDetailsModal.hidden = true;
+        signupDetailsReturnFocus?.focus({ preventScroll: true });
+        signupDetailsReturnFocus = null;
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180);
+    }
+
     async function openTripIntelModal(mic, travelEstimate, trigger) {
       if (!travelEstimate || mic.latitude === null || mic.longitude === null) return;
       const requestToken = ++tripIntelRequestToken;
@@ -1630,6 +1709,25 @@
       if (event.target.matches('[data-trip-intel-close]')) closeTripIntelModal();
     });
     tripIntelAlarm.addEventListener('click', downloadTripIntelReminder);
+    signupDetailsClose.addEventListener('click', closeSignupDetailsModal);
+    signupDetailsModal.addEventListener('click', (event) => {
+      if (event.target.matches('[data-signup-details-close]')) closeSignupDetailsModal();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !signupDetailsModal.hidden) closeSignupDetailsModal();
+      if (event.key !== 'Tab' || signupDetailsModal.hidden) return;
+      const focusable = [...signupDetailsModal.querySelectorAll('button:not([disabled]), a[href]')];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !tripIntelModal.hidden) closeTripIntelModal();
       if (event.key !== 'Tab' || tripIntelModal.hidden) return;
@@ -1687,18 +1785,31 @@
       openMicTonightList.replaceChildren(...items);
     }
 
-    function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null) {
+    function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null) {
+      const isLockedPreview = Boolean(upcomingDate);
       const card = document.createElement('article');
       card.id = `open-mic-card-${mic.id}`;
       card.tabIndex = -1;
-      card.className = isNext
+      card.className = isLockedPreview
+        ? 'open-mic-card relative rounded-xl border border-dashed border-zinc-700 bg-zinc-950/35 p-4 opacity-60 grayscale-[35%] shadow-inner shadow-black/30 transition hover:opacity-80'
+        : isNext
         ? 'open-mic-card relative rounded-xl border border-[#00C805] border-l-4 border-l-[#00C805] bg-gradient-to-r from-emerald-950/20 to-zinc-900/50 p-4 shadow-[0_0_20px_rgba(0,200,5,0.15)]'
         : 'open-mic-card rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
 
       const badges = document.createElement('div');
       badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
 
-      if (isNext) {
+      if (isLockedPreview) {
+        const badge = document.createElement('span');
+        badge.className = 'inline-block rounded border border-zinc-600 bg-zinc-900 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-300';
+        badge.textContent = `Next Open Mic ${formatUpcomingOpenMicDate(upcomingDate)}`;
+        badges.append(badge);
+
+        const lockBadge = document.createElement('span');
+        lockBadge.className = 'inline-flex items-center gap-1 rounded border border-zinc-800 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500';
+        lockBadge.textContent = '🔒 Upcoming';
+        badges.append(lockBadge);
+      } else if (isNext) {
         const badge = document.createElement('span');
         badge.className = 'inline-block rounded bg-[#00C805] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-black';
         badge.textContent = 'Next Open Mic';
@@ -1721,7 +1832,7 @@
       name.textContent = mic.name;
 
       const startTime = document.createElement('p');
-      startTime.className = `shrink-0 text-sm font-black ${isNext ? 'text-[#00C805]' : 'text-zinc-200'}`;
+      startTime.className = `shrink-0 text-sm font-black ${isNext && !isLockedPreview ? 'text-[#00C805]' : 'text-zinc-200'}`;
       startTime.textContent = formatMinutesToClock(mic.startMinutes) || 'Time TBD';
       headingRow.append(name, startTime);
       card.append(headingRow);
@@ -1882,7 +1993,7 @@
         card.append(details);
       }
 
-      if (mic.address || mic.website || mic.contact || mic.listUrl || (travelEstimate && isToday)) {
+      if (mic.address || mic.website || mic.signupDetails || mic.contact || mic.listUrl || (travelEstimate && isToday)) {
         const actions = document.createElement('div');
         actions.className = 'mt-3 flex flex-wrap gap-2 border-t border-zinc-800/80 pt-3';
 
@@ -1904,6 +2015,17 @@
           websiteLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
           websiteLink.textContent = mic.signupType === 'online' ? 'Online Signup' : 'Website / Signup';
           actions.append(websiteLink);
+        }
+
+        else if (mic.signupDetails) {
+          const signupDetailsButton = document.createElement('button');
+          signupDetailsButton.type = 'button';
+          signupDetailsButton.setAttribute('aria-haspopup', 'dialog');
+          signupDetailsButton.setAttribute('aria-controls', 'signupDetailsModal');
+          signupDetailsButton.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+          signupDetailsButton.textContent = 'Signup details';
+          signupDetailsButton.addEventListener('click', () => openSignupDetailsModal(mic, signupDetailsButton));
+          actions.append(signupDetailsButton);
         }
 
         if (mic.listUrl) {
@@ -1967,12 +2089,25 @@
           selectedDate.isToday ? now : selectedDate.date,
           selectedDate.isToday
         );
+        const selectedSeattleDate = getSeattleNow(selectedDate.date);
+        const upcomingPreviews = allMics
+          .filter((mic) => (
+            mic.showWhenInactive
+            && String(mic.recurrence?.weekday || '').toLowerCase() === dayName.toLowerCase()
+            && !openMicOccursOnSeattleDate(mic, selectedSeattleDate)
+          ))
+          .map((mic) => ({
+            mic,
+            date: getNextOpenMicOccurrenceDate(mic, selectedDate.date)
+          }))
+          .filter(({ date }) => Boolean(date))
+          .sort((a, b) => a.date - b.date);
         openMicMapDayLabel.textContent = dayName;
 
         // Render sidebar with chronologically sorted order
         renderOpenMicTonightPanel(todays, nextMic, lastMic);
 
-        if (todays.length === 0) {
+        if (todays.length === 0 && upcomingPreviews.length === 0) {
           openMicMapStatus.textContent = selectedDate.isToday
             ? 'No open mics listed for today.'
             : 'No open mics listed for this day.';
@@ -1985,14 +2120,25 @@
           openMicMapStatus.hidden = false;
         }
 
-        // Render cards: only the true next upcoming mic receives the hero border & badge
-        todays.forEach((mic) => {
+        const cardsToRender = [
+          ...todays.map((mic) => ({ mic, upcomingDate: null })),
+          ...upcomingPreviews.map(({ mic, date }) => ({ mic, upcomingDate: date }))
+        ].sort((a, b) => {
+          const timeA = a.mic.startMinutes ?? a.mic.signupMinutes ?? 9999;
+          const timeB = b.mic.startMinutes ?? b.mic.signupMinutes ?? 9999;
+          if (timeA !== timeB) return timeA - timeB;
+          return a.mic.name.localeCompare(b.mic.name);
+        });
+
+        // Keep every card in chronological order, including locked monthly previews.
+        cardsToRender.forEach(({ mic, upcomingDate }) => {
           const isNext = nextMic && mic.id === nextMic.id;
           openMicMapList.append(renderOpenMicCard(
             mic,
             isNext,
             selectedDate.isToday,
-            selectedDate.isToday ? getSeattleNow(now).minutesSinceMidnight : null
+            selectedDate.isToday ? getSeattleNow(now).minutesSinceMidnight : null,
+            upcomingDate
           ));
         });
       } catch (err) {
