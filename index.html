@@ -1796,16 +1796,17 @@
       const badges = document.createElement('div');
       badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
 
-      if (isLockedPreview) {
+if (isLockedPreview) {
         const badge = document.createElement('span');
-        badge.className = 'inline-block rounded border border-zinc-600 bg-zinc-900 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-zinc-300';
+        badge.className = 'inline-block rounded-lg border border-zinc-500 bg-zinc-900 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-zinc-100 shadow-sm';
         badge.textContent = `Next Open Mic ${formatUpcomingOpenMicDate(upcomingDate)}`;
         badges.append(badge);
 
         const lockBadge = document.createElement('span');
-        lockBadge.className = 'inline-flex items-center gap-1 rounded border border-zinc-800 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500';
+        lockBadge.className = 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-black/60 px-3.5 py-2 text-sm font-bold uppercase tracking-wider text-zinc-300 shadow-sm';
         lockBadge.textContent = '🔒 Upcoming';
         badges.append(lockBadge);
+      
       } else if (isNext) {
         const badge = document.createElement('span');
         badge.className = 'inline-block rounded bg-[#00C805] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-black';
