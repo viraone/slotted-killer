@@ -229,7 +229,8 @@
           <div class="trip-intel-metrics">
             <div><span class="trip-intel-metric__label">🚗 Drive</span><strong id="tripIntelDrive">—</strong></div>
             <div><span class="trip-intel-metric__label">🅿️ Parking hunt</span><strong id="tripIntelParkingHunt">Estimating…</strong></div>
-            <div class="trip-intel-metric--total"><span class="trip-intel-metric__label">Total</span><strong id="tripIntelTotal">—</strong></div>
+            <div><span class="trip-intel-metric__label">🚌 Bus / Transit</span><strong id="tripIntelTransit">Estimating…</strong></div>
+            <div class="trip-intel-metric--total"><span class="trip-intel-metric__label">Total Drive</span><strong id="tripIntelTotal">—</strong></div>
           </div>
         </section>
 
@@ -248,9 +249,10 @@
       </div>
 
       <footer class="trip-intel-actions">
+        <a id="tripIntelGoogleMapsTransit" class="trip-intel-action trip-intel-action--transit" href="#" target="_blank" rel="noopener noreferrer">🚌 Bus Routes</a>
         <a id="tripIntelAppleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">🗺️ Apple Maps</a>
         <a id="tripIntelGoogleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">📍 Google Maps</a>
-        <button id="tripIntelAlarm" type="button" class="trip-intel-action trip-intel-action--primary">🔔 Set “Leave Now” Alarm</button>
+        <button id="tripIntelAlarm" type="button" class="trip-intel-action trip-intel-action--primary">🔔 Set Alarm</button>
       </footer>
       <p id="tripIntelFeedback" class="trip-intel-feedback" role="status" aria-live="polite"></p>
     </section>
@@ -437,7 +439,7 @@
 
     .trip-intel-metrics {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -519,7 +521,7 @@
 
     .trip-intel-actions {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
       border-top: 1px solid #27272a;
       padding: 14px;
@@ -558,6 +560,19 @@
     .trip-intel-action--primary:focus-visible {
       background: #4ade80;
       color: #071108;
+    }
+
+    .trip-intel-action--transit {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.12);
+      color: #93c5fd;
+    }
+
+    .trip-intel-action--transit:hover,
+    .trip-intel-action--transit:focus-visible {
+      border-color: #60a5fa;
+      background: rgba(59, 130, 246, 0.25);
+      color: #ffffff;
     }
 
     .trip-intel-feedback {
@@ -648,10 +663,8 @@
       .trip-intel-modal__header { padding: 16px; }
       .trip-intel-modal__close span { display: none; }
       .trip-intel-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .trip-intel-metric--total { grid-column: 1 / -1; }
       .trip-intel-access-list > div { grid-template-columns: 1fr; gap: 3px; }
       .trip-intel-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .trip-intel-action--primary { grid-column: 1 / -1; }
       .trip-intel-trigger { border-radius: 16px; }
       .trip-intel-pill-cta { margin-left: 0; }
     }
@@ -890,11 +903,13 @@
     const tripIntelDrive = document.getElementById('tripIntelDrive');
     const tripIntelParkingHunt = document.getElementById('tripIntelParkingHunt');
     const tripIntelTotal = document.getElementById('tripIntelTotal');
+    const tripIntelTransit = document.getElementById('tripIntelTransit');
     const tripIntelWeather = document.getElementById('tripIntelWeather');
     const tripIntelParking = document.getElementById('tripIntelParking');
     const tripIntelSignupLocation = document.getElementById('tripIntelSignupLocation');
     const tripIntelAppleMaps = document.getElementById('tripIntelAppleMaps');
     const tripIntelGoogleMaps = document.getElementById('tripIntelGoogleMaps');
+    const tripIntelGoogleMapsTransit = document.getElementById('tripIntelGoogleMapsTransit');
     const tripIntelAlarm = document.getElementById('tripIntelAlarm');
     const tripIntelFeedback = document.getElementById('tripIntelFeedback');
     const signupDetailsModal = document.getElementById('signupDetailsModal');
@@ -1050,6 +1065,7 @@
     const EARTH_RADIUS_MILES = 3958.8;
     const ESTIMATED_ROAD_DISTANCE_MULTIPLIER = 1.25;
     const ESTIMATED_METRO_SPEED_MPH = 25;
+    const ESTIMATED_TRANSIT_SPEED_MPH = 12;
     const OPEN_MIC_ARRIVAL_BUFFER_MINUTES = 15;
     const OPEN_MIC_COORDINATE_OVERRIDES = {
       'spice-of-life-variety-open-mic-darren-s-speakeasy-renton-wa': {
@@ -1359,6 +1375,10 @@
       return Math.max(0, Math.round((estimatedRoadMiles / ESTIMATED_METRO_SPEED_MPH) * 60));
     }
 
+    function estimateOpenMicTransitMinutes(straightLineMiles) {
+      return Math.max(10, Math.round((Number(straightLineMiles) * 1.3 / 12) * 60 + 8));
+    }
+
     function getOpenMicTravelEstimate(mic, userLocation = userOpenMicLocation) {
       if (!userLocation || mic.latitude === null || mic.longitude === null) return null;
       const distanceMiles = calculateHaversineMiles(
@@ -1369,7 +1389,8 @@
       );
       return {
         distanceMiles,
-        driveMinutes: estimateOpenMicDriveMinutes(distanceMiles)
+        driveMinutes: estimateOpenMicDriveMinutes(distanceMiles),
+        transitMinutes: estimateOpenMicTransitMinutes(distanceMiles)
       };
     }
 
@@ -1590,6 +1611,11 @@
       tripIntelFeedback.textContent = '';
       tripIntelAppleMaps.href = `https://maps.apple.com/?daddr=${encodeURIComponent(mic.address)}`;
       tripIntelGoogleMaps.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mic.address)}`;
+      const originParam = userOpenMicLocation ? `&origin=${userOpenMicLocation.latitude},${userOpenMicLocation.longitude}` : '';
+      tripIntelGoogleMapsTransit.href = `https://www.google.com/maps/dir/?api=1${originParam}&destination=${encodeURIComponent(mic.address)}&travelmode=transit`;
+      if (tripIntelTransit) {
+        tripIntelTransit.textContent = travelEstimate.transitMinutes ? `~${travelEstimate.transitMinutes} min` : '—';
+      }
       updateTripIntelTotals(travelEstimate.driveMinutes, defaultParkingHunt);
 
       tripIntelModal.hidden = false;
