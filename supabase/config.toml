@@ -1,0 +1,4 @@
+project_id = "slotted-killer"
+
+[functions.sync-verified-signup]
+verify_jwt = false

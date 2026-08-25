@@ -1,0 +1,16 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^python3 -m http\\.server 8000$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd /Users/viradeth/Desktop/slotted-killer && python3 - <<'EOF'\nimport zipfile, re\nimport xml\\.etree\\.ElementTree as ET\n\nz = zipfile\\.ZipFile\\(\"West Coast Open Mics\\.xlsx\"\\)\n\nns = \\{'m': 'http://schemas\\.openxmlformats\\.org/spreadsheetml/2006/main'\\}\n\nwb = ET\\.fromstring\\(z\\.read\\('xl/workbook\\.xml'\\)\\)\nsheets = wb\\.find\\('m:sheets', ns\\)\nprint\\(\"=== SHEETS ===\"\\)\nfor s in sheets:\n    print\\(s\\.attrib\\)\n\nprint\\(\\)\nprint\\(\"=== TABLES ===\"\\)\nfor i in range\\(1,5\\):\n    try:\n        t = ET\\.fromstring\\(z\\.read\\(f'xl/tables/table\\{i\\}\\.xml'\\)\\)\n        print\\(f\"table\\{i\\}:\", t\\.attrib\\.get\\('name'\\), t\\.attrib\\.get\\('displayName'\\), t\\.attrib\\.get\\('ref'\\)\\)\n        cols = t\\.find\\('m:tableColumns', ns\\)\n        if cols is not None:\n            names = \\[c\\.attrib\\.get\\('name'\\) for c in cols\\]\n            print\\(\"  columns:\", names\\)\n    except KeyError:\n        print\\(f\"table\\{i\\}: not found\"\\)\nEOF$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd /Users/viradeth/Desktop/slotted-killer && python3 - <<'PYEOF'\nimport zipfile\nimport xml\\.etree\\.ElementTree as ET\n\nz = zipfile\\.ZipFile\\(\"West Coast Open Mics\\.xlsx\"\\)\nrels = ET\\.fromstring\\(z\\.read\\('xl/_rels/workbook\\.xml\\.rels'\\)\\)\nrns = \\{'r':'http://schemas\\.openxmlformats\\.org/package/2006/relationships'\\}\nmapping = \\{\\}\nfor rel in rels:\n    mapping\\[rel\\.attrib\\['Id'\\]\\] = rel\\.attrib\\['Target'\\]\nfor k,v in mapping\\.items\\(\\):\n    print\\(k, v\\)\nPYEOF$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

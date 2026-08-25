@@ -1,0 +1,11 @@
+# Supabase local state and environment files
+.supabase/
+supabase/.temp/
+supabase/.env*
+!supabase/.env.example
+
+# Never commit Google credentials or private keys
+*service-account*.json
+*service_account*.json
+*.pem
+*.key
