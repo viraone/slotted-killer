@@ -1248,15 +1248,23 @@
     function openMicOccursOnSeattleDate(mic, seattleNow) {
       const recurrence = mic.recurrence;
       if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
-      if (String(recurrence.weekday || '').toLowerCase() !== seattleNow.dayName.toLowerCase()) return false;
+
+      const recurrenceWeekdayMatches = String(recurrence.weekday || '').toLowerCase()
+        === seattleNow.dayName.toLowerCase();
+
+      // Weekly mics can run on more than one day. Honor every enabled day flag,
+      // while retaining recurrence.weekday as a fallback for older records.
+      if (recurrence.type === 'weekly') {
+        return Boolean(mic.days[seattleNow.dayName]) || recurrenceWeekdayMatches;
+      }
+
+      if (!recurrenceWeekdayMatches) return false;
 
       const occurrence = getWeekdayOccurrenceInMonth(seattleNow.dayOfMonth);
       const daysInMonth = new Date(Date.UTC(seattleNow.year, seattleNow.month, 0)).getUTCDate();
       const isLastWeekdayOfMonth = seattleNow.dayOfMonth + 7 > daysInMonth;
 
       switch (recurrence.type) {
-        case 'weekly':
-          return true;
         case 'monthly-nth-weekday':
           return occurrence === Number(recurrence.nth);
         case 'monthly-multiple-nth-weekdays':
@@ -1394,14 +1402,8 @@
         return '6:00 PM - Midnight';
       }
       const startLabel = formatMinutesToClock(mic.startMinutes);
-      const signupLabel = formatMinutesToClock(mic.signupMinutes);
-      if (startLabel && mic.signupType === 'online') return `Start ${startLabel} · Online Signup`;
-      if (startLabel && signupLabel && mic.startMinutes !== mic.signupMinutes) {
-        return `Start ${startLabel} · Signup ${signupLabel}`;
-      }
       if (startLabel) return `Start ${startLabel}`;
-      if (signupLabel) return `Signup ${signupLabel}`;
-      return mic.rawTime || 'Time not listed';
+      return 'Time not listed';
     }
 
     function buildOpenMicListButtonLabel(listLabel) {
@@ -2017,7 +2019,7 @@
           actions.append(websiteLink);
         }
 
-        else if (mic.signupDetails) {
+        if (mic.signupDetails) {
           const signupDetailsButton = document.createElement('button');
           signupDetailsButton.type = 'button';
           signupDetailsButton.setAttribute('aria-haspopup', 'dialog');

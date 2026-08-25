@@ -263,6 +263,7 @@
     "openMicType": "Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic. Sign up online via Bark Entertainment or at the door at 6:30 PM.",
+    "signupDetails": "Online sign up https://www.barkentertainment.com/open-mic",
     "webSignup": "https://www.barkentertainment.com/open-mic",
     "recurrenceText": "Every Tuesday & Wednesday",
     "recurrence": {
@@ -501,7 +502,8 @@
     "priceForTime": "Free",
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Mix music and comedy open mic. Signups at 7:00 PM, show at 8:00 PM.",
+    "requirementsInfo": "Mix music mic and comedy is allowed.",
+    "signupDetails": "Sign up in person at 7:00PM",
     "website": "https://darrellstavern.com",
     "phone": "(206) 542-6688",
     "webSignup": "",
@@ -528,7 +530,8 @@
     "priceForTime": "Free",
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Mix music and comedy open mic. Signups at 7:30 PM, show starts at 8:00 PM.",
+    "requirementsInfo": "Mix music and comedy open mic.",
+    "signupDetails": "Sign up in person at 7:00PM",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
@@ -553,7 +556,8 @@
     "priceForTime": "Free",
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Mix music and comedy open mic. Signups at 6:30 PM, show starts at 7:00 PM.",
+    "requirementsInfo": "Mix music and comedy open mic. Show starts at 7:00 PM.",
+    "signupDetails": "Sign up in person at 6:30PM",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
