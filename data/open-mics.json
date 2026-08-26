@@ -298,7 +298,7 @@
     "latitude": 47.180225,
     "longitude": -122.463749
   },
-  {
+{
     "id": "otter-on-the-rocks-4210-sw-admiral-way-seattle-wa-98116",
     "name": "Otter on the Rocks",
     "location": "4210 SW Admiral Way, Seattle, WA 98116",
@@ -318,6 +318,12 @@
     "webSignup": "",
     "contact": "https://www.instagram.com/otterontherocks/",
     "recurrenceText": "Every Other Tuesday",
+    "showWhenInactive": true,
+    "recurrence": {
+      "type": "biweekly",
+      "weekday": "Tuesday",
+      "anchorDate": "2026-09-01"
+    },
     "latitude": 47.5813,
     "longitude": -122.386
   },

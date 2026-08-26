@@ -251,8 +251,23 @@
           <div class="trip-intel-metrics">
             <div><span class="trip-intel-metric__label">🚗 Drive</span><strong id="tripIntelDrive">—</strong></div>
             <div><span class="trip-intel-metric__label">🅿️ Parking hunt</span><strong id="tripIntelParkingHunt">Estimating…</strong></div>
-            <div><span class="trip-intel-metric__label">🚌 Bus / Transit</span><strong id="tripIntelTransit">Estimating…</strong></div>
+            <button type="button" id="tripIntelTransitCardBtn" class="flex flex-col text-left transition hover:border-blue-500/60 hover:bg-blue-950/20 group">
+              <span class="trip-intel-metric__label flex items-center justify-between w-full">
+                <span>🚌 Bus / Transit</span>
+                <span class="text-[9px] text-blue-400 group-hover:underline">View live ↓</span>
+              </span>
+              <strong id="tripIntelTransit" class="text-blue-300">Estimating…</strong>
+            </button>
             <div class="trip-intel-metric--total"><span class="trip-intel-metric__label">Total Drive</span><strong id="tripIntelTotal">—</strong></div>
+          </div>
+        </section>
+        <section id="tripIntelTransitSection" class="trip-intel-section border-blue-900/40 bg-zinc-900/90" aria-labelledby="tripIntelTransitTitle">
+          <div class="flex items-center justify-between mb-3">
+            <h3 id="tripIntelTransitTitle" class="trip-intel-section__title text-blue-400 m-0">🚌 Live Puget Sound Transit Intel</h3>
+            <span id="tripIntelTransitBadge" class="rounded-full bg-blue-950 px-2 py-0.5 text-[10px] font-bold text-blue-400 border border-blue-800/60">King County Metro / Sound Transit</span>
+          </div>
+          <div id="tripIntelTransitContent" class="space-y-2 text-sm">
+            <p class="trip-intel-loading">Locating nearest bus lines &amp; live departures…</p>
           </div>
         </section>
 
@@ -1205,6 +1220,7 @@
         recurrence: record.recurrence && typeof record.recurrence === 'object' && !Array.isArray(record.recurrence)
           ? record.recurrence
           : null,
+        anchorDate: String(record.anchorDate || record.recurrence?.anchorDate || record.recurrence?.startDate || '').trim(),
         recurrenceText: String(record.recurrenceText || '').trim(),
         signupType: String(record.signupType || '').trim().toLowerCase(),
         signupDetails: String(record.signupDetails || record.signupInstructions || '').trim(),
@@ -1227,6 +1243,8 @@
         longitude: Number.isFinite(longitude) && longitude >= -180 && longitude <= 180 ? longitude : null
       };
     }
+
+    
 
     let openMicDataPromise = null;
     function loadOpenMicData() {
@@ -1333,6 +1351,19 @@
           return isLastWeekdayOfMonth;
         case 'monthly-first-and-last-weekday':
           return occurrence === 1 || isLastWeekdayOfMonth;
+        case 'biweekly':
+        case 'bi-weekly':
+        case 'every-other-week': {
+          const anchorStr = recurrence.anchorDate || recurrence.startDate || mic.anchorDate;
+          if (!anchorStr) return false;
+          const parts = anchorStr.split('-').map(Number);
+          if (parts.length < 3 || parts.some(isNaN)) return false;
+          const anchorUtc = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+          const currentUtc = Date.UTC(seattleNow.year, seattleNow.month - 1, seattleNow.dayOfMonth);
+          const diffDays = Math.round((currentUtc - anchorUtc) / (1000 * 60 * 60 * 24));
+          const diffWeeks = Math.round(diffDays / 7);
+          return (diffWeeks % 2 === 0);
+        }
         default:
           return false;
       }
@@ -1500,7 +1531,71 @@
       if ([95, 96, 99].includes(numericCode)) return { emoji: '⛈️', label: 'Thunderstorms' };
       return { emoji: '🌡️', label: 'Conditions unavailable' };
     }
-
+const OBA_API_KEY = 'TEST'; // OneBusAway public Puget Sound API key
+const OBA_BASE_URL = 'https://api.pugetsound.onebusaway.org/api/where';
+async function fetchOneBusAwayTransit(originLat, originLon, destLat, destLon) {
+try {
+// Step 1: Find stops within 450m of the user's origin
+const stopsUrl = `${OBA_BASE_URL}/stops-for-location.json?key=${OBA_API_KEY}&lat=${originLat}&lon=${originLon}&radius=450`;
+const stopsRes = await fetch(stopsUrl, { signal: AbortSignal.timeout(6000) });
+if (!stopsRes.ok) throw new Error('Failed to find nearby stops');
+const stopsData = await stopsRes.json();
+const stops = stopsData?.data?.list || [];
+if (!stops.length) {
+return { error: 'No Puget Sound bus stops found within a 5-minute walk.' };
+}
+// Sort stops by distance to user
+stops.sort((a, b) => {
+const distA = calculateHaversineMiles(originLat, originLon, a.lat, a.lon);
+const distB = calculateHaversineMiles(originLat, originLon, b.lat, b.lon);
+return distA - distB;
+});
+// Pick top 2 closest stops to inspect departures
+const primaryStops = stops.slice(0, 2);
+const arrivalPromises = primaryStops.map(async (stop) => {
+const arrivalsUrl = `${OBA_BASE_URL}/arrivals-and-departures-for-stop/${encodeURIComponent(stop.id)}.json?key=${OBA_API_KEY}&minutesBefore=0&minutesAfter=60`;
+const arrRes = await fetch(arrivalsUrl, { signal: AbortSignal.timeout(6000) });
+if (!arrRes.ok) return { stop, arrivals: [] };
+const arrData = await arrRes.json();
+return {
+stop,
+arrivals: arrData?.data?.entry?.arrivalsAndDepartures || []
+};
+});
+const stopArrivalsList = await Promise.all(arrivalPromises);
+const nowMs = Date.now();
+// Flatten upcoming departures and calculate walk and arrival times
+const upcomingRoutes = [];
+stopArrivalsList.forEach(({ stop, arrivals }) => {
+const stopDistMiles = calculateHaversineMiles(originLat, originLon, stop.lat, stop.lon);
+const walkMinutes = Math.max(1, Math.round((stopDistMiles / 3.0) * 60)); // ~3mph walking speed
+arrivals.forEach((arr) => {
+const targetTime = arr.predictedArrivalTime || arr.scheduledArrivalTime || arr.predictedDepartureTime || arr.scheduledDepartureTime;
+const minutesUntil = Math.round((targetTime - nowMs) / 60000);
+if (minutesUntil >= 0) {
+upcomingRoutes.push({
+routeShortName: arr.routeShortName || arr.routeId,
+headsign: arr.tripHeadsign || stop.direction || 'Inbound',
+minutesUntil,
+walkMinutes,
+stopName: stop.name,
+isRealTime: Boolean(arr.predictedArrivalTime || arr.predictedDepartureTime)
+});
+}
+});
+});
+// Sort by soonest departure
+upcomingRoutes.sort((a, b) => a.minutesUntil - b.minutesUntil);
+return {
+stopsFound: stops.length,
+nearestStop: primaryStops[0]?.name,
+routes: upcomingRoutes.slice(0, 4) // Show top 4 soonest
+};
+} catch (err) {
+console.warn('OneBusAway transit lookup error:', err);
+return { error: 'Live Puget Sound transit info currently unavailable.' };
+}
+}
     async function fetchTripIntelWeather(mic) {
       const params = new URLSearchParams({
         latitude: String(mic.latitude),
@@ -1638,7 +1733,7 @@
       }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180);
     }
 
-    async function openTripIntelModal(mic, travelEstimate, trigger) {
+async function openTripIntelModal(mic, travelEstimate, trigger) {
       if (!travelEstimate || mic.latitude === null || mic.longitude === null) return;
       const requestToken = ++tripIntelRequestToken;
       const venueName = mic.venue || mic.name;
@@ -1666,6 +1761,11 @@
       }
       updateTripIntelTotals(travelEstimate.driveMinutes, defaultParkingHunt);
 
+      const transitContent = document.getElementById('tripIntelTransitContent');
+      if (transitContent) {
+        transitContent.innerHTML = '<p class="trip-intel-loading">Locating nearest bus lines &amp; live departures…</p>';
+      }
+
       tripIntelModal.hidden = false;
       tripIntelModal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('trip-intel-open');
@@ -1674,9 +1774,12 @@
         tripIntelClose.focus({ preventScroll: true });
       });
 
-      const [weatherResult, parkingResult] = await Promise.allSettled([
+      const userLoc = userOpenMicLocation || { latitude: 47.6062, longitude: -122.3321 };
+
+      const [weatherResult, parkingResult, transitResult] = await Promise.allSettled([
         getCachedTripIntelWeather(mic),
-        fetchTripIntelParking(mic)
+        fetchTripIntelParking(mic),
+        fetchOneBusAwayTransit(userLoc.latitude, userLoc.longitude, mic.latitude, mic.longitude)
       ]);
       if (requestToken !== tripIntelRequestToken || tripIntelModal.hidden) return;
 
@@ -1703,6 +1806,40 @@
       } else {
         tripIntelParking.textContent = TRIP_INTEL_PARKING_FALLBACK;
         updateTripIntelTotals(travelEstimate.driveMinutes, defaultParkingHunt);
+      }
+
+      if (transitResult.status === 'fulfilled' && transitContent) {
+        const transitData = transitResult.value;
+        if (transitData.error || !transitData.routes?.length) {
+          transitContent.innerHTML = `
+            <div class="rounded-lg bg-zinc-950 p-3 border border-zinc-800 text-zinc-400">
+              <p class="font-medium text-xs">${transitData.error || 'No active bus departures found right now.'}</p>
+              <p class="text-[11px] text-zinc-500 mt-1">Use the "Bus Routes" button below for full schedule &amp; transfer steps.</p>
+            </div>
+          `;
+        } else {
+          const routeCards = transitData.routes.map((r) => `
+            <div class="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-950/80 px-3 py-2.5">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="rounded bg-blue-600 px-2 py-0.5 text-xs font-black text-white">Route ${r.routeShortName}</span>
+                  <span class="truncate text-xs font-bold text-zinc-200">${r.headsign}</span>
+                  ${r.isRealTime ? '<span class="text-[10px] text-emerald-400 font-bold">● Live</span>' : ''}
+                </div>
+                <p class="mt-1 text-[11px] text-zinc-400">Board at <span class="text-zinc-200 font-medium">${r.stopName}</span> (🚶 ~${r.walkMinutes} min walk)</p>
+              </div>
+              <div class="text-right pl-3">
+                <span class="text-sm font-black ${r.minutesUntil <= 5 ? 'text-amber-400' : 'text-blue-300'}">in ${r.minutesUntil} min</span>
+              </div>
+            </div>
+          `).join('');
+
+          transitContent.innerHTML = `
+            <div class="space-y-2">
+              ${routeCards}
+            </div>
+          `;
+        }
       }
     }
 
@@ -1774,7 +1911,17 @@
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       tripIntelFeedback.textContent = `Calendar reminder created for ${formatMinutesToClock(signupMinutes - totalMinutes)}.`;
     }
-
+const tripIntelTransitCardBtn = document.getElementById('tripIntelTransitCardBtn');
+    if (tripIntelTransitCardBtn) {
+      tripIntelTransitCardBtn.addEventListener('click', () => {
+        const transitSection = document.getElementById('tripIntelTransitSection');
+        if (transitSection) {
+          transitSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          transitSection.classList.add('ring-2', 'ring-blue-500');
+          setTimeout(() => transitSection.classList.remove('ring-2', 'ring-blue-500'), 1500);
+        }
+      });
+    }
     tripIntelClose.addEventListener('click', closeTripIntelModal);
     tripIntelModal.addEventListener('click', (event) => {
       if (event.target.matches('[data-trip-intel-close]')) closeTripIntelModal();
