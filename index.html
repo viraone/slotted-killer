@@ -1544,18 +1544,44 @@
       return { emoji: '🌡️', label: 'Conditions unavailable' };
     }
 
-    const OBA_API_KEY = 'TEST';
-    // Using CORS proxy wrapper so mobile browsers (iOS/Android) aren't blocked
-    const OBA_PROXY_WRAPPER = (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+const OBA_API_KEY = 'TEST';
     const OBA_BASE_URL = 'https://api.pugetsound.onebusaway.org/api/where';
+
+    // JSONP request helper: Bypasses CORS completely without any 3rd party proxy
+    function fetchOneBusAwayJsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'oba_cb_' + Math.random().toString(36).substring(2, 10);
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error('OneBusAway request timed out'));
+        }, 7000);
+
+        function cleanup() {
+          if (script.parentNode) script.remove();
+          delete window[callbackName];
+          clearTimeout(timeout);
+        }
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('OneBusAway script load error'));
+        };
+        document.head.appendChild(script);
+      });
+    }
 
     async function fetchOneBusAwayTransit(originLat, originLon, destLat, destLon) {
       try {
-        // Step 1: Find stops within 800m of user location (widened for suburban & urban Seattle/King County)
-        const rawStopsUrl = `${OBA_BASE_URL}/stops-for-location.json?key=${OBA_API_KEY}&lat=${originLat}&lon=${originLon}&radius=800`;
-        const stopsRes = await fetch(OBA_PROXY_WRAPPER(rawStopsUrl), { signal: AbortSignal.timeout(7000) });
-        if (!stopsRes.ok) throw new Error(`Stops request failed: HTTP ${stopsRes.status}`);
-        const stopsData = await stopsRes.json();
+        // Step 1: Find stops within 800m of origin
+        const stopsUrl = `${OBA_BASE_URL}/stops-for-location.json?key=${OBA_API_KEY}&lat=${originLat}&lon=${originLon}&radius=800`;
+        const stopsData = await fetchOneBusAwayJsonp(stopsUrl);
         const stops = stopsData?.data?.list || [];
 
         if (!stops.length) {
@@ -1573,10 +1599,8 @@
         const primaryStops = stops.slice(0, 3);
         const arrivalPromises = primaryStops.map(async (stop) => {
           try {
-            const rawArrivalsUrl = `${OBA_BASE_URL}/arrivals-and-departures-for-stop/${encodeURIComponent(stop.id)}.json?key=${OBA_API_KEY}&minutesBefore=0&minutesAfter=75`;
-            const arrRes = await fetch(OBA_PROXY_WRAPPER(rawArrivalsUrl), { signal: AbortSignal.timeout(6000) });
-            if (!arrRes.ok) return { stop, arrivals: [] };
-            const arrData = await arrRes.json();
+            const arrivalsUrl = `${OBA_BASE_URL}/arrivals-and-departures-for-stop/${encodeURIComponent(stop.id)}.json?key=${OBA_API_KEY}&minutesBefore=0&minutesAfter=75`;
+            const arrData = await fetchOneBusAwayJsonp(arrivalsUrl);
             return {
               stop,
               arrivals: arrData?.data?.entry?.arrivalsAndDepartures || []
