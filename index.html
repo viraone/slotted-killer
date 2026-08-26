@@ -1646,13 +1646,14 @@ const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / 
 // Sort by soonest departure
         upcomingRoutes.sort((a, b) => a.minutesUntil - b.minutesUntil);
 
-        // Deduplicate: Keep only the soonest departure for each unique Route number
+        // Deduplicate: Keep ONLY 1 card per distinct Route number
         const uniqueRoutes = [];
         const seenRoutes = new Set();
 
         for (const item of upcomingRoutes) {
-          if (!seenRoutes.has(item.routeShortName)) {
-            seenRoutes.add(item.routeShortName);
+          const routeKey = String(item.routeShortName || item.routeId || '').trim().toLowerCase();
+          if (routeKey && !seenRoutes.has(routeKey)) {
+            seenRoutes.add(routeKey);
             uniqueRoutes.push(item);
           }
         }
@@ -1660,7 +1661,7 @@ const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / 
         const result = {
           stopsFound: stops.length,
           nearestStop: primaryStops[0]?.name,
-          routes: uniqueRoutes.slice(0, 4) // Shows up to 4 unique route lines (e.g., Route 9, Route 49)
+          routes: uniqueRoutes // Returns only distinct routes (e.g. Route 9 and Route 49)
         };
 
         transitArrivalsCache.set(cacheKey, { timestamp: nowMs, data: result });
