@@ -2169,7 +2169,7 @@ if (isLockedPreview) {
           <span class="trip-intel-pill-separator" aria-hidden="true">•</span>
           <span data-trip-pill-weather class="whitespace-nowrap font-semibold text-zinc-200" aria-label="Loading live weather">🌡️ --°F</span>
           <span class="hidden text-zinc-600 sm:inline" aria-hidden="true">|</span>
-          <span class="trip-intel-pill-cta">⚡ Trip Intel <span class="trip-intel-pill-arrow" aria-hidden="true">↗</span></span>
+          <span class="trip-intel-pill-cta">🚗 Directions & Transit <span class="trip-intel-pill-arrow" aria-hidden="true">↗</span></span>
         `;
         travelBadge.addEventListener('click', () => openTripIntelModal(mic, travelEstimate, travelBadge));
         card.append(travelBadge);
@@ -2246,16 +2246,6 @@ if (isLockedPreview) {
       if (mic.address || mic.website || mic.signupDetails || mic.contact || mic.listUrl || (travelEstimate && isToday)) {
         const actions = document.createElement('div');
         actions.className = 'mt-3 flex flex-wrap gap-2 border-t border-zinc-800/80 pt-3';
-
-        if (mic.address) {
-          const mapLink = document.createElement('a');
-          mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mic.address)}`;
-          mapLink.target = '_blank';
-          mapLink.rel = 'noopener noreferrer';
-          mapLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
-          mapLink.textContent = 'Directions';
-          actions.append(mapLink);
-        }
 
         if (mic.website) {
           const websiteLink = document.createElement('a');
