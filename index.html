@@ -109,6 +109,28 @@
         </section>
       </section><!-- home-section -->
 
+      <section id="verification-section" hidden aria-labelledby="verificationTitle" class="min-w-0 py-8 sm:py-16">
+        <div id="verificationLoadingCard" class="mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
+          <div class="mx-auto mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+          <h1 id="verificationTitle" class="text-xl font-bold text-zinc-100">Verifying your email...</h1>
+          <p class="mt-2 text-xs text-zinc-400">Please wait while we confirm your submission.</p>
+        </div>
+
+        <div id="verificationSuccessCard" class="hidden mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
+          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-950/80 text-3xl text-emerald-400">✓</div>
+          <h1 class="text-2xl font-black text-white">Email Verified!</h1>
+          <p class="mt-3 text-sm leading-6 text-zinc-300">Your request has been successfully received.</p>
+          <p class="mt-2 text-sm leading-6 text-zinc-400">We'll notify you if you're selected for this Friday's lineup.</p>
+          <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500">You may now close this tab.</p>
+        </div>
+
+        <div id="verificationErrorCard" class="hidden mx-auto max-w-md rounded-2xl border border-red-900/60 bg-red-950/20 p-8 text-center shadow-2xl">
+          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">✕</div>
+          <h1 class="text-xl font-bold text-red-300">Verification Failed</h1>
+          <p id="verificationErrorMessage" class="mt-3 text-sm leading-6 text-zinc-300">We couldn't verify this email. The link may have expired or already been used.</p>
+        </div>
+      </section><!-- verification-section -->
+
       <section id="openmicmap-section" hidden aria-labelledby="openmicmap-title" class="min-w-0">
         <header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
           <div>
@@ -876,6 +898,15 @@
       .lineup-row__set,
       .lineup-row__time { white-space: normal; }
     }
+
+    body.verification-mode aside {
+      display: none !important;
+    }
+
+    body.verification-mode main {
+      margin-left: 0 !important;
+      padding-bottom: 0 !important;
+    }
   </style>
 
   <script>
@@ -928,12 +959,13 @@
     const successCard = document.getElementById('successCard');
     const instagramInfoButton = document.getElementById('instagramInfoButton');
     const instagramInfoTooltip = document.getElementById('instagramInfoTooltip');
-    const verificationRedirectDetected = (() => {
-      const queryParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-      return ['code', 'error', 'error_code'].some((key) => queryParams.has(key))
-        || ['access_token', 'error', 'error_code'].some((key) => hashParams.has(key));
-    })();
+    const verificationSection = document.getElementById('verification-section');
+    const verificationLoadingCard = document.getElementById('verificationLoadingCard');
+    const verificationSuccessCard = document.getElementById('verificationSuccessCard');
+    const verificationErrorCard = document.getElementById('verificationErrorCard');
+    const verificationErrorMessage = document.getElementById('verificationErrorMessage');
+    const verificationTabRequested =
+      new URLSearchParams(window.location.search).get('verify') === '1';
     const signupRequested =
       new URLSearchParams(window.location.search).get('signup') === '1';
     const lineupRequested =
@@ -943,8 +975,19 @@
     let verificationInProgress = false;
     let verificationHandled = false;
     let lineupRefreshTimer = null;
-    let verificationViewRequired = verificationRedirectDetected
-      || Boolean(localStorage.getItem('pending_signup_id'));
+
+    function enterStandaloneVerificationMode() {
+      document.body.classList.add('verification-mode');
+      homeSection.hidden = true;
+      openMicMapSection.hidden = true;
+      lineupSection.hidden = true;
+      verificationSection.hidden = false;
+      stopLineupRefreshTimer();
+    }
+
+    if (verificationTabRequested) {
+      enterStandaloneVerificationMode();
+    }
 
     function stopLineupRefreshTimer() {
       if (lineupRefreshTimer === null) return;
@@ -953,9 +996,9 @@
     }
 
     function startLineupRefreshTimer() {
-      if (lineupRefreshTimer !== null || verificationViewRequired || lineupSection.hidden) return;
+      if (lineupRefreshTimer !== null || verificationTabRequested || lineupSection.hidden) return;
       lineupRefreshTimer = window.setInterval(() => {
-        if (verificationViewRequired || lineupSection.hidden) {
+        if (verificationTabRequested || lineupSection.hidden) {
           stopLineupRefreshTimer();
           return;
         }
@@ -964,28 +1007,33 @@
     }
 
     function showHomeView() {
+      if (verificationTabRequested) return;
       stopLineupRefreshTimer();
       homeSection.hidden = false;
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
+      verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
     }
 
     function showOpenMicMapView() {
+      if (verificationTabRequested) return;
       stopLineupRefreshTimer();
       homeSection.hidden = true;
       openMicMapSection.hidden = false;
       lineupSection.hidden = true;
+      verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.add('openmicmap-mode');
     }
 
     function showLineupView() {
-      if (verificationViewRequired) return;
+      if (verificationTabRequested) return;
       homeSection.hidden = true;
       openMicMapSection.hidden = true;
       lineupSection.hidden = false;
+      verificationSection.hidden = true;
       document.body.classList.add('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
     }
@@ -2197,9 +2245,9 @@ if (isLockedPreview) {
     }
 
     function prioritizeVerificationView() {
-      verificationViewRequired = true;
-      stopLineupRefreshTimer();
-      showHomeView();
+      if (verificationTabRequested) {
+        enterStandaloneVerificationMode();
+      }
     }
 
     function formatSetLength(value) {
@@ -2246,7 +2294,7 @@ if (isLockedPreview) {
     }
 
     async function loadLineup() {
-      if (verificationViewRequired) return;
+      if (verificationTabRequested) return;
 
       showLineupView();
       lineupRows.replaceChildren();
@@ -2259,7 +2307,7 @@ if (isLockedPreview) {
         .select('name, set_length, start_time, sort_order')
         .order('sort_order', { ascending: true });
 
-      if (verificationViewRequired) return;
+      if (verificationTabRequested) return;
 
       if (error) {
         console.error('Unable to load lineup:', error);
@@ -2385,17 +2433,16 @@ if (isLockedPreview) {
         return;
       }
 
-      localStorage.removeItem('pending_signup_email');
-      localStorage.setItem('pending_signup_id', String(insertedSignup.id));
+      const redirectUrl = new URL(window.location.origin + window.location.pathname);
+      redirectUrl.searchParams.set('verify', '1');
 
       const { error: authError } = await supabaseClient.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: window.location.href }
+        options: { emailRedirectTo: redirectUrl.toString() }
       });
 
       if (authError) {
         console.error('Unable to send magic link:', authError);
-        localStorage.removeItem('pending_signup_id');
         showFormMessage(`Your submission was saved, but the verification email could not be sent: ${authError.message}`, true);
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
@@ -2410,35 +2457,25 @@ if (isLockedPreview) {
     });
 
     async function verifyPendingSignup(session) {
+      if (!verificationTabRequested) return;
       const userEmail = session?.user?.email;
       if (!userEmail || !supabaseClient || verificationInProgress || verificationHandled) return;
-      prioritizeVerificationView();
 
-      const pendingSignupId = localStorage.getItem('pending_signup_id');
-      console.log('Verification session available:', Boolean(userEmail));
-      console.log('Pending signup ID present:', Boolean(pendingSignupId));
-
-      if (!pendingSignupId || !/^[1-9]\d*$/.test(pendingSignupId)) {
-        console.error('Unable to claim sign-up: pending signup ID is missing or invalid.');
-        signupCard.classList.remove('hidden');
-        verificationSentCard.classList.add('hidden');
-        showFormMessage("We couldn't match this verification to your signup request. Please try submitting again.", true);
-        return;
-      }
-
+      enterStandaloneVerificationMode();
       verificationInProgress = true;
 
       try {
         const { data: claimSucceeded, error: claimError } = await supabaseClient.rpc(
-          'claim_pending_signup',
-          { p_signup_id: pendingSignupId }
+          'claim_pending_signup'
         );
 
         if (claimError) {
           console.error('Unable to claim verified sign-up:', claimError);
-          signupCard.classList.remove('hidden');
-          verificationSentCard.classList.add('hidden');
-          showFormMessage('We could not complete your verification. Please try submitting again.', true);
+          verificationLoadingCard.classList.add('hidden');
+          verificationErrorCard.classList.remove('hidden');
+          if (claimError.message) {
+            verificationErrorMessage.textContent = claimError.message;
+          }
           return;
         }
 
@@ -2446,19 +2483,20 @@ if (isLockedPreview) {
 
         if (claimSucceeded !== true) {
           console.error('Unable to claim verified sign-up: RPC returned false.');
-          signupCard.classList.remove('hidden');
-          verificationSentCard.classList.add('hidden');
-          showFormMessage("We couldn't match this verification to your signup request. Please try submitting again.", true);
+          verificationLoadingCard.classList.add('hidden');
+          verificationErrorCard.classList.remove('hidden');
           return;
         }
 
         verificationHandled = true;
-        localStorage.removeItem('pending_signup_id');
-        localStorage.removeItem('pending_signup_email');
-        signupCard.classList.add('hidden');
-        verificationSentCard.classList.add('hidden');
-        successCard.classList.remove('hidden');
+        verificationLoadingCard.classList.add('hidden');
+        verificationErrorCard.classList.add('hidden');
+        verificationSuccessCard.classList.remove('hidden');
         await supabaseClient.auth.signOut();
+      } catch (err) {
+        console.error('Unexpected error during verification:', err);
+        verificationLoadingCard.classList.add('hidden');
+        verificationErrorCard.classList.remove('hidden');
       } finally {
         verificationInProgress = false;
       }
@@ -2467,20 +2505,27 @@ if (isLockedPreview) {
     async function initializeApp() {
       const configured = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
       if (!configured) {
-        showFormMessage('Add your Supabase URL and anon key in index.html before submitting.', true);
+        if (verificationTabRequested) {
+          enterStandaloneVerificationMode();
+          verificationLoadingCard.classList.add('hidden');
+          verificationErrorCard.classList.remove('hidden');
+          verificationErrorMessage.textContent = 'Supabase configuration is missing.';
+        } else {
+          showFormMessage('Add your Supabase URL and anon key in index.html before submitting.', true);
+        }
         return;
       }
 
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (!verificationTabRequested) return;
+
         const hasVerificationSession = Boolean(session?.user?.email);
         console.log('Auth event:', event);
         console.log('Verification session available:', hasVerificationSession);
-        console.log('Pending signup ID present:', Boolean(localStorage.getItem('pending_signup_id')));
 
         if (event === 'SIGNED_IN' && hasVerificationSession) {
-          prioritizeVerificationView();
           window.setTimeout(() => verifyPendingSignup(session), 0);
         }
       });
@@ -2488,27 +2533,30 @@ if (isLockedPreview) {
       const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
       const hasVerificationSession = Boolean(session?.user?.email);
       console.log('Startup verification session available:', hasVerificationSession);
-      console.log('Pending signup ID present:', Boolean(localStorage.getItem('pending_signup_id')));
 
       if (sessionError) {
         console.error('Unable to read the authentication session:', sessionError);
       }
 
-      if (hasVerificationSession) {
-        prioritizeVerificationView();
-        await verifyPendingSignup(session);
-      } else if (verificationRedirectDetected && localStorage.getItem('pending_signup_id')) {
-        prioritizeVerificationView();
-        console.error('Verification redirect detected without a usable authenticated session.');
-        signupCard.classList.remove('hidden');
-        verificationSentCard.classList.add('hidden');
-        showFormMessage("We couldn't complete your email verification. Please try the verification link again.", true);
+      if (verificationTabRequested) {
+        enterStandaloneVerificationMode();
+        if (hasVerificationSession) {
+          await verifyPendingSignup(session);
+        } else {
+          window.setTimeout(() => {
+            if (!verificationHandled && !verificationInProgress) {
+              verificationLoadingCard.classList.add('hidden');
+              verificationErrorCard.classList.remove('hidden');
+            }
+          }, 5000);
+        }
+        return;
       }
 
       const scheduledMode = getSeattleScheduleMode();
       const lineupModeRequested = lineupRequested && !signupRequested;
 
-      if (!verificationViewRequired && (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup'))) {
+      if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
         await loadLineup();
         startLineupRefreshTimer();
       } else {
