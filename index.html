@@ -1544,18 +1544,22 @@
       return { emoji: '🌡️', label: 'Conditions unavailable' };
     }
 
-const OBA_API_KEY = 'TEST';
+const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / Puget Sound Developer Portal for higher limits
     const OBA_BASE_URL = 'https://api.pugetsound.onebusaway.org/api/where';
+    const transitArrivalsCache = new Map();
 
-    // JSONP request helper: Bypasses CORS completely without any 3rd party proxy
+    // JSONP request helper with proper cleanup and error handling
     function fetchOneBusAwayJsonp(url) {
       return new Promise((resolve, reject) => {
         const callbackName = 'oba_cb_' + Math.random().toString(36).substring(2, 10);
         const script = document.createElement('script');
+        let timedOut = false;
+
         const timeout = setTimeout(() => {
+          timedOut = true;
           cleanup();
           reject(new Error('OneBusAway request timed out'));
-        }, 7000);
+        }, 6000);
 
         function cleanup() {
           if (script.parentNode) script.remove();
@@ -1564,6 +1568,7 @@ const OBA_API_KEY = 'TEST';
         }
 
         window[callbackName] = (data) => {
+          if (timedOut) return;
           cleanup();
           resolve(data);
         };
@@ -1571,21 +1576,32 @@ const OBA_API_KEY = 'TEST';
         script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
         script.onerror = () => {
           cleanup();
-          reject(new Error('OneBusAway script load error'));
+          reject(new Error('OneBusAway API rate-limited or unavailable'));
         };
         document.head.appendChild(script);
       });
     }
 
     async function fetchOneBusAwayTransit(originLat, originLon, destLat, destLon) {
+      const cacheKey = `${originLat.toFixed(3)},${originLon.toFixed(3)}`;
+      const nowMs = Date.now();
+
+      // Return cached results if fetched within the last 60 seconds
+      if (transitArrivalsCache.has(cacheKey)) {
+        const cached = transitArrivalsCache.get(cacheKey);
+        if (nowMs - cached.timestamp < 60000) {
+          return cached.data;
+        }
+      }
+
       try {
-        // Step 1: Find stops within 800m of origin
+        // Step 1: Find stops within 800m
         const stopsUrl = `${OBA_BASE_URL}/stops-for-location.json?key=${OBA_API_KEY}&lat=${originLat}&lon=${originLon}&radius=800`;
         const stopsData = await fetchOneBusAwayJsonp(stopsUrl);
         const stops = stopsData?.data?.list || [];
 
         if (!stops.length) {
-          return { error: 'No active Puget Sound transit stops within a 10-minute walk of your location.' };
+          return { error: 'No Puget Sound transit stops within a 10-minute walk.' };
         }
 
         // Sort stops by distance to user
@@ -1595,58 +1611,63 @@ const OBA_API_KEY = 'TEST';
           return distA - distB;
         });
 
-        // Pick top 3 closest stops to inspect departures
-        const primaryStops = stops.slice(0, 3);
-        const arrivalPromises = primaryStops.map(async (stop) => {
+        // Query only the top 1-2 nearest stops to avoid 429 rate limiting
+        const primaryStops = stops.slice(0, 2);
+        const upcomingRoutes = [];
+
+        for (const stop of primaryStops) {
           try {
             const arrivalsUrl = `${OBA_BASE_URL}/arrivals-and-departures-for-stop/${encodeURIComponent(stop.id)}.json?key=${OBA_API_KEY}&minutesBefore=0&minutesAfter=75`;
             const arrData = await fetchOneBusAwayJsonp(arrivalsUrl);
-            return {
-              stop,
-              arrivals: arrData?.data?.entry?.arrivalsAndDepartures || []
-            };
-          } catch {
-            return { stop, arrivals: [] };
+            const arrivals = arrData?.data?.entry?.arrivalsAndDepartures || [];
+            const stopDistMiles = calculateHaversineMiles(originLat, originLon, stop.lat, stop.lon);
+            const walkMinutes = Math.max(1, Math.round((stopDistMiles / 3.0) * 60));
+
+            arrivals.forEach((arr) => {
+              const targetTime = arr.predictedArrivalTime || arr.scheduledArrivalTime || arr.predictedDepartureTime || arr.scheduledDepartureTime;
+              const minutesUntil = Math.round((targetTime - nowMs) / 60000);
+
+              if (minutesUntil >= 0 && minutesUntil <= 90) {
+                upcomingRoutes.push({
+                  routeShortName: arr.routeShortName || arr.routeId,
+                  headsign: arr.tripHeadsign || stop.direction || 'Inbound',
+                  minutesUntil,
+                  walkMinutes,
+                  stopName: stop.name,
+                  isRealTime: Boolean(arr.predictedArrivalTime || arr.predictedDepartureTime)
+                });
+              }
+            });
+          } catch (e) {
+            // Continue if one stop fails
           }
-        });
+        }
 
-        const stopArrivalsList = await Promise.all(arrivalPromises);
-        const nowMs = Date.now();
-
-        // Flatten upcoming departures and calculate walk and arrival times
-        const upcomingRoutes = [];
-        stopArrivalsList.forEach(({ stop, arrivals }) => {
-          const stopDistMiles = calculateHaversineMiles(originLat, originLon, stop.lat, stop.lon);
-          const walkMinutes = Math.max(1, Math.round((stopDistMiles / 3.0) * 60)); // ~3mph walking speed
-
-          arrivals.forEach((arr) => {
-            const targetTime = arr.predictedArrivalTime || arr.scheduledArrivalTime || arr.predictedDepartureTime || arr.scheduledDepartureTime;
-            const minutesUntil = Math.round((targetTime - nowMs) / 60000);
-
-            if (minutesUntil >= 0 && minutesUntil <= 90) {
-              upcomingRoutes.push({
-                routeShortName: arr.routeShortName || arr.routeId,
-                headsign: arr.tripHeadsign || stop.direction || 'Inbound',
-                minutesUntil,
-                walkMinutes,
-                stopName: stop.name,
-                isRealTime: Boolean(arr.predictedArrivalTime || arr.predictedDepartureTime)
-              });
-            }
-          });
-        });
-
-        // Sort by soonest departure
+// Sort by soonest departure
         upcomingRoutes.sort((a, b) => a.minutesUntil - b.minutesUntil);
 
-        return {
+        // Deduplicate: Keep only the soonest departure for each unique Route number
+        const uniqueRoutes = [];
+        const seenRoutes = new Set();
+
+        for (const item of upcomingRoutes) {
+          if (!seenRoutes.has(item.routeShortName)) {
+            seenRoutes.add(item.routeShortName);
+            uniqueRoutes.push(item);
+          }
+        }
+
+        const result = {
           stopsFound: stops.length,
           nearestStop: primaryStops[0]?.name,
-          routes: upcomingRoutes.slice(0, 5) // Show top 5 soonest
+          routes: uniqueRoutes.slice(0, 4) // Shows up to 4 unique route lines (e.g., Route 9, Route 49)
         };
+
+        transitArrivalsCache.set(cacheKey, { timestamp: nowMs, data: result });
+        return result;
       } catch (err) {
-        console.warn('OneBusAway transit lookup error:', err);
-        return { error: 'Live Puget Sound transit info currently unavailable.' };
+        console.warn('OneBusAway transit lookup:', err.message);
+        return { error: 'Live transit feed temporarily busy. Tap "Bus Routes" below for full schedule.' };
       }
     }
 
