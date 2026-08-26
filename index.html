@@ -132,28 +132,22 @@
       </section><!-- verification-section -->
 
       <section id="openmicmap-section" hidden aria-labelledby="openmicmap-title" class="min-w-0">
-        <header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
-          <div>
-            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Open Mics Today</p>
-            <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h1 id="openmicmap-title" class="text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl"><span id="openMicMapDayLabel">Today</span></h1>
-              <p id="openMicMapDateLabel" class="text-xs font-semibold uppercase tracking-wide text-zinc-500"></p>
+<header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Open Mics Today</p>
+              <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h1 id="openmicmap-title" class="text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl"><span id="openMicMapDayLabel">Today</span></h1>
+                <p id="openMicMapDateLabel" class="text-xs font-semibold uppercase tracking-wide text-zinc-500"></p>
+              </div>
             </div>
-          </div>
 
-          <div class="mt-4 overflow-x-auto pb-1">
-            <div id="openMicDaySelector" class="flex min-w-max gap-1.5" role="group" aria-label="Choose a day">
-              <button type="button" data-open-mic-day="Sunday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sun</button>
-              <button type="button" data-open-mic-day="Monday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Mon</button>
-              <button type="button" data-open-mic-day="Tuesday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Tue</button>
-              <button type="button" data-open-mic-day="Wednesday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Wed</button>
-              <button type="button" data-open-mic-day="Thursday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Thu</button>
-              <button type="button" data-open-mic-day="Friday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Fri</button>
-              <button type="button" data-open-mic-day="Saturday" class="open-mic-day-button min-w-12 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sat</button>
+            <!-- Location Button placed cleanly -->
+            <div>
               <button
                 id="openMicLocationButton"
                 type="button"
-                class="group inline-flex items-center gap-1.5 rounded-full bg-[#00C805] px-3.5 py-1.5 text-xs font-black text-black shadow-[0_0_20px_rgba(0,200,5,0.45)] transition-all duration-200 hover:scale-105 hover:bg-[#00E006] hover:shadow-[0_0_28px_rgba(0,200,5,0.7)] active:scale-95 focus:outline-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                class="group w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#00C805] px-4 py-2 text-xs font-black text-black shadow-[0_0_20px_rgba(0,200,5,0.45)] transition-all duration-200 hover:scale-105 hover:bg-[#00E006] hover:shadow-[0_0_28px_rgba(0,200,5,0.7)] active:scale-95 focus:outline-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <svg class="h-3.5 w-3.5 text-black stroke-[2.5] transition group-hover:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -166,12 +160,30 @@
               </button>
             </div>
           </div>
+
+          <!-- Day Buttons in a 7-column grid that fits all phone screens perfectly -->
+          <div class="mt-4">
+            <div id="openMicDaySelector" class="grid grid-cols-7 gap-1 sm:gap-2" role="group" aria-label="Choose a day">
+              <button type="button" data-open-mic-day="Sunday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sun</button>
+              <button type="button" data-open-mic-day="Monday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Mon</button>
+              <button type="button" data-open-mic-day="Tuesday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Tue</button>
+              <button type="button" data-open-mic-day="Wednesday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Wed</button>
+              <button type="button" data-open-mic-day="Thursday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Thu</button>
+              <button type="button" data-open-mic-day="Friday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Fri</button>
+              <button type="button" data-open-mic-day="Saturday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sat</button>
+            </div>
+          </div>
           
-          <div class="mt-2 flex items-center justify-between">
-            <p id="openMicLocationStatus" class="text-xs text-zinc-500" role="status" aria-live="polite">Turn on location to see distance and drive times.</p>
+          <!-- Clean status footer with zero text overlap -->
+          <div class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-t border-zinc-800/60 pt-2.5">
+            <p id="openMicLocationStatus" class="text-xs text-zinc-400 leading-normal" role="status" aria-live="polite">Turn on location to see distance and drive times.</p>
             <p class="text-[10px] text-zinc-600">Distance coordinates © <a class="underline hover:text-zinc-400" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></p>
           </div>
         </header>
+
+    
+  
+
 
         <div class="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
           <div class="min-w-0">
