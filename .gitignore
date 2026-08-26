@@ -9,3 +9,11 @@ supabase/.env*
 *service_account*.json
 *.pem
 *.key
+RESULTS.png
+RESULTS2.png
+has_active_verified_signup(text).png
+reset_weekly_sign_ups().png
+reset_weekly_signups().png
+sql01.png
+sql2.png
+sql4.png
