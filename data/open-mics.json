@@ -1374,5 +1374,37 @@
     },
     "latitude": 47.61462,
     "longitude": -122.31825
+  },
+  {
+    "id": "soul-food-coffeehouse-15748-redmond-way-redmond-wa-98052",
+    "name": "Soul Food Coffeehouse Open Mic",
+    "venue": "Soul Food Coffeehouse",
+    "location": "15748 Redmond Way, Redmond, WA 98052",
+    "timeSignupStart": "5pm/5pm",
+    "signupType": "in-person",
+    "signupDetails": "In-person sign-ups only at 5:00 PM.",
+    "showWhenInactive": true,
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "Yes",
+    "sunday": "no",
+    "priceForTime": "$5",
+    "openMicType": "Music",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Come support local musicians! First Saturday of each month. $5 cover.",
+    "contact": "(425) 881-5309",
+    "website": "",
+    "webSignup": "",
+    "recurrenceText": "Every 1st Saturday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Saturday",
+      "nth": 1
+    },
+    "latitude": 47.6742557,
+    "longitude": -122.1301778
   }
 ]
