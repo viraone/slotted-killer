@@ -1518,10 +1518,14 @@
 
       switch (recurrence.type) {
         case 'monthly-nth-weekday':
-          return occurrence === Number(recurrence.nth);
+          return Number(recurrence.nth) === -1
+            ? isLastWeekdayOfMonth
+            : occurrence === Number(recurrence.nth);
         case 'monthly-multiple-nth-weekdays':
           return Array.isArray(recurrence.nth)
-            && recurrence.nth.some((nth) => occurrence === Number(nth));
+            && recurrence.nth.some((nth) => (
+              Number(nth) === -1 ? isLastWeekdayOfMonth : occurrence === Number(nth)
+            ));
         case 'monthly-last-weekday':
           return isLastWeekdayOfMonth;
         case 'monthly-first-and-last-weekday':
