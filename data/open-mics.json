@@ -298,7 +298,7 @@
     "latitude": 47.180225,
     "longitude": -122.463749
   },
-{
+  {
     "id": "otter-on-the-rocks-4210-sw-admiral-way-seattle-wa-98116",
     "name": "Otter on the Rocks",
     "location": "4210 SW Admiral Way, Seattle, WA 98116",
@@ -1165,7 +1165,7 @@
     "latitude": 47.661232,
     "longitude": -122.324629
   },
-{
+  {
     "id": "halcyon-8564-greenwood-ave-n-seattle-wa-98103",
     "name": "Halcyon",
     "location": "8564 Greenwood Ave N, Seattle, WA 98103",
@@ -1282,7 +1282,7 @@
     "latitude": 47.86315,
     "longitude": -121.98064
   },
-{
+  {
     "id": "bulldog-news-4208-university-way-ne-seattle-wa-98105",
     "name": "Bulldog News Open Mic",
     "venue": "Bulldog News",
@@ -1311,5 +1311,68 @@
     },
     "latitude": 47.658249,
     "longitude": -122.313123
+  },
+  {
+    "id": "the-fishbowl-424-2nd-ave-w-ste-330-seattle-wa-98119",
+    "name": "The Fishbowl Open Mic",
+    "venue": "The Fishbowl",
+    "location": "424 2nd Ave W, Suite #330, Seattle, WA 98119",
+    "timeSignupStart": "6pm/6:30pm",
+    "signupType": "in-person",
+    "signupDetails": "Doors open at 6:00 PM, show starts at 6:30 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "All talents welcome at this QTBIPOC-centered community art space in Lower Queen Anne. Gallery will be open.",
+    "host": "The Power Puff Poets (Heather & Eddie!)",
+    "contact": "https://www.instagram.com/thefishbowlseattle/",
+    "website": "https://thefishbowlseattle.com",
+    "webSignup": "",
+    "recurrenceText": "Every Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday"
+    },
+    "latitude": 47.62256,
+    "longitude": -122.35821
+  },
+  {
+    "id": "eleven-eleven-1512-11th-ave-seattle-wa-98122",
+    "name": "Eleven Eleven Open Mic",
+    "venue": "Eleven Eleven",
+    "location": "1512 11th Ave, Seattle, WA 98122",
+    "timeSignupStart": "6:30pm/7pm-11pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person at 6:30 PM. Show runs from 7:00 PM to 11:00 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "REQ. ->",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Open mic night featuring local Seattle talent. Curated and hosted by Jones Boiy. Last Thursday of every month.",
+    "host": "Jones Boiy (@__jonesboiy__)",
+    "contact": "https://www.instagram.com/elevenelevenseattle/",
+    "website": "https://www.elevenelevenseattle.com",
+    "webSignup": "",
+    "recurrenceText": "Last Thursday of the Month",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Thursday",
+      "nth": -1
+    },
+    "latitude": 47.61462,
+    "longitude": -122.31825
   }
 ]

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,30 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="min-h-screen bg-zinc-950 pb-20 text-zinc-100 antialiased selection:bg-red-600 selection:text-white md:pb-0">
-  <aside class="fixed inset-x-0 bottom-0 z-50 flex h-16 items-center justify-around border-t border-zinc-800 bg-zinc-950/95 px-3 backdrop-blur md:inset-y-0 md:left-0 md:right-auto md:h-screen md:w-64 md:flex-col md:items-stretch md:justify-start md:border-r md:border-t-0 md:px-4 md:py-6">
-    <nav class="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-2" aria-label="Primary navigation">
-      <button type="button" data-view="home" class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-red-400 transition hover:bg-zinc-900 md:flex-none md:justify-start" aria-current="page">
-        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z"/></svg>
+
+<body
+  class="min-h-screen bg-zinc-950 pb-20 text-zinc-100 antialiased selection:bg-red-600 selection:text-white md:pb-0">
+  <aside
+    class="fixed inset-x-0 bottom-0 z-50 flex h-16 items-center justify-around border-t border-zinc-800 bg-zinc-950/95 px-3 backdrop-blur md:inset-y-0 md:left-0 md:right-auto md:h-screen md:w-64 md:flex-col md:items-stretch md:justify-start md:border-r md:border-t-0 md:px-4 md:py-6">
+    <nav class="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-2"
+      aria-label="Primary navigation">
+      <button type="button" data-view="home"
+        class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-red-400 transition hover:bg-zinc-900 md:flex-none md:justify-start"
+        aria-current="page">
+        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z" />
+        </svg>
         <span class="text-xs font-semibold md:text-base">Home</span>
       </button>
-      <button type="button" data-view="openmicmap" class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:justify-start">
-        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"/></svg>
+      <button type="button" data-view="openmicmap"
+        class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:justify-start">
+        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+        </svg>
         <span class="text-xs font-semibold md:text-base">Open Mic Map</span>
       </button>
     </nav>
@@ -28,50 +44,64 @@
         <header class="mb-8 border-b border-zinc-800 pb-8 text-center sm:mb-10">
           <p class="text-xs font-bold uppercase tracking-[0.3em] text-red-500">Every Friday Night</p>
           <p class="mb-3 mt-1 text-xs font-bold uppercase tracking-[0.3em] text-red-500">7PM - 9PM</p>
-          <img src="RICKSHAW_LOGO.jpeg" alt="Rickshaw Open Mic Logo" class="mx-auto mb-4 h-32 w-auto object-contain md:h-44">
+          <img src="RICKSHAW_LOGO.jpeg" alt="Rickshaw Open Mic Logo"
+            class="mx-auto mb-4 h-32 w-auto object-contain md:h-44">
           <p class="mx-auto mt-4 max-w-xl text-sm font-bold leading-6 text-zinc-200 sm:text-base">
             Submit request for Read The Room. Verify your email to officially join the request list.
           </p>
         </header>
 
-        <section id="signupCard" aria-label="Signup form" class="mb-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 shadow-2xl shadow-black/20 sm:p-7">
+        <section id="signupCard" aria-label="Signup form"
+          class="mb-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 shadow-2xl shadow-black/20 sm:p-7">
           <div class="mb-6">
             <p class="mt-1 text-sm text-zinc-400">Complete every required field, then verify your email.</p>
           </div>
 
           <form id="signupForm" class="space-y-5">
             <div>
-              <label for="name" class="mb-2 block text-sm font-medium">Stage Name / Full Name <span class="text-red-500">*</span></label>
-              <input id="name" name="name" type="text" required maxlength="100" autocomplete="name" placeholder="Your name" class="field">
+              <label for="name" class="mb-2 block text-sm font-medium">Stage Name / Full Name <span
+                  class="text-red-500">*</span></label>
+              <input id="name" name="name" type="text" required maxlength="100" autocomplete="name"
+                placeholder="Your name" class="field">
             </div>
 
             <div>
-              <label for="email" class="mb-2 block text-sm font-medium">Email Address <span class="text-red-500">*</span></label>
-              <input id="email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="you@example.com" class="field">
+              <label for="email" class="mb-2 block text-sm font-medium">Email Address <span
+                  class="text-red-500">*</span></label>
+              <input id="email" name="email" type="email" required maxlength="254" autocomplete="email"
+                placeholder="you@example.com" class="field">
               <p class="mt-2 text-xs text-zinc-500">We’ll send a secure verification link to this address.</p>
             </div>
 
             <div class="relative">
               <div class="mb-2 flex items-center gap-1.5">
-                <label for="instagram" class="text-sm font-medium">Instagram Handle <span class="font-normal text-zinc-500">(optional)</span></label>
-                <button id="instagramInfoButton" type="button" aria-label="Instagram information" aria-expanded="false" aria-controls="instagramInfoTooltip" class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-zinc-600 text-[10px] font-bold leading-none text-zinc-400 transition hover:border-zinc-400 hover:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-red-500">
+                <label for="instagram" class="text-sm font-medium">Instagram Handle <span
+                    class="font-normal text-zinc-500">(optional)</span></label>
+                <button id="instagramInfoButton" type="button" aria-label="Instagram information" aria-expanded="false"
+                  aria-controls="instagramInfoTooltip"
+                  class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-zinc-600 text-[10px] font-bold leading-none text-zinc-400 transition hover:border-zinc-400 hover:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-red-500">
                   i
                 </button>
               </div>
-              <div id="instagramInfoTooltip" role="tooltip" class="absolute left-0 top-6 z-10 hidden w-64 max-w-[calc(100vw-4rem)] rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-xs font-normal leading-5 text-zinc-200 shadow-xl">
+              <div id="instagramInfoTooltip" role="tooltip"
+                class="absolute left-0 top-6 z-10 hidden w-64 max-w-[calc(100vw-4rem)] rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-xs font-normal leading-5 text-zinc-200 shadow-xl">
                 It's not mandatory to put your Instagram account but we do look at it and it helps with verification.
               </div>
-              <input id="instagram" name="instagram" type="text" maxlength="100" autocomplete="off" placeholder="@handle" class="field">
+              <input id="instagram" name="instagram" type="text" maxlength="100" autocomplete="off"
+                placeholder="@handle" class="field">
             </div>
 
             <fieldset>
-              <legend class="mb-3 text-sm font-medium">Have you performed at this show in the past? <span class="text-red-500">*</span></legend>
+              <legend class="mb-3 text-sm font-medium">Have you performed at this show in the past? <span
+                  class="text-red-500">*</span></legend>
               <div class="grid grid-cols-2 gap-3">
-                <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
+                <label
+                  class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
                   <input type="radio" name="performed_before" value="true" required class="h-4 w-4 accent-red-600">
                   <span class="text-sm">Yes</span>
                 </label>
-                <label class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
+                <label
+                  class="flex cursor-pointer items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 transition hover:border-zinc-600">
                   <input type="radio" name="performed_before" value="false" required class="h-4 w-4 accent-red-600">
                   <span class="text-sm">No</span>
                 </label>
@@ -80,76 +110,102 @@
 
             <div class="space-y-3 border-t border-zinc-800 pt-5">
               <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
-                <input id="noShowAgreement" name="no_show_agreement" type="checkbox" required class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
-                <span class="text-sm leading-6 text-zinc-300">I understand that if I miss my spot without notifying the host, it may affect future bookings. <span class="text-red-500">*</span></span>
+                <input id="noShowAgreement" name="no_show_agreement" type="checkbox" required
+                  class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
+                <span class="text-sm leading-6 text-zinc-300">I understand that if I miss my spot without notifying the
+                  host, it may affect future bookings. <span class="text-red-500">*</span></span>
               </label>
 
               <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4">
-                <input id="guaranteeAgreement" name="guarantee_agreement" type="checkbox" required class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
-                <span class="text-sm leading-6 text-zinc-300">I understand that submission to this showcase does not guarantee a spot. Notifications go out on Thursday. If you're not selected, come to the show and join the standby list. <span class="text-red-500">*</span></span>
+                <input id="guaranteeAgreement" name="guarantee_agreement" type="checkbox" required
+                  class="mt-0.5 h-4 w-4 shrink-0 accent-red-600">
+                <span class="text-sm leading-6 text-zinc-300">I understand that submission to this showcase does not
+                  guarantee a spot. Notifications go out on Thursday. If you're not selected, come to the show and join
+                  the standby list. <span class="text-red-500">*</span></span>
               </label>
             </div>
 
-            <button id="submitButton" type="submit" class="w-full rounded-lg bg-red-600 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-red-950/30 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-60">
+            <button id="submitButton" type="submit"
+              class="w-full rounded-lg bg-red-600 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-red-950/30 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-60">
               Submit &amp; Verify Email
             </button>
             <p id="formMessage" role="status" aria-live="polite" class="hidden text-center text-sm"></p>
           </form>
         </section>
 
-        <section id="verificationSentCard" class="mb-10 hidden rounded-2xl border border-red-900/60 bg-red-950/20 p-7 text-center" role="status" aria-live="polite">
-          <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">✉</div>
+        <section id="verificationSentCard"
+          class="mb-10 hidden rounded-2xl border border-red-900/60 bg-red-950/20 p-7 text-center" role="status"
+          aria-live="polite">
+          <div
+            class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">
+            ✉</div>
           <h2 class="text-xl font-bold text-red-300">Verification email sent!</h2>
-          <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-zinc-300">Check your inbox and click the link to confirm your spot.</p>
+          <p class="mx-auto mt-2 max-w-lg text-sm leading-6 text-zinc-300">Check your inbox and click the link to
+            confirm your spot.</p>
         </section>
 
-        <section id="successCard" class="mb-10 hidden rounded-2xl border border-emerald-900/70 bg-emerald-950/20 p-7 text-center" role="status" aria-live="polite">
-          <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-950 text-2xl text-emerald-400">✓</div>
-          <h2 class="text-xl font-bold text-emerald-300">Email verified! Request received—we’ll email you if you make the official Friday lineup.</h2>
+        <section id="successCard"
+          class="mb-10 hidden rounded-2xl border border-emerald-900/70 bg-emerald-950/20 p-7 text-center" role="status"
+          aria-live="polite">
+          <div
+            class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-950 text-2xl text-emerald-400">
+            ✓</div>
+          <h2 class="text-xl font-bold text-emerald-300">Email verified! Request received—we’ll email you if you make
+            the official Friday lineup.</h2>
         </section>
       </section><!-- home-section -->
 
       <section id="verification-section" hidden aria-labelledby="verificationTitle" class="min-w-0 py-8 sm:py-16">
-        <div id="verificationLoadingCard" class="mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
-          <div class="mx-auto mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+        <div id="verificationLoadingCard"
+          class="mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
+          <div
+            class="mx-auto mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-red-500 border-t-transparent">
+          </div>
           <h1 id="verificationTitle" class="text-xl font-bold text-zinc-100">Verifying your email...</h1>
           <p class="mt-2 text-xs text-zinc-400">Please wait while we confirm your submission.</p>
         </div>
 
-        <div id="verificationSuccessCard" class="hidden mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
-          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-950/80 text-3xl text-emerald-400">✓</div>
+        <div id="verificationSuccessCard"
+          class="hidden mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
+          <div
+            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-950/80 text-3xl text-emerald-400">
+            ✓</div>
           <h1 class="text-2xl font-black text-white">Email Verified!</h1>
           <p class="mt-3 text-sm leading-6 text-zinc-300">Your request has been successfully received.</p>
-          <p class="mt-2 text-sm leading-6 text-zinc-400">We'll notify you if you're selected for this Friday's lineup.</p>
+          <p class="mt-2 text-sm leading-6 text-zinc-400">We'll notify you if you're selected for this Friday's lineup.
+          </p>
           <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500">You may now close this tab.</p>
         </div>
 
-        <div id="verificationErrorCard" class="hidden mx-auto max-w-md rounded-2xl border border-red-900/60 bg-red-950/20 p-8 text-center shadow-2xl">
-          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">✕</div>
+        <div id="verificationErrorCard"
+          class="hidden mx-auto max-w-md rounded-2xl border border-red-900/60 bg-red-950/20 p-8 text-center shadow-2xl">
+          <div
+            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-950 text-2xl text-red-400">
+            ✕</div>
           <h1 class="text-xl font-bold text-red-300">Verification Failed</h1>
-          <p id="verificationErrorMessage" class="mt-3 text-sm leading-6 text-zinc-300">We couldn't verify this email. The link may have expired or already been used.</p>
+          <p id="verificationErrorMessage" class="mt-3 text-sm leading-6 text-zinc-300">We couldn't verify this email.
+            The link may have expired or already been used.</p>
         </div>
       </section><!-- verification-section -->
 
       <section id="openmicmap-section" hidden aria-labelledby="openmicmap-title" class="min-w-0">
-<header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
+        <header class="mb-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-5">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Open Mics Today</p>
               <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h1 id="openmicmap-title" class="text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl"><span id="openMicMapDayLabel">Today</span></h1>
+                <h1 id="openmicmap-title" class="text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl"><span
+                    id="openMicMapDayLabel">Today</span></h1>
                 <p id="openMicMapDateLabel" class="text-xs font-semibold uppercase tracking-wide text-zinc-500"></p>
               </div>
             </div>
 
             <!-- Location Button placed cleanly -->
             <div>
-              <button
-                id="openMicLocationButton"
-                type="button"
-                class="group w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#00C805] px-4 py-2 text-xs font-black text-black shadow-[0_0_20px_rgba(0,200,5,0.45)] transition-all duration-200 hover:scale-105 hover:bg-[#00E006] hover:shadow-[0_0_28px_rgba(0,200,5,0.7)] active:scale-95 focus:outline-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <svg class="h-3.5 w-3.5 text-black stroke-[2.5] transition group-hover:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <button id="openMicLocationButton" type="button"
+                class="group w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-full bg-[#00C805] px-4 py-2 text-xs font-black text-black shadow-[0_0_20px_rgba(0,200,5,0.45)] transition-all duration-200 hover:scale-105 hover:bg-[#00E006] hover:shadow-[0_0_28px_rgba(0,200,5,0.7)] active:scale-95 focus:outline-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
+                <svg class="h-3.5 w-3.5 text-black stroke-[2.5] transition group-hover:rotate-90" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="22" y1="12" x2="18" y2="12"></line>
                   <line x1="6" y1="12" x2="2" y2="12"></line>
@@ -164,40 +220,63 @@
           <!-- Day Buttons in a 7-column grid that fits all phone screens perfectly -->
           <div class="mt-4">
             <div id="openMicDaySelector" class="grid grid-cols-7 gap-1 sm:gap-2" role="group" aria-label="Choose a day">
-              <button type="button" data-open-mic-day="Sunday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sun</button>
-              <button type="button" data-open-mic-day="Monday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Mon</button>
-              <button type="button" data-open-mic-day="Tuesday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Tue</button>
-              <button type="button" data-open-mic-day="Wednesday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Wed</button>
-              <button type="button" data-open-mic-day="Thursday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Thu</button>
-              <button type="button" data-open-mic-day="Friday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Fri</button>
-              <button type="button" data-open-mic-day="Saturday" class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200" aria-pressed="false">Sat</button>
+              <button type="button" data-open-mic-day="Sunday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Sun</button>
+              <button type="button" data-open-mic-day="Monday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Mon</button>
+              <button type="button" data-open-mic-day="Tuesday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Tue</button>
+              <button type="button" data-open-mic-day="Wednesday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Wed</button>
+              <button type="button" data-open-mic-day="Thursday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Thu</button>
+              <button type="button" data-open-mic-day="Friday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Fri</button>
+              <button type="button" data-open-mic-day="Saturday"
+                class="open-mic-day-button rounded-lg border border-zinc-700 px-1.5 py-2 text-xs font-bold text-zinc-400 text-center transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Sat</button>
             </div>
           </div>
-          
+
           <!-- Clean status footer with zero text overlap -->
-          <div class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-t border-zinc-800/60 pt-2.5">
-            <p id="openMicLocationStatus" class="text-xs text-zinc-400 leading-normal" role="status" aria-live="polite">Turn on location to see distance and drive times.</p>
-            <p class="text-[10px] text-zinc-600">Distance coordinates © <a class="underline hover:text-zinc-400" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></p>
+          <div
+            class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-t border-zinc-800/60 pt-2.5">
+            <p id="openMicLocationStatus" class="text-xs text-zinc-400 leading-normal" role="status" aria-live="polite">
+              Turn on location to see distance and drive times.</p>
+            <p class="text-[10px] text-zinc-600">Distance coordinates © <a class="underline hover:text-zinc-400"
+                href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap
+                contributors</a></p>
           </div>
         </header>
 
-    
-  
+
+
 
 
         <div class="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
           <div class="min-w-0">
-            <p id="openMicMapStatus" role="status" aria-live="polite" class="mb-4 hidden rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300"></p>
+            <p id="openMicMapStatus" role="status" aria-live="polite"
+              class="mb-4 hidden rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-sm text-zinc-300"></p>
             <div id="openMicMapList" class="space-y-3"></div>
           </div>
 
-          <aside id="openMicTonightPanel" class="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 xl:sticky xl:top-5 xl:self-start" aria-labelledby="openMicTonightTitle">
+          <aside id="openMicTonightPanel"
+            class="min-w-0 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 xl:sticky xl:top-5 xl:self-start"
+            aria-labelledby="openMicTonightTitle">
             <div class="flex items-center justify-between gap-3 border-b border-zinc-800 pb-3">
               <div>
                 <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-red-500">Selected day</p>
                 <h2 id="openMicTonightTitle" class="mt-0.5 text-base font-black text-zinc-100">Tonight's Mics</h2>
               </div>
-              <span id="openMicTonightCount" class="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-[10px] font-bold text-zinc-400">0 mics</span>
+              <span id="openMicTonightCount"
+                class="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-[10px] font-bold text-zinc-400">0
+                mics</span>
             </div>
 
             <dl class="grid grid-cols-2 gap-2 border-b border-zinc-800 py-3">
@@ -247,13 +326,16 @@
 
   <div id="tripIntelModal" class="trip-intel-modal" hidden aria-hidden="true">
     <div class="trip-intel-modal__backdrop" data-trip-intel-close></div>
-    <section class="trip-intel-modal__panel" role="dialog" aria-modal="true" aria-labelledby="tripIntelTitle" aria-describedby="tripIntelRoute">
+    <section class="trip-intel-modal__panel" role="dialog" aria-modal="true" aria-labelledby="tripIntelTitle"
+      aria-describedby="tripIntelRoute">
       <header class="trip-intel-modal__header">
         <div class="min-w-0">
-          <p class="trip-intel-modal__eyebrow"><span id="tripIntelVenueName">Venue</span><span aria-hidden="true">•</span> Trip &amp; Venue Intel</p>
+          <p class="trip-intel-modal__eyebrow"><span id="tripIntelVenueName">Venue</span><span
+              aria-hidden="true">•</span> Trip &amp; Venue Intel</p>
           <h2 id="tripIntelTitle" class="sr-only">Trip and venue information</h2>
         </div>
-        <button id="tripIntelClose" type="button" class="trip-intel-modal__close" aria-label="Close trip and venue information">✕ <span>Close</span></button>
+        <button id="tripIntelClose" type="button" class="trip-intel-modal__close"
+          aria-label="Close trip and venue information">✕ <span>Close</span></button>
       </header>
 
       <div class="trip-intel-modal__content">
@@ -262,21 +344,28 @@
           <p id="tripIntelRoute" class="trip-intel-route">Current location <span aria-hidden="true">➜</span> Venue</p>
           <div class="trip-intel-metrics">
             <div><span class="trip-intel-metric__label">🚗 Drive</span><strong id="tripIntelDrive">—</strong></div>
-            <div><span class="trip-intel-metric__label">🅿️ Parking hunt</span><strong id="tripIntelParkingHunt">Estimating…</strong></div>
-            <button type="button" id="tripIntelTransitCardBtn" class="flex flex-col text-left transition hover:border-blue-500/60 hover:bg-blue-950/20 group">
+            <div><span class="trip-intel-metric__label">🅿️ Parking hunt</span><strong
+                id="tripIntelParkingHunt">Estimating…</strong></div>
+            <button type="button" id="tripIntelTransitCardBtn"
+              class="flex flex-col text-left transition hover:border-blue-500/60 hover:bg-blue-950/20 group">
               <span class="trip-intel-metric__label flex items-center justify-between w-full">
                 <span>🚌 Bus / Transit</span>
                 <span class="text-[9px] text-blue-400 group-hover:underline">View live ↓</span>
               </span>
               <strong id="tripIntelTransit" class="text-blue-300">Estimating…</strong>
             </button>
-            <div class="trip-intel-metric--total"><span class="trip-intel-metric__label">Total Drive</span><strong id="tripIntelTotal">—</strong></div>
+            <div class="trip-intel-metric--total"><span class="trip-intel-metric__label">Total Drive</span><strong
+                id="tripIntelTotal">—</strong></div>
           </div>
         </section>
-        <section id="tripIntelTransitSection" class="trip-intel-section border-blue-900/40 bg-zinc-900/90" aria-labelledby="tripIntelTransitTitle">
+        <section id="tripIntelTransitSection" class="trip-intel-section border-blue-900/40 bg-zinc-900/90"
+          aria-labelledby="tripIntelTransitTitle">
           <div class="flex items-center justify-between mb-3">
-            <h3 id="tripIntelTransitTitle" class="trip-intel-section__title text-blue-400 m-0">🚌 Live Puget Sound Transit Intel</h3>
-            <span id="tripIntelTransitBadge" class="rounded-full bg-blue-950 px-2 py-0.5 text-[10px] font-bold text-blue-400 border border-blue-800/60">King County Metro / Sound Transit</span>
+            <h3 id="tripIntelTransitTitle" class="trip-intel-section__title text-blue-400 m-0">🚌 Live Puget Sound
+              Transit Intel</h3>
+            <span id="tripIntelTransitBadge"
+              class="rounded-full bg-blue-950 px-2 py-0.5 text-[10px] font-bold text-blue-400 border border-blue-800/60">King
+              County Metro / Sound Transit</span>
           </div>
           <div id="tripIntelTransitContent" class="space-y-2 text-sm">
             <p class="trip-intel-loading">Locating nearest bus lines &amp; live departures…</p>
@@ -291,17 +380,27 @@
         <section class="trip-intel-section" aria-labelledby="tripIntelParkingTitle">
           <h3 id="tripIntelParkingTitle" class="trip-intel-section__title">🅿️ Parking &amp; Venue Access</h3>
           <dl class="trip-intel-access-list">
-            <div><dt>Parking</dt><dd id="tripIntelParking" role="status">Checking nearby parking…</dd></div>
-            <div><dt>Sign-up location</dt><dd id="tripIntelSignupLocation">Check with host or bar staff upon arrival.</dd></div>
+            <div>
+              <dt>Parking</dt>
+              <dd id="tripIntelParking" role="status">Checking nearby parking…</dd>
+            </div>
+            <div>
+              <dt>Sign-up location</dt>
+              <dd id="tripIntelSignupLocation">Check with host or bar staff upon arrival.</dd>
+            </div>
           </dl>
         </section>
       </div>
 
       <footer class="trip-intel-actions">
-        <a id="tripIntelGoogleMapsTransit" class="trip-intel-action trip-intel-action--transit" href="#" target="_blank" rel="noopener noreferrer">🚌 Bus Routes</a>
-        <a id="tripIntelAppleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">🗺️ Apple Maps</a>
-        <a id="tripIntelGoogleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">📍 Google Maps</a>
-        <button id="tripIntelAlarm" type="button" class="trip-intel-action trip-intel-action--primary">🔔 Set Alarm</button>
+        <a id="tripIntelGoogleMapsTransit" class="trip-intel-action trip-intel-action--transit" href="#" target="_blank"
+          rel="noopener noreferrer">🚌 Bus Routes</a>
+        <a id="tripIntelAppleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">🗺️
+          Apple Maps</a>
+        <a id="tripIntelGoogleMaps" class="trip-intel-action" href="#" target="_blank" rel="noopener noreferrer">📍
+          Google Maps</a>
+        <button id="tripIntelAlarm" type="button" class="trip-intel-action trip-intel-action--primary">🔔 Set
+          Alarm</button>
       </footer>
       <p id="tripIntelFeedback" class="trip-intel-feedback" role="status" aria-live="polite"></p>
     </section>
@@ -309,13 +408,16 @@
 
   <div id="signupDetailsModal" class="trip-intel-modal" hidden aria-hidden="true">
     <div class="trip-intel-modal__backdrop" data-signup-details-close></div>
-    <section class="trip-intel-modal__panel signup-details-modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupDetailsTitle" aria-describedby="signupDetailsText">
+    <section class="trip-intel-modal__panel signup-details-modal__panel" role="dialog" aria-modal="true"
+      aria-labelledby="signupDetailsTitle" aria-describedby="signupDetailsText">
       <header class="trip-intel-modal__header">
         <div class="min-w-0">
-          <p class="trip-intel-modal__eyebrow"><span id="signupDetailsVenueName">Venue</span><span aria-hidden="true">•</span> Sign-up details</p>
+          <p class="trip-intel-modal__eyebrow"><span id="signupDetailsVenueName">Venue</span><span
+              aria-hidden="true">•</span> Sign-up details</p>
           <h2 id="signupDetailsTitle" class="sr-only">Sign-up details</h2>
         </div>
-        <button id="signupDetailsClose" type="button" class="trip-intel-modal__close" aria-label="Close sign-up details">✕ <span>Close</span></button>
+        <button id="signupDetailsClose" type="button" class="trip-intel-modal__close"
+          aria-label="Close sign-up details">✕ <span>Close</span></button>
       </header>
       <div class="trip-intel-modal__content">
         <section class="trip-intel-section">
@@ -334,7 +436,7 @@
   </style>
 
   <style>
-    body.openmicmap-mode > main > div {
+    body.openmicmap-mode>main>div {
       max-width: 1600px;
       padding-left: clamp(16px, 2vw, 32px);
       padding-right: clamp(16px, 2vw, 32px);
@@ -492,7 +594,7 @@
       gap: 8px;
     }
 
-    .trip-intel-metrics > div {
+    .trip-intel-metrics>div {
       display: flex;
       min-width: 0;
       flex-direction: column;
@@ -552,7 +654,7 @@
       margin: 0;
     }
 
-    .trip-intel-access-list > div {
+    .trip-intel-access-list>div {
       display: grid;
       grid-template-columns: 125px minmax(0, 1fr);
       gap: 12px;
@@ -689,8 +791,17 @@
     }
 
     @keyframes trip-intel-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.45; transform: scale(0.78); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.45;
+        transform: scale(0.78);
+      }
     }
 
     @media (max-width: 640px) {
@@ -709,23 +820,48 @@
         transform: translateY(28px) scale(1);
       }
 
-      .trip-intel-modal__header { padding: 16px; }
-      .trip-intel-modal__close span { display: none; }
-      .trip-intel-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .trip-intel-access-list > div { grid-template-columns: 1fr; gap: 3px; }
-      .trip-intel-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .trip-intel-trigger { border-radius: 16px; }
-      .trip-intel-pill-cta { margin-left: 0; }
+      .trip-intel-modal__header {
+        padding: 16px;
+      }
+
+      .trip-intel-modal__close span {
+        display: none;
+      }
+
+      .trip-intel-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .trip-intel-access-list>div {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      .trip-intel-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .trip-intel-trigger {
+        border-radius: 16px;
+      }
+
+      .trip-intel-pill-cta {
+        margin-left: 0;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
+
       .trip-intel-modal__backdrop,
       .trip-intel-modal__panel,
       .trip-intel-trigger,
       .trip-intel-action {
         transition: none;
       }
-      .trip-intel-live-dot { animation: none; }
+
+      .trip-intel-live-dot {
+        animation: none;
+      }
     }
 
     #lineup-section {
@@ -746,15 +882,15 @@
       background: #d9cfb4;
     }
 
-    body.lineup-mode > aside {
+    body.lineup-mode>aside {
       display: none;
     }
 
-    body.lineup-mode > main {
+    body.lineup-mode>main {
       margin-left: 0;
     }
 
-    body.lineup-mode > main > div {
+    body.lineup-mode>main>div {
       max-width: none;
       padding: 0;
     }
@@ -777,7 +913,7 @@
       pointer-events: none;
       opacity: 0.18;
       background-image:
-        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.035) 3px 4px),
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, 0.035) 3px 4px),
         radial-gradient(ellipse at center, transparent 35%, #000 100%);
       mix-blend-mode: screen;
     }
@@ -905,25 +1041,52 @@
     }
 
     @media (max-width: 700px) {
-      .lineup-poster__billing { letter-spacing: 0.12em; }
-      .lineup-poster__title-area { align-items: center; }
-      .lineup-poster__kicker { letter-spacing: 0.16em; }
+      .lineup-poster__billing {
+        letter-spacing: 0.12em;
+      }
+
+      .lineup-poster__title-area {
+        align-items: center;
+      }
+
+      .lineup-poster__kicker {
+        letter-spacing: 0.16em;
+      }
+
       .lineup-board__header,
       .lineup-row {
         grid-template-columns: minmax(0, 1fr) auto auto;
         column-gap: 12px;
       }
-      .lineup-board__header { letter-spacing: 0.08em; }
-      .lineup-row__name { overflow-wrap: break-word; }
+
+      .lineup-board__header {
+        letter-spacing: 0.08em;
+      }
+
+      .lineup-row__name {
+        overflow-wrap: break-word;
+      }
     }
 
     @media (max-width: 480px) {
-      .lineup-poster__title-area { gap: 12px; }
-      .lineup-poster__logo { width: 180px; height: auto; }
+      .lineup-poster__title-area {
+        gap: 12px;
+      }
+
+      .lineup-poster__logo {
+        width: 180px;
+        height: auto;
+      }
+
       .lineup-board__header,
-      .lineup-row { grid-template-columns: minmax(0, 1fr) 52px 72px; }
+      .lineup-row {
+        grid-template-columns: minmax(0, 1fr) 52px 72px;
+      }
+
       .lineup-row__set,
-      .lineup-row__time { white-space: normal; }
+      .lineup-row__time {
+        white-space: normal;
+      }
     }
 
     body.verification-mode aside {
@@ -1090,7 +1253,7 @@
         }
       });
     });
-    
+
     openMicLocationButton.addEventListener('click', () => {
       const buttonText = document.getElementById('openMicLocationButtonText');
 
@@ -1256,7 +1419,7 @@
       };
     }
 
-    
+
 
     let openMicDataPromise = null;
     function loadOpenMicData() {
@@ -1544,7 +1707,7 @@
       return { emoji: '🌡️', label: 'Conditions unavailable' };
     }
 
-const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / Puget Sound Developer Portal for higher limits
+    const OBA_API_KEY = 'ceb473d5-b12a-4833-82da-c4c721a62f17'; // Tip: Request your own free key from OneBusAway / Puget Sound Developer Portal for higher limits
     const OBA_BASE_URL = 'https://api.pugetsound.onebusaway.org/api/where';
     const transitArrivalsCache = new Map();
 
@@ -1643,7 +1806,7 @@ const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / 
           }
         }
 
-// Sort by soonest departure
+        // Sort by soonest departure
         upcomingRoutes.sort((a, b) => a.minutesUntil - b.minutesUntil);
 
         // Deduplicate: Keep ONLY 1 card per distinct Route number
@@ -1810,7 +1973,7 @@ const OBA_API_KEY = 'TEST'; // Tip: Request your own free key from OneBusAway / 
       }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 180);
     }
 
-async function openTripIntelModal(mic, travelEstimate, trigger) {
+    async function openTripIntelModal(mic, travelEstimate, trigger) {
       if (!travelEstimate || mic.latitude === null || mic.longitude === null) return;
       const requestToken = ++tripIntelRequestToken;
       const venueName = mic.venue || mic.name;
@@ -1988,7 +2151,7 @@ async function openTripIntelModal(mic, travelEstimate, trigger) {
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       tripIntelFeedback.textContent = `Calendar reminder created for ${formatMinutesToClock(signupMinutes - totalMinutes)}.`;
     }
-const tripIntelTransitCardBtn = document.getElementById('tripIntelTransitCardBtn');
+    const tripIntelTransitCardBtn = document.getElementById('tripIntelTransitCardBtn');
     if (tripIntelTransitCardBtn) {
       tripIntelTransitCardBtn.addEventListener('click', () => {
         const transitSection = document.getElementById('tripIntelTransitSection');
@@ -2088,13 +2251,13 @@ const tripIntelTransitCardBtn = document.getElementById('tripIntelTransitCardBtn
       card.className = isLockedPreview
         ? 'open-mic-card relative rounded-xl border border-dashed border-zinc-700 bg-zinc-950/35 p-4 opacity-60 grayscale-[35%] shadow-inner shadow-black/30 transition hover:opacity-80'
         : isNext
-        ? 'open-mic-card relative rounded-xl border border-[#00C805] border-l-4 border-l-[#00C805] bg-gradient-to-r from-emerald-950/20 to-zinc-900/50 p-4 shadow-[0_0_20px_rgba(0,200,5,0.15)]'
-        : 'open-mic-card rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
+          ? 'open-mic-card relative rounded-xl border border-[#00C805] border-l-4 border-l-[#00C805] bg-gradient-to-r from-emerald-950/20 to-zinc-900/50 p-4 shadow-[0_0_20px_rgba(0,200,5,0.15)]'
+          : 'open-mic-card rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
 
       const badges = document.createElement('div');
       badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
 
-if (isLockedPreview) {
+      if (isLockedPreview) {
         const badge = document.createElement('span');
         badge.className = 'inline-block rounded-lg border border-zinc-500 bg-zinc-900 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-zinc-100 shadow-sm';
         badge.textContent = `Next Open Mic ${formatUpcomingOpenMicDate(upcomingDate)}`;
@@ -2104,7 +2267,7 @@ if (isLockedPreview) {
         lockBadge.className = 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-black/60 px-3.5 py-2 text-sm font-bold uppercase tracking-wider text-zinc-300 shadow-sm';
         lockBadge.textContent = '🔒 Upcoming';
         badges.append(lockBadge);
-      
+
       } else if (isNext) {
         const badge = document.createElement('span');
         badge.className = 'inline-block rounded bg-[#00C805] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-black';
@@ -2162,26 +2325,23 @@ if (isLockedPreview) {
           const reachability = getOpenMicReachability(mic, travelEstimate, currentSeattleMinutes);
           if (reachability) {
             const reachabilityBadge = document.createElement('div');
-            reachabilityBadge.className = `mt-3 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border ${
-              reachability.canMakeIt
-                ? 'border-[#00C805]/30 bg-zinc-950/90 shadow-[0_0_15px_rgba(0,200,5,0.15)]'
-                : 'border-rose-500/30 bg-zinc-950/90 shadow-[0_0_15px_rgba(244,63,94,0.15)]'
-            } px-3.5 py-2`;
+            reachabilityBadge.className = `mt-3 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border ${reachability.canMakeIt
+              ? 'border-[#00C805]/30 bg-zinc-950/90 shadow-[0_0_15px_rgba(0,200,5,0.15)]'
+              : 'border-rose-500/30 bg-zinc-950/90 shadow-[0_0_15px_rgba(244,63,94,0.15)]'
+              } px-3.5 py-2`;
 
             const statusWrap = document.createElement('div');
             statusWrap.className = 'flex items-center gap-2';
 
             const statusDot = document.createElement('span');
-            statusDot.className = `inline-block h-2 w-2 rounded-full ${
-              reachability.canMakeIt
-                ? 'bg-[#00C805] shadow-[0_0_8px_#00C805]'
-                : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'
-            }`;
+            statusDot.className = `inline-block h-2 w-2 rounded-full ${reachability.canMakeIt
+              ? 'bg-[#00C805] shadow-[0_0_8px_#00C805]'
+              : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'
+              }`;
 
             const statusText = document.createElement('span');
-            statusText.className = `text-xs font-black tracking-wider uppercase ${
-              reachability.canMakeIt ? 'text-emerald-400' : 'text-rose-400'
-            }`;
+            statusText.className = `text-xs font-black tracking-wider uppercase ${reachability.canMakeIt ? 'text-emerald-400' : 'text-rose-400'
+              }`;
             statusText.textContent = reachability.status;
 
             statusWrap.append(statusDot, statusText);
@@ -2769,4 +2929,5 @@ if (isLockedPreview) {
     initializeApp();
   </script>
 </body>
+
 </html>

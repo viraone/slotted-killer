@@ -17,3 +17,7 @@ reset_weekly_signups().png
 sql01.png
 sql2.png
 sql4.png
+
+.env
+.env.local
+node_modules/
