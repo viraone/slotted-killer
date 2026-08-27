@@ -2300,7 +2300,9 @@
       headingRow.append(name, startTime);
       card.append(headingRow);
 
-      if (mic.venue) {
+      const venueIsRedundant = mic.venue
+        && mic.name.toLowerCase().includes(mic.venue.toLowerCase());
+      if (mic.venue && !venueIsRedundant) {
         const venue = document.createElement('p');
         venue.className = 'mt-1 text-sm font-semibold text-zinc-300';
         venue.textContent = mic.venue;
