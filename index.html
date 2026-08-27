@@ -275,8 +275,8 @@
                 <h2 id="openMicTonightTitle" class="mt-0.5 text-base font-black text-zinc-100">Tonight's Mics</h2>
               </div>
               <span id="openMicTonightCount"
-                class="rounded-full border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-[10px] font-bold text-zinc-400">0
-                mics</span>
+                class="rounded-full border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-sm font-bold text-zinc-300">0
+                open mics</span>
             </div>
 
             <dl class="grid grid-cols-2 gap-2 border-b border-zinc-800 py-3">
@@ -2207,7 +2207,7 @@
     });
 
     function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
-      openMicTonightCount.textContent = `${mics.length} ${mics.length === 1 ? 'mic' : 'mics'}`;
+      openMicTonightCount.textContent = `${mics.length} ${mics.length === 1 ? 'open mic' : 'open mics'}`;
       openMicTonightNext.textContent = nextMic
         ? `${formatMinutesToClock(nextMic.startMinutes) || 'Time TBD'} · ${nextMic.name}`
         : '—';
