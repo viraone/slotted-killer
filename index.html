@@ -446,6 +446,13 @@
       scroll-margin-top: 24px;
     }
 
+    .open-mic-card--active {
+      border-color: #00C805 !important;
+      border-left-width: 4px !important;
+      background: linear-gradient(to right, rgba(6, 78, 59, 0.2), rgba(24, 24, 27, 0.5)) !important;
+      box-shadow: 0 0 20px rgba(0, 200, 5, 0.15) !important;
+    }
+
     body.trip-intel-open {
       overflow: hidden;
     }
@@ -2239,12 +2246,20 @@
         button.addEventListener('click', () => {
           const card = document.getElementById(`open-mic-card-${mic.id}`);
           if (!card) return;
+          setActiveOpenMicCard(card);
           card.scrollIntoView({ behavior: 'smooth', block: 'center' });
           card.focus({ preventScroll: true });
         });
         return button;
       });
       openMicTonightList.replaceChildren(...items);
+    }
+
+    function setActiveOpenMicCard(card) {
+      document.querySelectorAll('.open-mic-card--active').forEach((el) => {
+        if (el !== card) el.classList.remove('open-mic-card--active');
+      });
+      card.classList.add('open-mic-card--active');
     }
 
     function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null) {
@@ -2254,9 +2269,13 @@
       card.tabIndex = -1;
       card.className = isLockedPreview
         ? 'open-mic-card relative rounded-xl border border-dashed border-zinc-700 bg-zinc-950/35 p-4 opacity-60 grayscale-[35%] shadow-inner shadow-black/30 transition hover:opacity-80'
-        : isNext
-          ? 'open-mic-card relative rounded-xl border border-[#00C805] border-l-4 border-l-[#00C805] bg-gradient-to-r from-emerald-950/20 to-zinc-900/50 p-4 shadow-[0_0_20px_rgba(0,200,5,0.15)]'
-          : 'open-mic-card rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
+        : 'open-mic-card relative cursor-pointer rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
+
+      if (!isLockedPreview) {
+        // Highlight the soonest mic by default; clicking any card moves the highlight.
+        if (isNext) card.classList.add('open-mic-card--active');
+        card.addEventListener('click', () => setActiveOpenMicCard(card));
+      }
 
       const badges = document.createElement('div');
       badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
