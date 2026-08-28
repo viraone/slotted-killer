@@ -2680,6 +2680,44 @@
       });
     }
 
+    const LINEUP_SHEET_ID = '1CiqV18PMOPVienqn4HrqMVuMkxXX4bDJd08HATQk8gU';
+    const LINEUP_SHEET_NAME = 'Intake & Contacts';
+
+    async function fetchLineupFromSheet() {
+      const url = `https://docs.google.com/spreadsheets/d/${LINEUP_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(LINEUP_SHEET_NAME)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Sheet request failed (${response.status})`);
+
+      const text = await response.text();
+      const jsonMatch = text.match(/setResponse\(([\s\S]*)\);?\s*$/);
+      if (!jsonMatch) throw new Error('Unexpected sheet response format');
+
+      const payload = JSON.parse(jsonMatch[1]);
+      if (payload.status !== 'ok') throw new Error('Sheet query returned an error');
+
+      const cols = payload.table.cols.map((col) => (col.label || '').trim().toUpperCase());
+      const nameIndex = cols.indexOf('NAME');
+      const setIndex = cols.indexOf('SET');
+      const timeIndex = cols.indexOf('TIME');
+
+      const cellText = (row, index) => {
+        if (index < 0) return '';
+        const cell = row.c?.[index];
+        if (!cell) return '';
+        if (cell.f != null && String(cell.f).trim() !== '') return String(cell.f).trim();
+        if (cell.v != null) return String(cell.v).trim();
+        return '';
+      };
+
+      return payload.table.rows
+        .map((row) => ({
+          name: cellText(row, nameIndex),
+          set_length: cellText(row, setIndex),
+          start_time: cellText(row, timeIndex),
+        }))
+        .filter((entry) => entry.name !== '');
+    }
+
     async function loadLineup() {
       if (verificationTabRequested) return;
 
@@ -2689,10 +2727,13 @@
       lineupStatus.textContent = "Loading tonight's lineup...";
       lineupStatus.closest('.lineup-board').setAttribute('aria-busy', 'true');
 
-      const { data, error } = await supabaseClient
-        .from('show_lineup')
-        .select('name, set_length, start_time, sort_order')
-        .order('sort_order', { ascending: true });
+      let data = null;
+      let error = null;
+      try {
+        data = await fetchLineupFromSheet();
+      } catch (err) {
+        error = err;
+      }
 
       if (verificationTabRequested) return;
 
