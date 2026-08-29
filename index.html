@@ -55,7 +55,7 @@
           <path stroke-linecap="round" stroke-linejoin="round"
             d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
         </svg>
-        <span class="text-xs font-semibold md:text-base">Open Mic Sign-Up</span>
+        <span id="signupNavLabel" class="text-xs font-semibold md:text-base">Open Mic Sign-Up</span>
       </button>
     </nav>
   </aside>
@@ -1270,13 +1270,31 @@
       });
     }
 
+    // During the Friday lineup window (6:00 AM - 9:40 PM Seattle time) the
+    // second nav tab becomes "Tonight's Line Up" and opens the lineup instead
+    // of the signup form. Outside the window it reverts to "Open Mic Sign-Up".
+    function isLineupWindowActive() {
+      return !signupRequested && getSeattleScheduleMode() === 'lineup';
+    }
+
+    function updateSignupNavLabel() {
+      const label = document.getElementById('signupNavLabel');
+      if (label) label.textContent = isLineupWindowActive() ? "Tonight's Line Up" : 'Open Mic Sign-Up';
+    }
+    updateSignupNavLabel();
+    window.setInterval(updateSignupNavLabel, 60 * 1000);
+
     document.querySelectorAll('.nav-button').forEach((btn) => {
       btn.addEventListener('click', () => {
         const view = btn.dataset.view;
         setActiveNav(view);
+        updateSignupNavLabel();
         if (view === 'openmicmap') {
           showOpenMicMapView();
           renderOpenMicMapView();
+        } else if (isLineupWindowActive()) {
+          loadLineup();
+          startLineupRefreshTimer();
         } else {
           showHomeView();
         }
