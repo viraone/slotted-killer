@@ -2987,6 +2987,10 @@
       if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
         await loadLineup();
         startLineupRefreshTimer();
+      } else if (window.location.hash === '#openmicmap') {
+        setActiveNav('openmicmap');
+        showOpenMicMapView();
+        renderOpenMicMapView();
       } else {
         showHomeView();
       }

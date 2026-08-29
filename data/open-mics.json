@@ -749,9 +749,13 @@
   },
   {
     "id": "a1-hop-shop-144th-14401-greenwood-ave-n-seattle-wa-98133",
-    "name": "A1 hop shop 144th",
+    "name": "A1 Since Day 1 Comedy Open Mic",
+    "venue": "A1 Hop Shop Taproom 144th",
     "location": "14401 Greenwood Ave N, Seattle, WA 98133",
-    "timeSignupStart": "9pm/9:30pm",
+    "timeSignupStart": "9pm/9:30pm-11pm",
+    "signupType": "in-person",
+    "signupDetails": "Show up and go up. Signups start at 9:00 PM.",
+    "showWhenInactive": true,
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
@@ -762,9 +766,16 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "1st Fri.",
+    "requirementsInfo": "Every 1st Friday of the month. Show 9:30 PM - 11 PM. Hosted by Masih Ahmad.",
+    "host": "Masih Ahmad",
     "contact": "https://www.instagram.com/saucymasihahmadcomedy/",
     "webSignup": "",
+    "recurrenceText": "Every 1st Friday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Friday",
+      "nth": 1
+    },
     "latitude": 47.733335,
     "longitude": -122.355986
   },
