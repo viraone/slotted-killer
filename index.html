@@ -2308,12 +2308,6 @@
         badge.textContent = `Next Open Mic ${formatUpcomingOpenMicDate(upcomingDate)}`;
         badges.append(badge);
 
-        const lockBadge = document.createElement('span');
-        lockBadge.className = 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-black/60 px-3.5 py-2 text-sm font-bold uppercase tracking-wider text-zinc-300 shadow-sm';
-        const lockWeekday = String(mic.recurrence?.weekday || '').trim();
-        lockBadge.textContent = lockWeekday ? `🔒 Not this ${lockWeekday}` : '🔒 Upcoming';
-        badges.append(lockBadge);
-
       } else if (isNext) {
         const badge = document.createElement('span');
         badge.className = 'inline-block rounded bg-[#00C805] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-black';
