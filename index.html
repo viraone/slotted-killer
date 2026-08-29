@@ -2344,7 +2344,7 @@
       const isNonWeeklyRecurring = Boolean(mic.recurrence && mic.recurrence.type !== 'weekly');
       if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj) {
         const confirmBadge = document.createElement('span');
-        confirmBadge.className = 'inline-block rounded-lg border border-[#00C805]/60 bg-[#00C805]/10 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-[#00C805] shadow-sm';
+        confirmBadge.className = 'inline-block rounded border border-[#00C805]/50 bg-[#00C805]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#00C805]';
         confirmBadge.textContent = `✓ Happening ${formatUpcomingOpenMicDate(selectedDateObj)}`;
         badges.append(confirmBadge);
       }
