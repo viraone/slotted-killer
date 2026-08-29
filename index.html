@@ -38,7 +38,7 @@
     class="fixed inset-x-0 bottom-0 z-50 flex h-16 items-center justify-around border-t border-zinc-800 bg-zinc-950/95 px-3 backdrop-blur md:inset-y-0 md:left-0 md:right-auto md:h-screen md:w-64 md:flex-col md:items-stretch md:justify-start md:border-r md:border-t-0 md:px-4 md:py-6">
     <nav class="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-2"
       aria-label="Primary navigation">
-      <button type="button" data-view="home"
+      <button type="button" data-view="openmicmap"
         class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-red-400 transition hover:bg-zinc-900 md:flex-none md:justify-start"
         aria-current="page">
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -48,14 +48,14 @@
         </svg>
         <span class="text-xs font-semibold md:text-base">Home</span>
       </button>
-      <button type="button" data-view="openmicmap"
+      <button type="button" data-view="home"
         class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:justify-start">
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round"
-            d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
         </svg>
-        <span class="text-xs font-semibold md:text-base">Open Mic Map</span>
+        <span class="text-xs font-semibold md:text-base">Open Mic Sign-Up</span>
       </button>
     </nav>
   </aside>
@@ -3008,14 +3008,17 @@
       const lineupModeRequested = lineupRequested && !signupRequested;
 
       if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
+        setActiveNav('home');
         await loadLineup();
         startLineupRefreshTimer();
-      } else if (window.location.hash === '#openmicmap') {
+      } else if (signupRequested) {
+        setActiveNav('home');
+        showHomeView();
+      } else {
+        // Default landing view: the PNW open mic list & map.
         setActiveNav('openmicmap');
         showOpenMicMapView();
         renderOpenMicMapView();
-      } else {
-        showHomeView();
       }
     }
 
