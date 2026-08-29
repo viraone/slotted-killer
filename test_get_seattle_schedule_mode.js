@@ -18,9 +18,11 @@ const testCases = [
   { name: 'Friday 6:01 AM', date: '2023-10-27T06:01:00-07:00', expected: 'lineup' },
   { name: 'Friday 12:59 PM', date: '2023-10-27T12:59:00-07:00', expected: 'lineup' },
   { name: 'Friday 1:00 PM', date: '2023-10-27T13:00:00-07:00', expected: 'lineup' },
-  { name: 'Friday 11:59 PM', date: '2023-10-27T23:59:00-07:00', expected: 'lineup' },
-  { name: 'Saturday 12:00 AM', date: '2023-10-28T00:00:00-07:00', expected: 'lineup' },
-  { name: 'Saturday 5:59 AM', date: '2023-10-28T05:59:00-07:00', expected: 'lineup' },
+  { name: 'Friday 9:39 PM', date: '2023-10-27T21:39:00-07:00', expected: 'lineup' },
+  { name: 'Friday 9:40 PM', date: '2023-10-27T21:40:00-07:00', expected: 'signup' },
+  { name: 'Friday 11:59 PM', date: '2023-10-27T23:59:00-07:00', expected: 'signup' },
+  { name: 'Saturday 12:00 AM', date: '2023-10-28T00:00:00-07:00', expected: 'signup' },
+  { name: 'Saturday 5:59 AM', date: '2023-10-28T05:59:00-07:00', expected: 'signup' },
   { name: 'Saturday 6:00 AM', date: '2023-10-28T06:00:00-07:00', expected: 'signup' },
   { name: 'Saturday 6:01 AM', date: '2023-10-28T06:01:00-07:00', expected: 'signup' }
 ];

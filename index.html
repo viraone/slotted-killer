@@ -2622,10 +2622,7 @@
       const hoursSinceMidnight = Number(values.hour) % 24;
       const minutesSinceMidnight = hoursSinceMidnight * 60 + Number(values.minute);
 
-      if (values.weekday === 'Fri' && minutesSinceMidnight >= 6 * 60) {
-        return 'lineup';
-      }
-      if (values.weekday === 'Sat' && minutesSinceMidnight < 6 * 60) {
+      if (values.weekday === 'Fri' && minutesSinceMidnight >= 6 * 60 && minutesSinceMidnight < 21 * 60 + 40) {
         return 'lineup';
       }
       return 'signup';
