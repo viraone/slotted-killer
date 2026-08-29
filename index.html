@@ -2262,7 +2262,7 @@
       card.classList.add('open-mic-card--active');
     }
 
-    function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null) {
+    function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
       const isLockedPreview = Boolean(upcomingDate);
       const card = document.createElement('article');
       card.id = `open-mic-card-${mic.id}`;
@@ -2288,7 +2288,8 @@
 
         const lockBadge = document.createElement('span');
         lockBadge.className = 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-black/60 px-3.5 py-2 text-sm font-bold uppercase tracking-wider text-zinc-300 shadow-sm';
-        lockBadge.textContent = '🔒 Upcoming';
+        const lockWeekday = String(mic.recurrence?.weekday || '').trim();
+        lockBadge.textContent = lockWeekday ? `🔒 Not this ${lockWeekday}` : '🔒 Upcoming';
         badges.append(lockBadge);
 
       } else if (isNext) {
@@ -2305,6 +2306,14 @@
         }
       }
       card.append(badges);
+
+      const isNonWeeklyRecurring = Boolean(mic.recurrence && mic.recurrence.type !== 'weekly');
+      if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj) {
+        const confirmBadge = document.createElement('span');
+        confirmBadge.className = 'inline-block rounded-lg border border-[#00C805]/60 bg-[#00C805]/10 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-[#00C805] shadow-sm';
+        confirmBadge.textContent = `✓ Happening ${formatUpcomingOpenMicDate(selectedDateObj)}`;
+        badges.append(confirmBadge);
+      }
 
       const headingRow = document.createElement('div');
       headingRow.className = 'flex items-start justify-between gap-4';
@@ -2597,7 +2606,8 @@
             isNext,
             selectedDate.isToday,
             selectedDate.isToday ? getSeattleNow(now).minutesSinceMidnight : null,
-            upcomingDate
+            upcomingDate,
+            selectedDate.date
           ));
         });
       } catch (err) {
