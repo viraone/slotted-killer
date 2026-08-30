@@ -656,7 +656,7 @@
     "id": "hill-city-tapp-house-5303-rainier-ave-s-seattle-wa-98118",
     "name": "Hill City Tap House / Open Mic Collective PNW",
     "location": "5303 Rainier Ave S, Seattle, WA 98118",
-    "timeSignupStart": "online/7pm",
+    "timeSignupStart": "online/8pm",
     "monday": "",
     "tuesday": "",
     "wednesday": "REQ. ->",
@@ -667,7 +667,8 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Stand-up comedy open mic. 1st and 3rd Wednesday of every month. Online signups.",
+    "requirementsInfo": "Tap In Comedy stand-up open mic. 1st and 3rd Wednesday of every month. Show starts at 8:00 PM. Online signups.",
+    "host": "Derek Anthony",
     "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSdOELox5NHhOTNc-1KolAhhHtwXkLcq2-0YvqleKhVRdtfalA/viewform",
     "recurrenceText": "Every 1st & 3rd Wednesday",
     "recurrence": {
