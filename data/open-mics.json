@@ -495,6 +495,35 @@
     "longitude": -122.32085
   },
   {
+    "id": "hopvine-pub-507-15th-ave-e-seattle-wa-98112",
+    "name": "Hopvine Pub Open Mic",
+    "location": "507 15th Ave E, Seattle, WA 98112",
+    "timeSignupStart": "7pm/8pm-11pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up at the bar from 7:00–7:45 PM. No early signup; 15 performers are selected by lottery at 7:45 PM. A purchase is required to sign up.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free; purchase required to perform",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "21+",
+    "requirementsInfo": "All acts are welcome. Performances must be respectful of all people and the venue. Hosted by The Amazing Justin.",
+    "host": "The Amazing Justin",
+    "contact": "https://hopvinepub.com/seattle-capitol-hill-hopvine-pub-events",
+    "webSignup": "",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.623369,
+    "longitude": -122.312828
+  },
+  {
     "id": "darrells-tavern-18041-aurora-ave-n-shoreline-wa-98133",
     "name": "Darrell's Tavern",
     "location": "18041 Aurora Ave N, Shoreline, WA 98133",
