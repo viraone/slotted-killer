@@ -1365,7 +1365,7 @@
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
-    "thursday": "REQ. ->",
+    "thursday": "Yes",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
@@ -1379,9 +1379,8 @@
     "webSignup": "",
     "recurrenceText": "Last Thursday of the Month",
     "recurrence": {
-      "type": "monthly-nth-weekday",
-      "weekday": "Thursday",
-      "nth": -1
+      "type": "weekly",
+      "weekday": "Thursday"
     },
     "latitude": 47.61462,
     "longitude": -122.31825
@@ -1417,5 +1416,33 @@
     },
     "latitude": 47.6742557,
     "longitude": -122.1301778
+  },
+  {
+    "id": "1928-sunday-open-mic-14525-aurora-ave-n-shoreline-wa-98133",
+    "name": "1928 Sunday Open Mic",
+    "venue": "1928 Tap & Grill & Karaoke",
+    "location": "14525 Aurora Ave N, Shoreline, WA 98133",
+    "timeSignupStart": "/7pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "Yes",
+    "priceForTime": "",
+    "openMicType": "Mix Music Mic / Comedy",
+    "ageRequirement": "",
+    "requirementsInfo": "All talents welcome, including singers, musicians, poets, comedians, and more.",
+    "host": "Cyrus",
+    "contact": "https://www.instagram.com/1928tapgrillkaraoke/",
+    "webSignup": "",
+    "recurrenceText": "Every Sunday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Sunday"
+    },
+    "latitude": 47.734981,
+    "longitude": -122.345462
   }
 ]
