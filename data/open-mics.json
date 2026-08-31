@@ -438,6 +438,8 @@
     "venue": "J. Michael's Pub & Eatery",
     "location": "15770 Redmond Way, Redmond, WA 98052",
     "timeSignupStart": "6:30pm/7pm",
+    "signupType": "in-person",
+    "showWhenInactive": true,
     "monday": "no",
     "tuesday": "REQ. ->",
     "wednesday": "no",
