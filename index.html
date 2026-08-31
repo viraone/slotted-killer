@@ -2865,11 +2865,11 @@
         const isUrgent = minutesLeft <= 180; // last 3 hours before close
         signupWindowStatus.classList.add(isUrgent ? 'signup-window-status--urgent' : 'signup-window-status--open');
         signupWindowStatusText.textContent = isUrgent
-          ? `Requests close in ${formatCountdownDuration(minutesLeft)}`
-          : `Requests open — closes Thu 10:00 PM (${formatCountdownDuration(minutesLeft)} left)`;
+          ? `Sign Up Requests Closing Soon — ${formatCountdownDuration(minutesLeft)} left`
+          : `Sign Up Requests Open — Closes Thursday at 10:00 PM (${formatCountdownDuration(minutesLeft)} left)`;
       } else {
         signupWindowStatus.classList.add('signup-window-status--closed');
-        signupWindowStatusText.textContent = 'Requests closed for this week — reopens after Friday’s show';
+        signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
       }
 
       if (!signupSubmissionInFlight) {
