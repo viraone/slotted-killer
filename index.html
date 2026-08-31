@@ -472,7 +472,19 @@
       border-color: #00C805 !important;
       border-left-width: 4px !important;
       background: linear-gradient(to right, rgba(6, 78, 59, 0.2), rgba(24, 24, 27, 0.5)) !important;
-      box-shadow: 0 0 20px rgba(0, 200, 5, 0.15) !important;
+      animation: open-mic-active-pulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes open-mic-active-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(0, 200, 5, 0.15), 0 0 0 0 rgba(0, 200, 5, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 28px rgba(0, 200, 5, 0.35), 0 0 0 6px rgba(0, 200, 5, 0);
+      }
     }
 
     body.trip-intel-open {
@@ -889,6 +901,10 @@
       }
 
       .trip-intel-live-dot {
+        animation: none;
+      }
+
+      .open-mic-card--active {
         animation: none;
       }
     }
