@@ -71,6 +71,12 @@
           <p class="mx-auto mt-4 max-w-xl text-sm font-bold leading-6 text-zinc-200 sm:text-base">
             Submit request for Read The Room. Verify your email to officially join the request list.
           </p>
+          <div id="signupWindowStatus"
+            class="signup-window-status mx-auto mt-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold"
+            role="status" aria-live="polite">
+            <span id="signupWindowStatusDot" class="signup-window-status__dot h-1.5 w-1.5 shrink-0 rounded-full"></span>
+            <span id="signupWindowStatusText"></span>
+          </div>
         </header>
 
         <section id="signupCard" aria-label="Signup form"
@@ -500,6 +506,49 @@
 
       50% {
         box-shadow: 0 0 28px rgba(0, 200, 5, 0.35), 0 0 0 6px rgba(0, 200, 5, 0);
+      }
+    }
+
+    .signup-window-status--open {
+      border-color: rgba(0, 200, 5, 0.5);
+      background: rgba(0, 200, 5, 0.1);
+      color: #00C805;
+    }
+
+    .signup-window-status--open .signup-window-status__dot {
+      background: #00C805;
+    }
+
+    .signup-window-status--urgent {
+      border-color: rgb(220, 38, 38);
+      background: rgba(127, 29, 29, 0.25);
+      color: #f87171;
+      animation: signup-window-urgent-pulse 2.2s ease-in-out infinite;
+    }
+
+    .signup-window-status--urgent .signup-window-status__dot {
+      background: #ef4444;
+    }
+
+    .signup-window-status--closed {
+      border-color: #3f3f46;
+      background: rgba(39, 39, 42, 0.5);
+      color: #a1a1aa;
+    }
+
+    .signup-window-status--closed .signup-window-status__dot {
+      background: #71717a;
+    }
+
+    @keyframes signup-window-urgent-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 14px rgba(220, 38, 38, 0.2), 0 0 0 0 rgba(220, 38, 38, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 0 5px rgba(220, 38, 38, 0);
       }
     }
 
@@ -1207,6 +1256,8 @@
     const emailInput = document.getElementById('email');
     const submitButton = document.getElementById('submitButton');
     const formMessage = document.getElementById('formMessage');
+    const signupWindowStatus = document.getElementById('signupWindowStatus');
+    const signupWindowStatusText = document.getElementById('signupWindowStatusText');
     const verificationSentCard = document.getElementById('verificationSentCard');
     const successCard = document.getElementById('successCard');
     const instagramInfoButton = document.getElementById('instagramInfoButton');
@@ -1227,6 +1278,16 @@
     let verificationInProgress = false;
     let verificationHandled = false;
     let lineupRefreshTimer = null;
+    // Requests for Read The Room close Thursday 10:00 PM Seattle time (so the
+    // host can finalize the lineup and send notifications) and reopen once
+    // Friday's show wraps at 9:40 PM — the same boundary getSeattleScheduleMode
+    // uses to switch the nav into lineup mode.
+    const SIGNUP_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const SIGNUP_CLOSE_MINUTES = 22 * 60; // Thu 10:00 PM
+    const SIGNUP_REOPEN_MINUTES = 21 * 60 + 40; // Fri 9:40 PM
+
+    let signupWindowIsOpen = true;
+    let signupSubmissionInFlight = false;
 
     function enterStandaloneVerificationMode() {
       document.body.classList.add('verification-mode');
@@ -1316,6 +1377,9 @@
     }
     updateSignupNavLabel();
     window.setInterval(updateSignupNavLabel, 60 * 1000);
+
+    updateSignupWindowStatus();
+    window.setInterval(updateSignupWindowStatus, 30 * 1000);
 
     document.querySelectorAll('.nav-button').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -2746,6 +2810,74 @@
       return 'signup';
     }
 
+    function getSeattleWeekdayAndMinutes(date = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+      }).formatToParts(date);
+      const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+      const minutesSinceMidnight = (Number(values.hour) % 24) * 60 + Number(values.minute);
+      return { weekday: values.weekday, minutesSinceMidnight };
+    }
+
+    function isSignupRequestWindowOpen(date = new Date()) {
+      const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
+      if (weekday === 'Thu' && minutesSinceMidnight >= SIGNUP_CLOSE_MINUTES) return false;
+      if (weekday === 'Fri' && minutesSinceMidnight < SIGNUP_REOPEN_MINUTES) return false;
+      return true;
+    }
+
+    function minutesUntilSignupClose(date = new Date()) {
+      const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
+      const daysUntilThursday = (SIGNUP_WEEKDAYS.indexOf('Thu') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
+      return daysUntilThursday * 1440 + (SIGNUP_CLOSE_MINUTES - minutesSinceMidnight);
+    }
+
+    function minutesUntilSignupReopen(date = new Date()) {
+      const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
+      const daysUntilFriday = (SIGNUP_WEEKDAYS.indexOf('Fri') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
+      return daysUntilFriday * 1440 + (SIGNUP_REOPEN_MINUTES - minutesSinceMidnight);
+    }
+
+    function formatCountdownDuration(totalMinutes) {
+      const minutes = Math.max(0, Math.round(totalMinutes));
+      const days = Math.floor(minutes / 1440);
+      const hours = Math.floor((minutes % 1440) / 60);
+      const mins = minutes % 60;
+      if (days > 0) return `${days}d ${hours}h`;
+      if (hours > 0) return `${hours}h ${mins}m`;
+      return `${mins}m`;
+    }
+
+    function updateSignupWindowStatus() {
+      if (!signupWindowStatus || !signupWindowStatusText) return;
+
+      const now = new Date();
+      signupWindowIsOpen = isSignupRequestWindowOpen(now);
+
+      signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--urgent', 'signup-window-status--closed');
+
+      if (signupWindowIsOpen) {
+        const minutesLeft = minutesUntilSignupClose(now);
+        const isUrgent = minutesLeft <= 180; // last 3 hours before close
+        signupWindowStatus.classList.add(isUrgent ? 'signup-window-status--urgent' : 'signup-window-status--open');
+        signupWindowStatusText.textContent = isUrgent
+          ? `Requests close in ${formatCountdownDuration(minutesLeft)}`
+          : `Requests open — closes Thu 10:00 PM (${formatCountdownDuration(minutesLeft)} left)`;
+      } else {
+        signupWindowStatus.classList.add('signup-window-status--closed');
+        signupWindowStatusText.textContent = 'Requests closed for this week — reopens after Friday’s show';
+      }
+
+      if (!signupSubmissionInFlight) {
+        submitButton.disabled = !signupWindowIsOpen;
+        submitButton.textContent = signupWindowIsOpen ? 'Submit & Verify Email' : 'Requests Closed';
+      }
+    }
+
     function prioritizeVerificationView() {
       if (verificationTabRequested) {
         enterStandaloneVerificationMode();
@@ -2898,6 +3030,10 @@
     signupForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       if (!signupForm.reportValidity()) return;
+      if (!signupWindowIsOpen) {
+        showFormMessage('Requests for this week have closed. Check back after Friday’s show.', true);
+        return;
+      }
       if (!supabaseClient) {
         showFormMessage('Add your Supabase URL and anon key in index.html before submitting.', true);
         return;
@@ -2910,6 +3046,7 @@
       const slot_type = document.getElementById('slotType')?.value || 'First Available';
       const performedBefore = new FormData(signupForm).get('performed_before') === 'true';
 
+      signupSubmissionInFlight = true;
       submitButton.disabled = true;
       submitButton.textContent = 'Sending Verification…';
       formMessage.classList.add('hidden');
@@ -2922,6 +3059,7 @@
       if (duplicateCheckError) {
         console.error('Unable to check for an existing verified sign-up:', duplicateCheckError);
         showFormMessage('Could not check this email address. Please try again.', true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2930,6 +3068,7 @@
       if (typeof hasActiveVerifiedSignup !== 'boolean') {
         console.error('Unable to check for an existing verified sign-up: RPC returned an invalid response.');
         showFormMessage('Could not check this email address. Please try again.', true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2937,6 +3076,7 @@
 
       if (hasActiveVerifiedSignup === true) {
         showFormMessage('An account has already been verified with this email address. Please use a different email to continue.', true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2963,6 +3103,7 @@
       if (insertError) {
         console.error('Unable to save sign-up:', insertError);
         showFormMessage(`Could not save your submission: ${insertError.message}`, true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2971,6 +3112,7 @@
       if (insertedSignup?.id == null) {
         console.error('Unable to save sign-up: no signup ID was returned.');
         showFormMessage('Could not save your submission. Please try again.', true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2987,6 +3129,7 @@
       if (authError) {
         console.error('Unable to send magic link:', authError);
         showFormMessage(`Your submission was saved, but the verification email could not be sent: ${authError.message}`, true);
+        signupSubmissionInFlight = false;
         submitButton.disabled = false;
         submitButton.textContent = 'Submit & Verify Email';
         return;
@@ -2995,6 +3138,7 @@
       signupForm.reset();
       signupCard.classList.add('hidden');
       verificationSentCard.classList.remove('hidden');
+      signupSubmissionInFlight = false;
       submitButton.disabled = false;
       submitButton.textContent = 'Submit & Verify Email';
     });
