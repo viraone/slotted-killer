@@ -266,6 +266,22 @@
             </div>
           </div>
 
+          <!-- Type filter pills, same visual language as the day selector -->
+          <div class="mt-3">
+            <div id="openMicTypeFilter" class="flex flex-wrap gap-1.5 sm:gap-2" role="group"
+              aria-label="Filter by open mic type">
+              <button type="button" data-open-mic-type="all"
+                class="open-mic-type-button rounded-full border border-[#00C805] bg-[#00C805] px-3 py-1.5 text-xs font-black text-black transition"
+                aria-pressed="true">All</button>
+              <button type="button" data-open-mic-type="comedy"
+                class="open-mic-type-button rounded-full border border-zinc-700 bg-transparent px-3 py-1.5 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Comedy</button>
+              <button type="button" data-open-mic-type="variety"
+                class="open-mic-type-button rounded-full border border-zinc-700 bg-transparent px-3 py-1.5 text-xs font-bold text-zinc-400 transition hover:border-[#00C805]/50 hover:text-zinc-200"
+                aria-pressed="false">Music &amp; Variety</button>
+            </div>
+          </div>
+
           <!-- Clean status footer with zero text overlap -->
           <div
             class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-t border-zinc-800/60 pt-2.5">
@@ -1153,6 +1169,7 @@
     const openMicMapDayLabel = document.getElementById('openMicMapDayLabel');
     const openMicMapDateLabel = document.getElementById('openMicMapDateLabel');
     const openMicDayButtons = document.querySelectorAll('.open-mic-day-button');
+    const openMicTypeButtons = document.querySelectorAll('.open-mic-type-button');
     const openMicLocationButton = document.getElementById('openMicLocationButton');
     const openMicLocationStatus = document.getElementById('openMicLocationStatus');
     const openMicMapStatus = document.getElementById('openMicMapStatus');
@@ -1375,6 +1392,7 @@
       }
     };
     let selectedOpenMicDayName = null;
+    let selectedOpenMicType = 'all';
     let userOpenMicLocation = null;
     const openMicReachabilityRequests = new Set();
 
@@ -1384,6 +1402,13 @@
         if (!OPEN_MIC_CALENDAR_DAYS.includes(dayName)) return;
 
         selectedOpenMicDayName = dayName;
+        renderOpenMicMapView();
+      });
+    });
+
+    openMicTypeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        selectedOpenMicType = button.dataset.openMicType;
         renderOpenMicMapView();
       });
     });
@@ -1558,6 +1583,37 @@
         button.classList.toggle('bg-transparent', !isSelected);
         button.classList.toggle('text-zinc-400', !isSelected);
       });
+    }
+
+    function updateOpenMicTypeFilter(selectedType) {
+      openMicTypeButtons.forEach((button) => {
+        const isSelected = button.dataset.openMicType === selectedType;
+        button.setAttribute('aria-pressed', String(isSelected));
+        button.classList.toggle('border-[#00C805]', isSelected);
+        button.classList.toggle('bg-[#00C805]', isSelected);
+        button.classList.toggle('text-black', isSelected);
+        button.classList.toggle('font-black', isSelected);
+        button.classList.toggle('border-zinc-700', !isSelected);
+        button.classList.toggle('bg-transparent', !isSelected);
+        button.classList.toggle('text-zinc-400', !isSelected);
+        button.classList.toggle('font-bold', !isSelected);
+      });
+    }
+
+    // Buckets the free-text openMicType field into the filter categories. There is
+    // no clean "music-only" category in the data — every music mention is paired
+    // with comedy or filed under variety — so comedy-only mics are their own
+    // bucket and everything else with a type falls under Music & Variety.
+    function classifyOpenMicCategory(micType) {
+      const text = String(micType || '').toLowerCase();
+      if (!text) return null;
+      const mentionsOtherTalent = /music|variety|mix|anything|talent|voice/.test(text);
+      return mentionsOtherTalent ? 'variety' : 'comedy';
+    }
+
+    function filterOpenMicsByType(mics, selectedType) {
+      if (selectedType === 'all') return mics;
+      return mics.filter((mic) => classifyOpenMicCategory(mic.micType) === selectedType);
     }
 
     function openMicOccursOnSeattleDate(mic, seattleNow) {
@@ -2597,9 +2653,10 @@
       openMicMapDateLabel.textContent = formatSeattleCalendarDate(selectedDate.date);
       openMicTonightTitle.textContent = `${selectedDateParts.dayName}'s Mics`;
       updateOpenMicDaySelector(selectedDateParts.dayName);
+      updateOpenMicTypeFilter(selectedOpenMicType);
 
       try {
-        const allMics = await loadOpenMicData();
+        const allMics = filterOpenMicsByType(await loadOpenMicData(), selectedOpenMicType);
         if (renderToken !== openMicMapRenderToken) return;
 
         const { dayName, todays, nextMic, lastMic } = selectOpenMicsForSeattleDate(
@@ -2626,9 +2683,10 @@
         renderOpenMicTonightPanel(todays, nextMic, lastMic);
 
         if (todays.length === 0 && upcomingPreviews.length === 0) {
-          openMicMapStatus.textContent = selectedDate.isToday
-            ? 'No open mics listed for today.'
-            : 'No open mics listed for this day.';
+          const dayPhrase = selectedDate.isToday ? 'today' : 'this day';
+          openMicMapStatus.textContent = selectedOpenMicType === 'all'
+            ? `No open mics listed for ${dayPhrase}.`
+            : `No matching open mics for ${dayPhrase}. Try clearing the type filter.`;
           openMicMapStatus.hidden = false;
           return;
         }
