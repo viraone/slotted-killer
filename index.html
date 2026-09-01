@@ -1772,12 +1772,21 @@
         return a.name.localeCompare(b.name);
       });
 
-      // Find the next upcoming mic. Time-TBD mics use the same "latest" fallback
-      // as the sort above so they stay eligible after every timed mic has started.
-      // When everything has already started, nextMic stays null — nothing is "next".
+      // Highlight rule: before any mic starts, highlight the earliest upcoming
+      // mic. Once mics start, highlight the most recently STARTED one and hold
+      // it until the next start time actually arrives (e.g. the 7:30 mic stays
+      // highlighted until 8:00 sharp). Ties within a start time keep the sort
+      // order above (distance, then name). Time-TBD mics count as latest.
       let nextMic = null;
       if (compareCurrentTime) {
-        nextMic = todays.find((mic) => (mic.startMinutes ?? mic.signupMinutes ?? 9999) >= minutesSinceMidnight) || null;
+        const effectiveMinutes = (mic) => mic.startMinutes ?? mic.signupMinutes ?? 9999;
+        const started = todays.filter((mic) => effectiveMinutes(mic) <= minutesSinceMidnight);
+        if (started.length > 0) {
+          const currentTier = effectiveMinutes(started[started.length - 1]);
+          nextMic = started.find((mic) => effectiveMinutes(mic) === currentTier);
+        } else {
+          nextMic = todays[0] || null;
+        }
       } else {
         nextMic = todays.length > 0 ? todays[0] : null;
       }
