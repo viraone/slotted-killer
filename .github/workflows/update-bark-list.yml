@@ -20,17 +20,21 @@ jobs:
         with:
           node-version: 20
 
-      - name: Check BARK for the current 6th & Proctor list
+      - name: Install Tesseract OCR (reads the MC off the schedule images)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr
+
+      - name: Check BARK for the current Tacoma Comedy lists and MCs
         run: node scripts/update-bark-list.mjs
 
-      - name: Commit a changed performer-list URL
+      - name: Commit changed list URLs or hosts
+        if: always()
         run: |
           if git diff --quiet -- data/open-mics.json; then
-            echo "BARK performer-list URL is unchanged."
+            echo "BARK performer lists are unchanged."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/open-mics.json
-          git commit -m "Update BARK 6th & Proctor performer list"
+          git commit -m "Update BARK Tacoma Comedy performer lists and hosts"
           git push
