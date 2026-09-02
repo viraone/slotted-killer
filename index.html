@@ -2678,8 +2678,10 @@
       }
 
       const cardHost = getOpenMicHost(mic, upcomingDate || selectedDateObj);
+      // When a list link exists the host is shown on that button instead of as a line.
+      const hostOnListButton = Boolean(cardHost && mic.listUrl);
       const detailBits = [
-        cardHost ? `Host: ${cardHost}` : '',
+        cardHost && !hostOnListButton ? `Host: ${cardHost}` : '',
         mic.wheelchairAccessible ? 'Wheelchair accessible' : ''
       ].filter(Boolean);
       if (detailBits.length) {
@@ -2720,7 +2722,8 @@
           listLink.target = '_blank';
           listLink.rel = 'noopener noreferrer';
           listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
-          listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
+          listLink.textContent = hostOnListButton ? `Host: ${cardHost}` : buildOpenMicListButtonLabel(mic.listLabel);
+          if (hostOnListButton) listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
           actions.append(listLink);
         }
 
