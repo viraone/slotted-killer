@@ -183,7 +183,7 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic. Sign up in person or check monthly list online.",
     "webSignup": "https://www.barkentertainment.com/open-mic",
-    "listLabel": "6th & Proctor August List",
+    "listLabel": "6th & Proctor September List",
     "listUrl": "https://www.barkentertainment.com/copy-of-tcc2-june-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
     "recurrenceText": "Every Monday & Thursday",
@@ -192,7 +192,15 @@
       "weekday": "Monday"
     },
     "latitude": 47.255369,
-    "longitude": -122.48735
+    "longitude": -122.48735,
+    "hostSchedule": {
+      "2026-09-03": "Heath Richardson",
+      "2026-09-07": "Tony Ynot",
+      "2026-09-14": "James Fitz",
+      "2026-09-21": "Jes Anderson",
+      "2026-09-24": "Narin Vann",
+      "2026-09-28": "Erica Tausch"
+    }
   },
   {
     "id": "the-growler-guys-8500-lake-city-way-ne-seattle-wa-98115",
@@ -271,7 +279,20 @@
       "weekday": "Tuesday"
     },
     "latitude": 47.253971,
-    "longitude": -122.441551
+    "longitude": -122.441551,
+    "listLabel": "Downtown September List",
+    "listUrl": "https://www.barkentertainment.com/copy-of-bricktown-may-list",
+    "listSourceUrl": "https://www.barkentertainment.com/open-mic",
+    "hostSchedule": {
+      "2026-09-01": "Brendan Meeks",
+      "2026-09-02": "Peter Artman",
+      "2026-09-08": "Gavin Howells",
+      "2026-09-09": "Corey Bennett",
+      "2026-09-15": "Allison Fine",
+      "2026-09-22": "Donald Robert",
+      "2026-09-23": "Christian Mateo",
+      "2026-09-29": "Joe McHugh"
+    }
   },
   {
     "id": "super-funny-comedy-8402-s-hosmer-st-annex-building-tacoma-wa-98444",
@@ -464,7 +485,7 @@
         4
       ]
     },
-    "latitude": 47.6740,
+    "latitude": 47.674,
     "longitude": -122.1298
   },
   {
