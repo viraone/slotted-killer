@@ -1478,5 +1478,34 @@
     },
     "latitude": 47.734981,
     "longitude": -122.345462
+  },
+  {
+    "id": "tims-tavern-9655-16th-ave-sw-seattle-wa-98106",
+    "name": "Tim's Tavern",
+    "location": "9655 16th Ave SW, Seattle, WA 98106",
+    "timeSignupStart": "6:30pm/7pm",
+    "signupType": "in-person",
+    "signupDetails": "In-person signup starts at 6:30 PM.",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "No cover",
+    "openMicType": "Variety (Music, Comedy, etc.)",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Music, comedy, spoken word, and more.",
+    "host": "Levi",
+    "phone": "(206) 588-2452",
+    "webSignup": "",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.5158507,
+    "longitude": -122.3557004
   }
 ]
