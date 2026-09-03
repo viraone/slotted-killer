@@ -519,17 +519,6 @@
       background: #00C805;
     }
 
-    .signup-window-status--urgent {
-      border-color: rgb(220, 38, 38);
-      background: rgba(127, 29, 29, 0.25);
-      color: #f87171;
-      animation: signup-window-urgent-pulse 2.2s ease-in-out infinite;
-    }
-
-    .signup-window-status--urgent .signup-window-status__dot {
-      background: #ef4444;
-    }
-
     .signup-window-status--closed {
       border-color: #3f3f46;
       background: rgba(39, 39, 42, 0.5);
@@ -538,18 +527,6 @@
 
     .signup-window-status--closed .signup-window-status__dot {
       background: #71717a;
-    }
-
-    @keyframes signup-window-urgent-pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 14px rgba(220, 38, 38, 0.2), 0 0 0 0 rgba(220, 38, 38, 0.4);
-      }
-
-      50% {
-        box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 0 5px rgba(220, 38, 38, 0);
-      }
     }
 
     body.trip-intel-open {
@@ -2680,14 +2657,32 @@
       const cardHost = getOpenMicHost(mic, upcomingDate || selectedDateObj);
       // When a list link exists the host is shown on that button instead of as a line.
       const hostOnListButton = Boolean(cardHost && mic.listUrl);
-      const detailBits = [
-        cardHost && !hostOnListButton ? `Host: ${cardHost}` : '',
-        mic.wheelchairAccessible ? 'Wheelchair accessible' : ''
-      ].filter(Boolean);
-      if (detailBits.length) {
+      const hostBadgeClass = 'inline-flex items-center gap-1.5 rounded-md border border-amber-400/80 bg-gradient-to-r from-amber-500/25 to-amber-400/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.35)] transition hover:border-amber-300 hover:text-amber-100 hover:shadow-[0_0_16px_rgba(251,191,36,0.5)]';
+      const buildHostBadgeContent = (el) => {
+        const icon = document.createElement('span');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '🎤';
+        const label = document.createElement('span');
+        label.className = 'text-amber-400/90 font-bold normal-case tracking-normal';
+        label.textContent = 'Host:';
+        const name = document.createElement('span');
+        name.className = 'normal-case tracking-normal text-white';
+        name.textContent = cardHost;
+        el.replaceChildren(icon, label, name);
+      };
+      if (cardHost && !hostOnListButton) {
+        const hostRow = document.createElement('div');
+        hostRow.className = 'mt-3 flex flex-wrap items-center gap-2';
+        const hostBadge = document.createElement('span');
+        hostBadge.className = hostBadgeClass;
+        buildHostBadgeContent(hostBadge);
+        hostRow.append(hostBadge);
+        card.append(hostRow);
+      }
+      if (mic.wheelchairAccessible) {
         const details = document.createElement('p');
         details.className = 'mt-3 text-sm font-medium leading-6 text-zinc-300';
-        details.textContent = detailBits.join(' · ');
+        details.textContent = 'Wheelchair accessible';
         card.append(details);
       }
 
@@ -2721,9 +2716,14 @@
           listLink.href = mic.listUrl;
           listLink.target = '_blank';
           listLink.rel = 'noopener noreferrer';
-          listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
-          listLink.textContent = hostOnListButton ? `Host: ${cardHost}` : buildOpenMicListButtonLabel(mic.listLabel);
-          if (hostOnListButton) listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
+          if (hostOnListButton) {
+            listLink.className = hostBadgeClass;
+            buildHostBadgeContent(listLink);
+            listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
+          } else {
+            listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+            listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
+          }
           actions.append(listLink);
         }
 
@@ -2889,26 +2889,10 @@
       return true;
     }
 
-    function minutesUntilSignupClose(date = new Date()) {
-      const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
-      const daysUntilThursday = (SIGNUP_WEEKDAYS.indexOf('Thu') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
-      return daysUntilThursday * 1440 + (SIGNUP_CLOSE_MINUTES - minutesSinceMidnight);
-    }
-
     function minutesUntilSignupReopen(date = new Date()) {
       const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
       const daysUntilFriday = (SIGNUP_WEEKDAYS.indexOf('Fri') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
       return daysUntilFriday * 1440 + (SIGNUP_REOPEN_MINUTES - minutesSinceMidnight);
-    }
-
-    function formatCountdownDuration(totalMinutes) {
-      const minutes = Math.max(0, Math.round(totalMinutes));
-      const days = Math.floor(minutes / 1440);
-      const hours = Math.floor((minutes % 1440) / 60);
-      const mins = minutes % 60;
-      if (days > 0) return `${days}d ${hours}h`;
-      if (hours > 0) return `${hours}h ${mins}m`;
-      return `${mins}m`;
     }
 
     function updateSignupWindowStatus() {
@@ -2917,15 +2901,11 @@
       const now = new Date();
       signupWindowIsOpen = isSignupRequestWindowOpen(now);
 
-      signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--urgent', 'signup-window-status--closed');
+      signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--closed');
 
       if (signupWindowIsOpen) {
-        const minutesLeft = minutesUntilSignupClose(now);
-        const isUrgent = minutesLeft <= 180; // last 3 hours before close
-        signupWindowStatus.classList.add(isUrgent ? 'signup-window-status--urgent' : 'signup-window-status--open');
-        signupWindowStatusText.textContent = isUrgent
-          ? `Sign Up Requests Closing Soon — ${formatCountdownDuration(minutesLeft)} left`
-          : `Sign Up Requests Open — Closes Thursday at 10:00 PM (${formatCountdownDuration(minutesLeft)} left)`;
+        signupWindowStatus.classList.add('signup-window-status--open');
+        signupWindowStatusText.textContent = 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
       } else {
         signupWindowStatus.classList.add('signup-window-status--closed');
         signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
