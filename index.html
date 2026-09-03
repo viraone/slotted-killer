@@ -193,16 +193,23 @@
           <p class="mt-2 text-xs text-zinc-400">Please wait while we confirm your submission.</p>
         </div>
 
-        <div id="verificationSuccessCard"
-          class="hidden mx-auto max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/90 p-8 text-center shadow-2xl">
-          <div
-            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-950/80 text-3xl text-emerald-400">
-            ✓</div>
-          <h1 class="text-2xl font-black text-white">Email Verified!</h1>
-          <p class="mt-3 text-sm leading-6 text-zinc-300">Your request has been successfully received.</p>
-          <p class="mt-2 text-sm leading-6 text-zinc-400">We'll notify you if you're selected for this Friday's lineup.
-          </p>
-          <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-zinc-500">You may now close this tab.</p>
+        <div id="verificationSuccessCard" class="hidden verify-card mx-auto max-w-md text-center">
+          <div class="verify-card__inner">
+            <div class="verify-check" aria-hidden="true">
+              <span class="verify-check__ring"></span>
+              <svg viewBox="0 0 52 52" class="verify-check__svg">
+                <circle class="verify-check__circle" cx="26" cy="26" r="24" fill="none" />
+                <path class="verify-check__mark" fill="none" d="M15 27l7 7 15-16" />
+              </svg>
+            </div>
+            <p class="verify-rise verify-eyebrow" style="--d:.55s">Stagetime PNW</p>
+            <h1 class="verify-rise text-3xl font-black tracking-tight text-white sm:text-4xl" style="--d:.65s">Email Verified!</h1>
+            <p class="verify-rise mt-4 text-base font-semibold leading-7 text-zinc-100" style="--d:.8s">Your request has been successfully received.</p>
+            <p class="verify-rise mt-2 text-sm leading-6 text-zinc-400" style="--d:.9s">We'll notify you if you're selected for this Friday's lineup.
+            </p>
+            <div class="verify-rise verify-divider" style="--d:1.05s"></div>
+            <p class="verify-rise text-[11px] font-bold uppercase tracking-[0.28em] text-zinc-500" style="--d:1.15s">You may now close this tab.</p>
+          </div>
         </div>
 
         <div id="verificationErrorCard"
@@ -507,6 +514,131 @@
       50% {
         box-shadow: 0 0 28px rgba(0, 200, 5, 0.35), 0 0 0 6px rgba(0, 200, 5, 0);
       }
+    }
+
+    /* Email verification success card */
+    .verify-card {
+      position: relative;
+      border-radius: 1.5rem;
+      padding: 1px;
+      background: linear-gradient(160deg, rgba(0, 200, 5, 0.7), rgba(0, 200, 5, 0.08) 45%, rgba(63, 63, 70, 0.6));
+      box-shadow: 0 0 60px rgba(0, 200, 5, 0.12), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+      animation: verify-card-in .6s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .verify-card__inner {
+      position: relative;
+      overflow: hidden;
+      border-radius: calc(1.5rem - 1px);
+      padding: 2.75rem 2rem 2.25rem;
+      background:
+        radial-gradient(120% 70% at 50% -10%, rgba(0, 200, 5, 0.22), transparent 60%),
+        linear-gradient(180deg, #131316, #09090b);
+    }
+
+    .verify-card__inner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 18px 18px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, .9), transparent 70%);
+    }
+
+    .verify-check {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .verify-check__ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      border: 1px solid rgba(0, 200, 5, 0.45);
+      animation: verify-ring 2.4s ease-out .9s infinite;
+    }
+
+    .verify-check__svg {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 50% 40%, rgba(0, 200, 5, 0.28), rgba(0, 200, 5, 0.06) 70%);
+      box-shadow: inset 0 0 0 1px rgba(0, 200, 5, 0.25), 0 0 32px rgba(0, 200, 5, 0.35);
+      animation: verify-pop .5s cubic-bezier(.34, 1.56, .64, 1) .15s both;
+    }
+
+    .verify-check__circle {
+      stroke: #00C805;
+      stroke-width: 2;
+      stroke-dasharray: 151;
+      stroke-dashoffset: 151;
+      animation: verify-draw .7s ease-out .3s forwards;
+    }
+
+    .verify-check__mark {
+      stroke: #fff;
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 34;
+      stroke-dashoffset: 34;
+      filter: drop-shadow(0 0 6px rgba(0, 200, 5, 0.9));
+      animation: verify-draw .45s cubic-bezier(.65, 0, .45, 1) .75s forwards;
+    }
+
+    .verify-eyebrow {
+      margin-bottom: .75rem;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: #00C805;
+    }
+
+    .verify-divider {
+      height: 1px;
+      margin: 1.75rem auto 1.25rem;
+      width: 60%;
+      background: linear-gradient(90deg, transparent, rgba(0, 200, 5, 0.5), transparent);
+    }
+
+    .verify-rise {
+      opacity: 0;
+      animation: verify-rise .6s cubic-bezier(.2, .8, .2, 1) var(--d, 0s) forwards;
+    }
+
+    @keyframes verify-card-in {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @keyframes verify-pop {
+      from { transform: scale(.6); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+
+    @keyframes verify-draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes verify-ring {
+      0% { transform: scale(1); opacity: .8; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @keyframes verify-rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .verify-card, .verify-check__svg, .verify-rise { animation: none; opacity: 1; }
+      .verify-check__ring { display: none; }
+      .verify-check__circle, .verify-check__mark { animation: none; stroke-dashoffset: 0; }
     }
 
     .signup-window-status--open {
