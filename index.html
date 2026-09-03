@@ -519,17 +519,6 @@
       background: #00C805;
     }
 
-    .signup-window-status--urgent {
-      border-color: rgb(220, 38, 38);
-      background: rgba(127, 29, 29, 0.25);
-      color: #f87171;
-      animation: signup-window-urgent-pulse 2.2s ease-in-out infinite;
-    }
-
-    .signup-window-status--urgent .signup-window-status__dot {
-      background: #ef4444;
-    }
-
     .signup-window-status--closed {
       border-color: #3f3f46;
       background: rgba(39, 39, 42, 0.5);
@@ -538,18 +527,6 @@
 
     .signup-window-status--closed .signup-window-status__dot {
       background: #71717a;
-    }
-
-    @keyframes signup-window-urgent-pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 14px rgba(220, 38, 38, 0.2), 0 0 0 0 rgba(220, 38, 38, 0.4);
-      }
-
-      50% {
-        box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 0 5px rgba(220, 38, 38, 0);
-      }
     }
 
     body.trip-intel-open {
@@ -2912,26 +2889,10 @@
       return true;
     }
 
-    function minutesUntilSignupClose(date = new Date()) {
-      const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
-      const daysUntilThursday = (SIGNUP_WEEKDAYS.indexOf('Thu') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
-      return daysUntilThursday * 1440 + (SIGNUP_CLOSE_MINUTES - minutesSinceMidnight);
-    }
-
     function minutesUntilSignupReopen(date = new Date()) {
       const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
       const daysUntilFriday = (SIGNUP_WEEKDAYS.indexOf('Fri') - SIGNUP_WEEKDAYS.indexOf(weekday) + 7) % 7;
       return daysUntilFriday * 1440 + (SIGNUP_REOPEN_MINUTES - minutesSinceMidnight);
-    }
-
-    function formatCountdownDuration(totalMinutes) {
-      const minutes = Math.max(0, Math.round(totalMinutes));
-      const days = Math.floor(minutes / 1440);
-      const hours = Math.floor((minutes % 1440) / 60);
-      const mins = minutes % 60;
-      if (days > 0) return `${days}d ${hours}h`;
-      if (hours > 0) return `${hours}h ${mins}m`;
-      return `${mins}m`;
     }
 
     function updateSignupWindowStatus() {
@@ -2940,15 +2901,11 @@
       const now = new Date();
       signupWindowIsOpen = isSignupRequestWindowOpen(now);
 
-      signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--urgent', 'signup-window-status--closed');
+      signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--closed');
 
       if (signupWindowIsOpen) {
-        const minutesLeft = minutesUntilSignupClose(now);
-        const isUrgent = minutesLeft <= 180; // last 3 hours before close
-        signupWindowStatus.classList.add(isUrgent ? 'signup-window-status--urgent' : 'signup-window-status--open');
-        signupWindowStatusText.textContent = isUrgent
-          ? `Sign Up Requests Closing Soon — ${formatCountdownDuration(minutesLeft)} left`
-          : 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
+        signupWindowStatus.classList.add('signup-window-status--open');
+        signupWindowStatusText.textContent = 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
       } else {
         signupWindowStatus.classList.add('signup-window-status--closed');
         signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
