@@ -2948,7 +2948,7 @@
         signupWindowStatus.classList.add(isUrgent ? 'signup-window-status--urgent' : 'signup-window-status--open');
         signupWindowStatusText.textContent = isUrgent
           ? `Sign Up Requests Closing Soon — ${formatCountdownDuration(minutesLeft)} left`
-          : `Sign Up Requests Open — Closes Thursday at 10:00 PM (${formatCountdownDuration(minutesLeft)} left)`;
+          : 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
       } else {
         signupWindowStatus.classList.add('signup-window-status--closed');
         signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
