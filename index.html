@@ -2680,14 +2680,32 @@
       const cardHost = getOpenMicHost(mic, upcomingDate || selectedDateObj);
       // When a list link exists the host is shown on that button instead of as a line.
       const hostOnListButton = Boolean(cardHost && mic.listUrl);
-      const detailBits = [
-        cardHost && !hostOnListButton ? `Host: ${cardHost}` : '',
-        mic.wheelchairAccessible ? 'Wheelchair accessible' : ''
-      ].filter(Boolean);
-      if (detailBits.length) {
+      const hostBadgeClass = 'inline-flex items-center gap-1.5 rounded-md border border-amber-400/80 bg-gradient-to-r from-amber-500/25 to-amber-400/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.35)] transition hover:border-amber-300 hover:text-amber-100 hover:shadow-[0_0_16px_rgba(251,191,36,0.5)]';
+      const buildHostBadgeContent = (el) => {
+        const icon = document.createElement('span');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '🎤';
+        const label = document.createElement('span');
+        label.className = 'text-amber-400/90 font-bold normal-case tracking-normal';
+        label.textContent = 'Host:';
+        const name = document.createElement('span');
+        name.className = 'normal-case tracking-normal text-white';
+        name.textContent = cardHost;
+        el.replaceChildren(icon, label, name);
+      };
+      if (cardHost && !hostOnListButton) {
+        const hostRow = document.createElement('div');
+        hostRow.className = 'mt-3 flex flex-wrap items-center gap-2';
+        const hostBadge = document.createElement('span');
+        hostBadge.className = hostBadgeClass;
+        buildHostBadgeContent(hostBadge);
+        hostRow.append(hostBadge);
+        card.append(hostRow);
+      }
+      if (mic.wheelchairAccessible) {
         const details = document.createElement('p');
         details.className = 'mt-3 text-sm font-medium leading-6 text-zinc-300';
-        details.textContent = detailBits.join(' · ');
+        details.textContent = 'Wheelchair accessible';
         card.append(details);
       }
 
@@ -2721,9 +2739,14 @@
           listLink.href = mic.listUrl;
           listLink.target = '_blank';
           listLink.rel = 'noopener noreferrer';
-          listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
-          listLink.textContent = hostOnListButton ? `Host: ${cardHost}` : buildOpenMicListButtonLabel(mic.listLabel);
-          if (hostOnListButton) listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
+          if (hostOnListButton) {
+            listLink.className = hostBadgeClass;
+            buildHostBadgeContent(listLink);
+            listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
+          } else {
+            listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+            listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
+          }
           actions.append(listLink);
         }
 
