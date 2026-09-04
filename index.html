@@ -3113,13 +3113,8 @@
       const payload = JSON.parse(jsonMatch[1]);
       if (payload.status !== 'ok') throw new Error('Sheet query returned an error');
 
-      const cols = payload.table.cols.map((col) => (col.label || '').trim().toUpperCase());
-      const nameIndex = cols.indexOf('NAME');
-      const setIndex = cols.indexOf('SET') !== -1 ? cols.indexOf('SET') : cols.indexOf('LENGTH');
-      const timeIndex = cols.indexOf('TIME');
-
       const cellText = (row, index) => {
-        if (index < 0) return '';
+        if (index < 0 || !row) return '';
         const cell = row.c?.[index];
         if (!cell) return '';
         if (cell.f != null && String(cell.f).trim() !== '') return String(cell.f).trim();
@@ -3127,7 +3122,28 @@
         return '';
       };
 
-      return payload.table.rows
+      const cols = payload.table.cols.map((col) => (col.label || '').trim().toUpperCase());
+      let nameIndex = cols.indexOf('NAME');
+      let setIndex = cols.indexOf('SET') !== -1 ? cols.indexOf('SET') : cols.indexOf('LENGTH');
+      let timeIndex = cols.indexOf('TIME');
+      let dataRows = payload.table.rows;
+
+      if (nameIndex === -1) {
+        // Google Sheets didn't auto-detect a header row for this tab (blank header
+        // cells break its heuristic), so the header text ends up in the first data row.
+        const headerRow = payload.table.rows[0];
+        const headerCells = (headerRow?.c || []).map((_, i) => cellText(headerRow, i).toUpperCase());
+        nameIndex = headerCells.indexOf('NAME');
+        setIndex = headerCells.indexOf('SET') !== -1 ? headerCells.indexOf('SET') : headerCells.indexOf('LENGTH');
+        timeIndex = headerCells.indexOf('TIME');
+        dataRows = payload.table.rows.slice(1);
+
+        if (nameIndex === -1) nameIndex = 0;
+        if (setIndex === -1) setIndex = nameIndex + 1;
+        if (timeIndex === -1) timeIndex = nameIndex + 2;
+      }
+
+      return dataRows
         .map((row) => ({
           name: cellText(row, nameIndex),
           set_length: cellText(row, setIndex),
