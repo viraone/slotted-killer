@@ -1376,37 +1376,6 @@
     "longitude": -122.313123
   },
   {
-    "id": "the-fishbowl-424-2nd-ave-w-ste-330-seattle-wa-98119",
-    "name": "The Fishbowl Open Mic",
-    "venue": "The Fishbowl",
-    "location": "424 2nd Ave W, Suite #330, Seattle, WA 98119",
-    "timeSignupStart": "6pm/6:30pm",
-    "signupType": "in-person",
-    "signupDetails": "Doors open at 6:00 PM, show starts at 6:30 PM.",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "Yes",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "no",
-    "priceForTime": "Free",
-    "openMicType": "Variety / All Talents Welcome",
-    "ageRequirement": "All Ages",
-    "requirementsInfo": "All talents welcome at this QTBIPOC-centered community art space in Lower Queen Anne. Gallery will be open.",
-    "host": "The Power Puff Poets (Heather & Eddie!)",
-    "contact": "https://www.instagram.com/thefishbowlseattle/",
-    "website": "https://thefishbowlseattle.com",
-    "webSignup": "",
-    "recurrenceText": "Every Thursday",
-    "recurrence": {
-      "type": "weekly",
-      "weekday": "Thursday"
-    },
-    "latitude": 47.62256,
-    "longitude": -122.35821
-  },
-  {
     "id": "eleven-eleven-1512-11th-ave-seattle-wa-98122",
     "name": "Eleven Eleven Open Mic",
     "venue": "Eleven Eleven",
