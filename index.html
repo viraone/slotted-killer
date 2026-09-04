@@ -3099,7 +3099,7 @@
     }
 
     const LINEUP_SHEET_ID = '1CiqV18PMOPVienqn4HrqMVuMkxXX4bDJd08HATQk8gU';
-    const LINEUP_SHEET_NAME = 'Intake & Contacts';
+    const LINEUP_SHEET_NAME = 'Lineup';
 
     async function fetchLineupFromSheet() {
       const url = `https://docs.google.com/spreadsheets/d/${LINEUP_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(LINEUP_SHEET_NAME)}`;
@@ -3115,7 +3115,7 @@
 
       const cols = payload.table.cols.map((col) => (col.label || '').trim().toUpperCase());
       const nameIndex = cols.indexOf('NAME');
-      const setIndex = cols.indexOf('SET');
+      const setIndex = cols.indexOf('SET') !== -1 ? cols.indexOf('SET') : cols.indexOf('LENGTH');
       const timeIndex = cols.indexOf('TIME');
 
       const cellText = (row, index) => {
