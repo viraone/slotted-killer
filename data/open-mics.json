@@ -1198,35 +1198,6 @@
     "longitude": -122.335409
   },
   {
-    "id": "comedy-open-mic-309-ne-45th-st-seattle-wa-98105",
-    "name": "Comedy Open Mic",
-    "location": "309 NE 45th St, Seattle, WA 98105",
-    "timeSignupStart": "show up go up or DM host/5pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "Yes",
-    "priceForTime": "",
-    "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "Once a month on the 1st Sunday. Show up, go up, or DM host. Host: Steven Baz. Wheelchair accessible.",
-    "webSignup": "https://www.instagram.com/steven_baz/",
-    "recurrence": {
-      "type": "monthly-nth-weekday",
-      "weekday": "Sunday",
-      "nth": 1
-    },
-    "source": {
-      "name": "Killer Set Productions",
-      "url": "https://www.killersetproductions.com/open-mic-in-pnw#saturday"
-    },
-    "latitude": 47.661232,
-    "longitude": -122.324629
-  },
-  {
     "id": "halcyon-8564-greenwood-ave-n-seattle-wa-98103",
     "name": "Halcyon",
     "location": "8564 Greenwood Ave N, Seattle, WA 98103",
