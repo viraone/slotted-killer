@@ -2,3 +2,7 @@ project_id = "slotted-killer"
 
 [functions.sync-verified-signup]
 verify_jwt = false
+
+# Called from the public "Add Your Mic" form with the publishable key (not a JWT).
+[functions.submit-open-mic]
+verify_jwt = false

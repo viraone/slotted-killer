@@ -39,23 +39,36 @@
     <nav class="flex w-full items-center justify-around md:flex-col md:items-stretch md:gap-2"
       aria-label="Primary navigation">
       <button type="button" data-view="openmicmap"
-        class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-red-400 transition hover:bg-zinc-900 md:flex-none md:justify-start"
+        class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-red-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3"
         aria-current="page">
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round"
             d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z" />
         </svg>
-        <span class="text-xs font-semibold md:text-base">Home</span>
+        <span class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Home</span>
       </button>
       <button type="button" data-view="home"
-        class="nav-button flex flex-1 items-center justify-center gap-4 rounded-xl px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:justify-start">
+        class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round"
             d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
         </svg>
-        <span id="signupNavLabel" class="text-xs font-semibold md:text-base">Open Mic Sign-Up</span>
+        <span id="signupNavLabel"
+          class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Open Mic
+          Sign-Up</span>
+      </button>
+      <button type="button" data-view="addmic"
+        class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
+        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 15a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v5a4 4 0 0 0 4 4Zm0 0v4m-4 0h8M5 10.5a7 7 0 0 0 14 0" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 3.5v4m-2-2h4" />
+        </svg>
+        <span class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Add Your
+          Mic</span>
       </button>
     </nav>
   </aside>
@@ -346,6 +359,478 @@
         </div>
       </section><!-- openmicmap-section -->
 
+      <section id="addmic-section" hidden aria-labelledby="addmic-title" class="min-w-0">
+        <header class="addmic-hero mb-6 rounded-2xl border border-zinc-800 p-5 sm:p-7">
+          <div class="relative">
+            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Add Your Mic</p>
+            <h1 id="addmic-title" class="mt-1 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">Put your
+              open mic on the map.</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">Host, book, or run a mic anywhere in
+              the Pacific Northwest? Tell us about it below and we'll add it to the StageTime PNW list. Every submission
+              is reviewed by a human before it goes live.</p>
+            <ul class="mt-4 flex flex-wrap gap-2 text-[11px] font-bold text-zinc-300" aria-label="What to expect">
+              <li class="addmic-chip"><span aria-hidden="true">🎤</span> Comedy, music &amp; variety</li>
+              <li class="addmic-chip"><span aria-hidden="true">⏱</span> About 3 minutes</li>
+              <li class="addmic-chip"><span aria-hidden="true">🆓</span> Always free to list</li>
+            </ul>
+          </div>
+        </header>
+
+        <div id="addMicFormWrap"
+          class="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(300px,380px)] xl:items-start">
+          <form id="addMicForm" class="min-w-0 space-y-5" novalidate>
+
+            <section class="addmic-card" aria-labelledby="addMicStep1Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">1</span>
+                <div>
+                  <h2 id="addMicStep1Title" class="addmic-card__title">The mic</h2>
+                  <p class="addmic-card__subtitle">What's it called and where is it?</p>
+                </div>
+              </header>
+              <div class="space-y-4">
+                <div>
+                  <label for="addMicName" class="addmic-label">Open mic name <span class="addmic-required">*</span></label>
+                  <input id="addMicName" name="micName" type="text" required maxlength="120" autocomplete="off"
+                    placeholder="e.g. Broadview Comedy Open Mic" class="field">
+                </div>
+                <div>
+                  <label for="addMicVenue" class="addmic-label">Venue <span class="addmic-optional">(if different from
+                      the mic name)</span></label>
+                  <input id="addMicVenue" name="venue" type="text" maxlength="120" autocomplete="organization"
+                    placeholder="e.g. Broadview Tap House" class="field">
+                </div>
+                <div>
+                  <label for="addMicStreet" class="addmic-label">Street address <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicStreet" name="street" type="text" required maxlength="160"
+                    autocomplete="street-address" placeholder="217 N 125th St" class="field">
+                </div>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1fr)_120px_140px]">
+                  <div class="col-span-2 sm:col-span-1">
+                    <label for="addMicCity" class="addmic-label">City <span class="addmic-required">*</span></label>
+                    <input id="addMicCity" name="city" type="text" required maxlength="80" autocomplete="address-level2"
+                      placeholder="Seattle" class="field">
+                  </div>
+                  <div>
+                    <label for="addMicState" class="addmic-label">State <span class="addmic-required">*</span></label>
+                    <select id="addMicState" name="state" required class="field" autocomplete="address-level1">
+                      <option value="WA">WA</option>
+                      <option value="OR">OR</option>
+                      <option value="ID">ID</option>
+                      <option value="BC">BC</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="addMicZip" class="addmic-label">ZIP <span class="addmic-required">*</span></label>
+                    <input id="addMicZip" name="zip" type="text" required inputmode="numeric" maxlength="10"
+                      pattern="[0-9A-Za-z][0-9A-Za-z \-]{2,9}" title="Enter a ZIP or postal code"
+                      autocomplete="postal-code" placeholder="98133" class="field">
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="addmic-card" aria-labelledby="addMicStep2Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">2</span>
+                <div>
+                  <h2 id="addMicStep2Title" class="addmic-card__title">When it happens</h2>
+                  <p class="addmic-card__subtitle">Days, how often, and the times.</p>
+                </div>
+              </header>
+              <div class="space-y-5">
+                <fieldset data-addmic-group="days">
+                  <legend class="addmic-label">Day(s) of the week <span class="addmic-required">*</span></legend>
+                  <div class="grid grid-cols-7 gap-1 sm:gap-2">
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Sunday"><span
+                        class="addmic-pill__face">Sun</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Monday"><span
+                        class="addmic-pill__face">Mon</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Tuesday"><span
+                        class="addmic-pill__face">Tue</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Wednesday"><span
+                        class="addmic-pill__face">Wed</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Thursday"><span
+                        class="addmic-pill__face">Thu</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Friday"><span
+                        class="addmic-pill__face">Fri</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="days" value="Saturday"><span
+                        class="addmic-pill__face">Sat</span></label>
+                  </div>
+                  <p class="addmic-error" hidden>Pick at least one day.</p>
+                </fieldset>
+
+                <fieldset data-addmic-group="frequency">
+                  <legend class="addmic-label">How often <span class="addmic-required">*</span></legend>
+                  <div class="grid grid-cols-3 gap-2">
+                    <label class="addmic-pill"><input type="radio" name="frequency" value="weekly" checked><span
+                        class="addmic-pill__face">Every week</span></label>
+                    <label class="addmic-pill"><input type="radio" name="frequency" value="biweekly"><span
+                        class="addmic-pill__face">Every other week</span></label>
+                    <label class="addmic-pill"><input type="radio" name="frequency" value="monthly"><span
+                        class="addmic-pill__face">Monthly</span></label>
+                  </div>
+                  <p class="addmic-error" hidden>Choose how often the mic runs.</p>
+                </fieldset>
+
+                <fieldset id="addMicMonthlyWeeks" data-addmic-group="monthlyWeeks" hidden>
+                  <legend class="addmic-label">Which week(s) of the month <span class="addmic-required">*</span></legend>
+                  <div class="grid grid-cols-5 gap-1 sm:gap-2">
+                    <label class="addmic-pill"><input type="checkbox" name="monthlyWeeks" value="1"><span
+                        class="addmic-pill__face">1st</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="monthlyWeeks" value="2"><span
+                        class="addmic-pill__face">2nd</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="monthlyWeeks" value="3"><span
+                        class="addmic-pill__face">3rd</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="monthlyWeeks" value="4"><span
+                        class="addmic-pill__face">4th</span></label>
+                    <label class="addmic-pill"><input type="checkbox" name="monthlyWeeks" value="-1"><span
+                        class="addmic-pill__face">Last</span></label>
+                  </div>
+                  <p class="addmic-error" hidden>Pick at least one week.</p>
+                </fieldset>
+
+                <div id="addMicBiweeklyAnchor" hidden>
+                  <label for="addMicAnchorDate" class="addmic-label">Next date it's happening <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicAnchorDate" name="anchorDate" type="date" class="field">
+                  <p class="addmic-hint">We use this to work out which weeks are "on" weeks.</p>
+                  <p id="addMicAnchorWarning" class="addmic-warning" hidden></p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  <div>
+                    <label for="addMicSignupTime" class="addmic-label">Sign-up time <span id="addMicSignupRequiredMark"
+                        class="addmic-required">*</span><span id="addMicSignupOptionalMark" class="addmic-optional"
+                        hidden>(optional)</span></label>
+                    <input id="addMicSignupTime" name="signupTime" type="time" required class="field">
+                  </div>
+                  <div>
+                    <label for="addMicStartTime" class="addmic-label">Show starts <span
+                        class="addmic-required">*</span></label>
+                    <input id="addMicStartTime" name="startTime" type="time" required class="field">
+                  </div>
+                  <div class="col-span-2 sm:col-span-1">
+                    <label for="addMicEndTime" class="addmic-label">Ends <span
+                        class="addmic-optional">(optional)</span></label>
+                    <input id="addMicEndTime" name="endTime" type="time" class="field">
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="addmic-card" aria-labelledby="addMicStep3Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">3</span>
+                <div>
+                  <h2 id="addMicStep3Title" class="addmic-card__title">Sign-up</h2>
+                  <p class="addmic-card__subtitle">How do comics get on the list?</p>
+                </div>
+              </header>
+              <div class="space-y-5">
+                <fieldset data-addmic-group="signupType">
+                  <legend class="addmic-label">Sign-up method <span class="addmic-required">*</span></legend>
+                  <div class="grid grid-cols-3 gap-2">
+                    <label class="addmic-pill"><input type="radio" name="signupType" value="in-person" checked><span
+                        class="addmic-pill__face">In person</span></label>
+                    <label class="addmic-pill"><input type="radio" name="signupType" value="online"><span
+                        class="addmic-pill__face">Online</span></label>
+                    <label class="addmic-pill"><input type="radio" name="signupType" value="both"><span
+                        class="addmic-pill__face">Both</span></label>
+                  </div>
+                  <p class="addmic-error" hidden>Choose how people sign up.</p>
+                </fieldset>
+
+                <div id="addMicOnlineLinkWrap" hidden>
+                  <label for="addMicWebSignup" class="addmic-label">Online sign-up link <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicWebSignup" name="webSignup" type="text" inputmode="url" maxlength="500"
+                    autocomplete="url" placeholder="https://forms.gle/…" class="field">
+                </div>
+
+                <div>
+                  <label for="addMicSignupDetails" class="addmic-label">Sign-up details <span
+                      class="addmic-optional">(optional)</span></label>
+                  <textarea id="addMicSignupDetails" name="signupDetails" rows="3" maxlength="600"
+                    placeholder="e.g. Sign up at the bar starting at 7:30. First come, first choice of placement. 5-minute sets, list caps at 20."
+                    class="field"></textarea>
+                  <p class="addmic-hint">Leave this blank and we'll write a simple one from your times.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="addmic-card" aria-labelledby="addMicStep4Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">4</span>
+                <div>
+                  <h2 id="addMicStep4Title" class="addmic-card__title">The details</h2>
+                  <p class="addmic-card__subtitle">What comics should know before they show up.</p>
+                </div>
+              </header>
+              <div class="space-y-5">
+                <fieldset data-addmic-group="micType">
+                  <legend class="addmic-label">What kind of mic? <span class="addmic-required">*</span></legend>
+                  <div class="flex flex-wrap gap-2">
+                    <label class="addmic-pill addmic-pill--auto"><input type="radio" name="micType"
+                        value="comedy"><span class="addmic-pill__face">Comedy</span></label>
+                    <label class="addmic-pill addmic-pill--auto"><input type="radio" name="micType" value="music"><span
+                        class="addmic-pill__face">Music</span></label>
+                    <label class="addmic-pill addmic-pill--auto"><input type="radio" name="micType"
+                        value="variety"><span class="addmic-pill__face">Variety / Mix</span></label>
+                    <label class="addmic-pill addmic-pill--auto"><input type="radio" name="micType" value="improv"><span
+                        class="addmic-pill__face">Improv</span></label>
+                    <label class="addmic-pill addmic-pill--auto"><input type="radio" name="micType" value="other"><span
+                        class="addmic-pill__face">Other</span></label>
+                  </div>
+                  <p class="addmic-error" hidden>Pick the type of mic.</p>
+                </fieldset>
+
+                <div id="addMicTypeOtherWrap" hidden>
+                  <label for="addMicTypeOther" class="addmic-label">Describe the mic <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicTypeOther" name="micTypeOther" type="text" maxlength="80"
+                    placeholder="e.g. Poetry & storytelling" class="field">
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2">
+                  <fieldset data-addmic-group="age">
+                    <legend class="addmic-label">Age <span class="addmic-required">*</span></legend>
+                    <div class="grid grid-cols-3 gap-2">
+                      <label class="addmic-pill"><input type="radio" name="age" value="21" checked><span
+                          class="addmic-pill__face">21+</span></label>
+                      <label class="addmic-pill"><input type="radio" name="age" value="18"><span
+                          class="addmic-pill__face">18+</span></label>
+                      <label class="addmic-pill"><input type="radio" name="age" value="all"><span
+                          class="addmic-pill__face">All ages</span></label>
+                    </div>
+                    <p class="addmic-error" hidden>Choose an age requirement.</p>
+                  </fieldset>
+                  <fieldset data-addmic-group="price">
+                    <legend class="addmic-label">Cost to perform <span class="addmic-required">*</span></legend>
+                    <div class="grid grid-cols-3 gap-2">
+                      <label class="addmic-pill"><input type="radio" name="price" value="free" checked><span
+                          class="addmic-pill__face">Free</span></label>
+                      <label class="addmic-pill"><input type="radio" name="price" value="purchase"><span
+                          class="addmic-pill__face">Buy something</span></label>
+                      <label class="addmic-pill"><input type="radio" name="price" value="cover"><span
+                          class="addmic-pill__face">Cover</span></label>
+                    </div>
+                    <p class="addmic-error" hidden>Choose the cost to perform.</p>
+                  </fieldset>
+                </div>
+
+                <div id="addMicCoverAmountWrap" hidden>
+                  <label for="addMicCoverAmount" class="addmic-label">Cover amount <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicCoverAmount" name="coverAmount" type="text" inputmode="decimal" maxlength="40"
+                    placeholder="$5" class="field">
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="addMicHost" class="addmic-label">Host <span
+                        class="addmic-optional">(optional)</span></label>
+                    <input id="addMicHost" name="host" type="text" maxlength="120"
+                      placeholder="e.g. Callan Hercules, or “rotating”" class="field">
+                  </div>
+                  <div>
+                    <label for="addMicContact" class="addmic-label">Instagram or contact link <span
+                        class="addmic-optional">(optional)</span></label>
+                    <input id="addMicContact" name="contact" type="text" maxlength="200" autocomplete="off"
+                      placeholder="@yourmic or https://…" class="field">
+                  </div>
+                </div>
+
+                <div>
+                  <label for="addMicWebsite" class="addmic-label">Venue website <span
+                      class="addmic-optional">(optional)</span></label>
+                  <input id="addMicWebsite" name="website" type="text" inputmode="url" maxlength="200"
+                    autocomplete="url" placeholder="https://…" class="field">
+                </div>
+
+                <div>
+                  <label for="addMicRules" class="addmic-label">Details &amp; rules <span
+                      class="addmic-optional">(optional)</span></label>
+                  <textarea id="addMicRules" name="rules" rows="3" maxlength="800"
+                    placeholder="Set length, bucket or list, clean or anything goes, drink minimums, parking tips — anything a comic should know."
+                    class="field"></textarea>
+                </div>
+
+                <label class="addmic-check">
+                  <input id="addMicWheelchair" name="wheelchairAccessible" type="checkbox"
+                    class="mt-0.5 h-4 w-4 shrink-0 accent-[#00C805]">
+                  <span>The venue is wheelchair accessible</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="addmic-card" aria-labelledby="addMicStep5Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">5</span>
+                <div>
+                  <h2 id="addMicStep5Title" class="addmic-card__title">Flyer</h2>
+                  <p class="addmic-card__subtitle">Optional, but it helps us get the details right.</p>
+                </div>
+              </header>
+              <label id="addMicDropzone" for="addMicFlyer" class="addmic-dropzone">
+                <input id="addMicFlyer" name="flyer" type="file" accept="image/*" class="sr-only"
+                  aria-describedby="addMicFlyerHelp">
+                <div id="addMicDropzoneIdle">
+                  <svg class="mx-auto mb-3 h-8 w-8 text-[#00C805]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3 16.5V18a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-1.5M12 3v13m0-13-4 4m4-4 4 4" />
+                  </svg>
+                  <p class="text-sm font-bold text-zinc-100">Drop a flyer here or <span
+                      class="text-[#00C805] underline decoration-[#00C805]/40 underline-offset-2">browse</span></p>
+                  <p id="addMicFlyerHelp" class="mt-1 text-xs text-zinc-500">JPG, PNG, WEBP or HEIC · up to 10 MB</p>
+                </div>
+                <div id="addMicDropzonePreview" class="hidden items-center gap-4 text-left">
+                  <div
+                    class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950">
+                    <img id="addMicFlyerThumb" alt="Flyer preview" class="h-full w-full object-cover">
+                    <span id="addMicFlyerThumbFallback" class="hidden text-2xl" aria-hidden="true">🖼️</span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p id="addMicFlyerName" class="truncate text-sm font-bold text-zinc-100"></p>
+                    <p id="addMicFlyerSize" class="mt-0.5 text-xs text-zinc-500"></p>
+                    <p class="mt-1.5 text-xs font-semibold text-[#00C805]">Tap to replace</p>
+                  </div>
+                </div>
+              </label>
+              <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+                <p id="addMicFlyerError" class="addmic-error !mt-0" hidden></p>
+                <button id="addMicFlyerRemove" type="button"
+                  class="hidden ml-auto rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-red-500 hover:text-red-300">Remove
+                  flyer</button>
+              </div>
+            </section>
+
+            <section class="addmic-card" aria-labelledby="addMicStep6Title">
+              <header class="addmic-card__header">
+                <span class="addmic-step" aria-hidden="true">6</span>
+                <div>
+                  <h2 id="addMicStep6Title" class="addmic-card__title">About you</h2>
+                  <p class="addmic-card__subtitle">So we can follow up if something's unclear. Never shown publicly.
+                  </p>
+                </div>
+              </header>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label for="addMicSubmitterName" class="addmic-label">Your name <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicSubmitterName" name="submitterName" type="text" required maxlength="120"
+                    autocomplete="name" placeholder="Your name" class="field">
+                </div>
+                <div>
+                  <label for="addMicSubmitterEmail" class="addmic-label">Email <span
+                      class="addmic-required">*</span></label>
+                  <input id="addMicSubmitterEmail" name="submitterEmail" type="email" required maxlength="254"
+                    autocomplete="email" placeholder="you@example.com" class="field">
+                </div>
+                <div>
+                  <label for="addMicSubmitterRole" class="addmic-label">Your role</label>
+                  <select id="addMicSubmitterRole" name="submitterRole" class="field">
+                    <option value="host">I host it</option>
+                    <option value="booker">I book or produce it</option>
+                    <option value="venue">I'm with the venue</option>
+                    <option value="performer">I perform there</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="addMicSubmitterInstagram" class="addmic-label">Your Instagram <span
+                      class="addmic-optional">(optional)</span></label>
+                  <input id="addMicSubmitterInstagram" name="submitterInstagram" type="text" maxlength="100"
+                    autocomplete="off" placeholder="@handle" class="field">
+                </div>
+              </div>
+              <div class="mt-4">
+                <label for="addMicNotes" class="addmic-label">Anything else? <span
+                    class="addmic-optional">(optional)</span></label>
+                <textarea id="addMicNotes" name="notes" rows="2" maxlength="1000"
+                  placeholder="Corrections to an existing listing, special dates, the best way to reach you…"
+                  class="field"></textarea>
+              </div>
+              <div class="addmic-hp" aria-hidden="true">
+                <label for="addMicCompany">Company</label>
+                <input id="addMicCompany" name="company" type="text" tabindex="-1" autocomplete="off">
+              </div>
+            </section>
+
+            <details id="addMicMobilePreview" class="addmic-card xl:hidden">
+              <summary>
+                <span class="flex items-center gap-2"><span class="trip-intel-live-dot" aria-hidden="true"></span>
+                  Preview your listing</span>
+                <svg class="addmic-summary-chevron h-4 w-4 text-zinc-500" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+                </svg>
+              </summary>
+              <div id="addMicPreviewMobile" class="mt-4"></div>
+              <p class="mt-3 text-xs leading-5 text-zinc-500">This is how your mic will look on the list once it's
+                approved.</p>
+            </details>
+
+            <button id="addMicSubmitButton" type="submit"
+              class="w-full rounded-xl bg-[#00C805] px-5 py-3.5 text-base font-black text-black shadow-[0_0_20px_rgba(0,200,5,0.35)] transition hover:bg-[#00E006] hover:shadow-[0_0_28px_rgba(0,200,5,0.6)] active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:ring-offset-2 focus:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-[#00C805]">
+              Submit my mic
+            </button>
+            <p id="addMicFormMessage" role="status" aria-live="polite" class="hidden text-center text-sm"></p>
+            <p class="text-center text-[11px] leading-5 text-zinc-600">By submitting you confirm the info is accurate
+              and okay to publish on StageTime PNW.</p>
+          </form>
+
+          <aside class="hidden min-w-0 xl:sticky xl:top-5 xl:block xl:self-start" aria-labelledby="addMicPreviewTitle">
+            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <div class="flex items-center justify-between gap-3 border-b border-zinc-800 pb-3">
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-[#00C805]">Live preview</p>
+                  <h2 id="addMicPreviewTitle" class="mt-0.5 text-base font-black text-zinc-100">Your listing</h2>
+                </div>
+                <span class="trip-intel-live-dot" aria-hidden="true"></span>
+              </div>
+              <div id="addMicPreviewDesktop" class="mt-3"></div>
+              <p class="mt-3 text-xs leading-5 text-zinc-500">This is how your mic will look on the list once it's
+                approved. Distance and drive time show up for comics automatically.</p>
+            </div>
+          </aside>
+        </div>
+
+        <section id="addMicSuccessCard" class="hidden verify-card mx-auto max-w-md text-center" role="status"
+          aria-live="polite">
+          <div class="verify-card__inner">
+            <div class="verify-check" aria-hidden="true">
+              <span class="verify-check__ring"></span>
+              <svg viewBox="0 0 52 52" class="verify-check__svg">
+                <circle class="verify-check__circle" cx="26" cy="26" r="24" fill="none" />
+                <path class="verify-check__mark" fill="none" d="M15 27l7 7 15-16" />
+              </svg>
+            </div>
+            <p class="verify-rise verify-eyebrow" style="--d:.55s">StageTime PNW</p>
+            <h2 id="addMicSuccessTitle" tabindex="-1"
+              class="verify-rise text-3xl font-black tracking-tight text-white outline-none sm:text-4xl" style="--d:.65s">
+              Mic submitted!</h2>
+            <p class="verify-rise mt-4 text-base font-semibold leading-7 text-zinc-100" style="--d:.8s">Thanks, <span
+                id="addMicSuccessName"></span>. We got <span id="addMicSuccessMic" class="text-[#00C805]"></span>.</p>
+            <p class="verify-rise mt-2 text-sm leading-6 text-zinc-400" style="--d:.9s">We'll review it and add it to
+              the list, usually within a few days. We'll email you if anything needs clearing up.</p>
+            <p id="addMicSuccessFlyerNote" class="verify-rise mt-2 text-sm leading-6 text-amber-300" style="--d:.95s"
+              hidden>Heads up: the flyer didn't upload, but the rest of your submission went through.</p>
+            <div class="verify-rise verify-divider" style="--d:1.05s"></div>
+            <div class="verify-rise flex flex-wrap justify-center gap-2" style="--d:1.15s">
+              <button id="addMicSubmitAnother" type="button"
+                class="rounded-lg border border-[#00C805]/60 bg-[#00C805]/10 px-4 py-2.5 text-sm font-bold text-[#00C805] transition hover:bg-[#00C805]/20">Add
+                another mic</button>
+              <button id="addMicBackToList" type="button"
+                class="rounded-lg border border-zinc-700 px-4 py-2.5 text-sm font-bold text-zinc-200 transition hover:border-zinc-500">Back
+                to the list</button>
+            </div>
+          </div>
+        </section>
+      </section><!-- addmic-section -->
+
       <section id="lineup-section" hidden aria-labelledby="lineup-title">
         <div class="lineup-poster">
           <div class="lineup-poster__inner">
@@ -491,6 +976,338 @@
       max-width: 1600px;
       padding-left: clamp(16px, 2vw, 32px);
       padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    /* Add Your Mic form */
+    body.addmic-mode>main>div {
+      max-width: 1240px;
+      padding-left: clamp(16px, 2vw, 32px);
+      padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    #addmic-section {
+      color-scheme: dark;
+    }
+
+    #addmic-section .field:focus {
+      border-color: #00C805;
+      box-shadow: 0 0 0 2px rgba(0, 200, 5, 0.2);
+    }
+
+    #addmic-section .field:user-invalid {
+      border-color: rgba(248, 113, 113, 0.7);
+    }
+
+    #addmic-section select.field {
+      appearance: none;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+
+    #addmic-section textarea.field {
+      min-height: 5.5rem;
+      resize: vertical;
+    }
+
+    .addmic-hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(110% 90% at 0% 0%, rgba(0, 200, 5, 0.18), transparent 55%),
+        linear-gradient(180deg, rgba(24, 24, 27, 0.55), rgba(9, 9, 11, 0.35));
+    }
+
+    .addmic-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 18px 18px;
+      mask-image: linear-gradient(115deg, rgba(0, 0, 0, 0.9), transparent 70%);
+    }
+
+    .addmic-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #27272a;
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: rgba(9, 9, 11, 0.7);
+    }
+
+    .addmic-card {
+      border: 1px solid #27272a;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      background: rgba(24, 24, 27, 0.4);
+    }
+
+    @media (min-width: 640px) {
+      .addmic-card {
+        padding: 1.5rem;
+      }
+    }
+
+    .addmic-card__header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(39, 39, 42, 0.8);
+      padding-bottom: 1rem;
+    }
+
+    .addmic-step {
+      display: inline-flex;
+      height: 28px;
+      width: 28px;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0, 200, 5, 0.45);
+      border-radius: 999px;
+      background: rgba(0, 200, 5, 0.12);
+      color: #00C805;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: 0 0 12px rgba(0, 200, 5, 0.18);
+    }
+
+    .addmic-card__title {
+      margin: 0;
+      color: #fafafa;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.75rem;
+    }
+
+    .addmic-card__subtitle {
+      margin: 0;
+      color: #71717a;
+      font-size: 12px;
+      line-height: 1rem;
+    }
+
+    .addmic-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #e4e4e7;
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.25rem;
+    }
+
+    .addmic-required {
+      color: #00C805;
+    }
+
+    .addmic-optional {
+      color: #71717a;
+      font-weight: 400;
+    }
+
+    .addmic-hint,
+    .addmic-warning,
+    .addmic-error {
+      margin: 0.5rem 0 0;
+      font-size: 12px;
+      line-height: 1rem;
+    }
+
+    .addmic-hint {
+      color: #71717a;
+    }
+
+    .addmic-warning {
+      color: #fbbf24;
+    }
+
+    .addmic-error {
+      color: #f87171;
+      font-weight: 600;
+    }
+
+    .addmic-hint[hidden],
+    .addmic-warning[hidden],
+    .addmic-error[hidden] {
+      display: none;
+    }
+
+    .addmic-pill {
+      display: block;
+      min-width: 0;
+    }
+
+    .addmic-pill input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .addmic-pill__face {
+      display: flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #3f3f46;
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.35rem;
+      color: #a1a1aa;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.1;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 150ms ease, background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .addmic-pill__face:hover {
+      border-color: rgba(0, 200, 5, 0.5);
+      color: #e4e4e7;
+    }
+
+    .addmic-pill input:checked+.addmic-pill__face {
+      border-color: #00C805;
+      background: #00C805;
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 14px rgba(0, 200, 5, 0.35);
+    }
+
+    .addmic-pill input:focus-visible+.addmic-pill__face {
+      outline: 2px solid rgba(0, 200, 5, 0.6);
+      outline-offset: 2px;
+    }
+
+    .addmic-pill--auto .addmic-pill__face {
+      border-radius: 999px;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .addmic-group--invalid .addmic-pill input:not(:checked)+.addmic-pill__face {
+      border-color: rgba(248, 113, 113, 0.55);
+    }
+
+    .addmic-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border: 1px solid #27272a;
+      border-radius: 0.5rem;
+      padding: 12px 16px;
+      background: rgba(9, 9, 11, 0.7);
+      color: #d4d4d8;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      cursor: pointer;
+      transition: border-color 150ms ease;
+    }
+
+    .addmic-check:hover {
+      border-color: #3f3f46;
+    }
+
+    .addmic-dropzone {
+      display: block;
+      border: 2px dashed #3f3f46;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      background: rgba(9, 9, 11, 0.6);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+    }
+
+    .addmic-dropzone:hover,
+    .addmic-dropzone.is-dragover,
+    .addmic-dropzone:has(input:focus-visible) {
+      border-color: rgba(0, 200, 5, 0.65);
+      background: rgba(0, 200, 5, 0.05);
+      box-shadow: 0 0 20px rgba(0, 200, 5, 0.12);
+    }
+
+    .addmic-dropzone.has-file {
+      border-style: solid;
+      border-color: rgba(0, 200, 5, 0.45);
+      padding: 1rem;
+    }
+
+    .addmic-dropzone.has-file #addMicDropzonePreview {
+      display: flex;
+    }
+
+    .addmic-hp {
+      position: absolute;
+      left: -10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    #addMicPreviewDesktop .open-mic-card,
+    #addMicPreviewMobile .open-mic-card {
+      cursor: default;
+    }
+
+    .addmic-preview--placeholder .open-mic-card {
+      opacity: 0.55;
+    }
+
+    .addmic-preview-empty {
+      border: 1px dashed #3f3f46;
+      border-radius: 0.75rem;
+      padding: 1.5rem 1rem;
+      color: #71717a;
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    details.addmic-card summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      list-style: none;
+      color: #fafafa;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    details.addmic-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .addmic-summary-chevron {
+      transition: transform 150ms ease;
+    }
+
+    details.addmic-card[open] .addmic-summary-chevron {
+      transform: rotate(180deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .addmic-pill__face,
+      .addmic-dropzone,
+      .addmic-summary-chevron {
+        transition: none;
+      }
     }
 
     .open-mic-card {
@@ -1360,6 +2177,7 @@
     const lineupSection = document.getElementById('lineup-section');
     const lineupRows = document.getElementById('lineupRows');
     const lineupStatus = document.getElementById('lineupStatus');
+    const addMicSection = document.getElementById('addmic-section');
     const signupCard = document.getElementById('signupCard');
     const signupForm = document.getElementById('signupForm');
     const emailInput = document.getElementById('email');
@@ -1382,6 +2200,8 @@
       new URLSearchParams(window.location.search).get('signup') === '1';
     const lineupRequested =
       new URLSearchParams(window.location.search).get('lineup') === '1';
+    const addMicRequested =
+      new URLSearchParams(window.location.search).get('addmic') === '1';
 
     let supabaseClient = null;
     let verificationInProgress = false;
@@ -1403,7 +2223,9 @@
       homeSection.hidden = true;
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
+      addMicSection.hidden = true;
       verificationSection.hidden = false;
+      document.body.classList.remove('addmic-mode');
       stopLineupRefreshTimer();
     }
 
@@ -1434,9 +2256,11 @@
       homeSection.hidden = false;
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
+      addMicSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
+      document.body.classList.remove('addmic-mode');
     }
 
     function showOpenMicMapView() {
@@ -1445,9 +2269,25 @@
       homeSection.hidden = true;
       openMicMapSection.hidden = false;
       lineupSection.hidden = true;
+      addMicSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
+      document.body.classList.remove('addmic-mode');
       document.body.classList.add('openmicmap-mode');
+    }
+
+    function showAddMicView() {
+      if (verificationTabRequested) return;
+      stopLineupRefreshTimer();
+      homeSection.hidden = true;
+      openMicMapSection.hidden = true;
+      lineupSection.hidden = true;
+      addMicSection.hidden = false;
+      verificationSection.hidden = true;
+      document.body.classList.remove('lineup-mode');
+      document.body.classList.remove('openmicmap-mode');
+      document.body.classList.add('addmic-mode');
+      scheduleAddMicPreview();
     }
 
     function showLineupView() {
@@ -1455,9 +2295,11 @@
       homeSection.hidden = true;
       openMicMapSection.hidden = true;
       lineupSection.hidden = false;
+      addMicSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.add('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
+      document.body.classList.remove('addmic-mode');
     }
 
     function setActiveNav(view) {
@@ -1498,6 +2340,8 @@
         if (view === 'openmicmap') {
           showOpenMicMapView();
           renderOpenMicMapView();
+        } else if (view === 'addmic') {
+          showAddMicView();
         } else if (isLineupWindowActive()) {
           loadLineup();
           startLineupRefreshTimer();
@@ -3376,6 +4220,672 @@
       }
     }
 
+    // --- Add Your Mic form ---
+    // Hosts submit a mic; the submission is stored in Supabase
+    // (public.open_mic_submissions) with a `record` already shaped like an
+    // entry in data/open-mics.json, so approving one is a copy-paste plus a
+    // run of scripts/geocode-open-mics.mjs for coordinates.
+    const ADD_MIC_FLYER_BUCKET = 'open-mic-flyers';
+    const ADD_MIC_FLYER_MAX_BYTES = 10 * 1024 * 1024;
+    const ADD_MIC_ORDINALS = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th', '-1': 'Last' };
+    const ADD_MIC_TYPE_LABELS = {
+      comedy: 'Comedy',
+      music: 'Music Mic',
+      variety: 'Variety / Mix Mic / Anything is allowed',
+      improv: 'Improv Comedy'
+    };
+    const ADD_MIC_AGE_LABELS = { 21: '21+', 18: '18+', all: 'All Ages' };
+    const ADD_MIC_GROUP_RULES = [
+      { name: 'days' },
+      { name: 'frequency' },
+      { name: 'monthlyWeeks', when: () => getAddMicRadio('frequency') === 'monthly' },
+      { name: 'signupType' },
+      { name: 'micType' },
+      { name: 'age' },
+      { name: 'price' }
+    ];
+
+    const addMicForm = document.getElementById('addMicForm');
+    const addMicFormWrap = document.getElementById('addMicFormWrap');
+    const addMicSubmitButton = document.getElementById('addMicSubmitButton');
+    const addMicFormMessage = document.getElementById('addMicFormMessage');
+    const addMicSuccessCard = document.getElementById('addMicSuccessCard');
+    const addMicSuccessTitle = document.getElementById('addMicSuccessTitle');
+    const addMicSuccessName = document.getElementById('addMicSuccessName');
+    const addMicSuccessMic = document.getElementById('addMicSuccessMic');
+    const addMicSuccessFlyerNote = document.getElementById('addMicSuccessFlyerNote');
+    const addMicSubmitAnother = document.getElementById('addMicSubmitAnother');
+    const addMicBackToList = document.getElementById('addMicBackToList');
+    const addMicMonthlyWeeks = document.getElementById('addMicMonthlyWeeks');
+    const addMicBiweeklyAnchor = document.getElementById('addMicBiweeklyAnchor');
+    const addMicAnchorDate = document.getElementById('addMicAnchorDate');
+    const addMicAnchorWarning = document.getElementById('addMicAnchorWarning');
+    const addMicSignupTime = document.getElementById('addMicSignupTime');
+    const addMicSignupRequiredMark = document.getElementById('addMicSignupRequiredMark');
+    const addMicSignupOptionalMark = document.getElementById('addMicSignupOptionalMark');
+    const addMicOnlineLinkWrap = document.getElementById('addMicOnlineLinkWrap');
+    const addMicWebSignup = document.getElementById('addMicWebSignup');
+    const addMicTypeOtherWrap = document.getElementById('addMicTypeOtherWrap');
+    const addMicTypeOther = document.getElementById('addMicTypeOther');
+    const addMicCoverAmountWrap = document.getElementById('addMicCoverAmountWrap');
+    const addMicCoverAmount = document.getElementById('addMicCoverAmount');
+    const addMicDropzone = document.getElementById('addMicDropzone');
+    const addMicDropzoneIdle = document.getElementById('addMicDropzoneIdle');
+    const addMicFlyerInput = document.getElementById('addMicFlyer');
+    const addMicFlyerThumb = document.getElementById('addMicFlyerThumb');
+    const addMicFlyerThumbFallback = document.getElementById('addMicFlyerThumbFallback');
+    const addMicFlyerName = document.getElementById('addMicFlyerName');
+    const addMicFlyerSize = document.getElementById('addMicFlyerSize');
+    const addMicFlyerRemove = document.getElementById('addMicFlyerRemove');
+    const addMicFlyerError = document.getElementById('addMicFlyerError');
+    const addMicPreviewTargets = [
+      document.getElementById('addMicPreviewDesktop'),
+      document.getElementById('addMicPreviewMobile')
+    ].filter(Boolean);
+
+    let addMicFlyerFile = null;
+    let addMicFlyerObjectUrl = null;
+    let addMicSubmissionInFlight = false;
+    let addMicAttemptedSubmit = false;
+    let addMicPreviewFrame = null;
+
+    function addMicFormValue(name) {
+      const field = addMicForm.elements[name];
+      if (!field || field instanceof RadioNodeList) return '';
+      return String(field.value ?? '').trim();
+    }
+
+    function getAddMicChecked(name) {
+      return [...addMicForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value);
+    }
+
+    function getAddMicRadio(name) {
+      return getAddMicChecked(name)[0] || '';
+    }
+
+    // "19:30" -> "7:30pm", "19:00" -> "7pm" (the timeSignupStart shorthand used in the JSON)
+    function formatTimeInputShort(value) {
+      const match = /^(\d{1,2}):(\d{2})/.exec(String(value || '').trim());
+      if (!match) return '';
+      const hour24 = Number(match[1]);
+      const minute = match[2];
+      const suffix = hour24 >= 12 ? 'pm' : 'am';
+      const hour12 = hour24 % 12 || 12;
+      return minute === '00' ? `${hour12}${suffix}` : `${hour12}:${minute}${suffix}`;
+    }
+
+    // "19:30" -> "7:30 PM"
+    function formatTimeInputLong(value) {
+      const minutes = parseTimeStringToMinutes(String(value || '').trim());
+      return minutes === null ? '' : formatMinutesToClock(minutes);
+    }
+
+    function joinNaturally(items) {
+      if (items.length <= 1) return items[0] || '';
+      return `${items.slice(0, -1).join(', ')} & ${items[items.length - 1]}`;
+    }
+
+    function slugifyAddMic(text) {
+      return String(text || '')
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    // Accepts "@handle", "instagram.com/handle", "venue.com" or a full URL and
+    // returns an https:// URL (the cards only link http(s) values).
+    function normalizeAddMicUrl(value, { instagramHandles = false } = {}) {
+      const text = String(value || '').trim();
+      if (!text) return '';
+      if (/^https?:\/\//i.test(text)) return text;
+      if (/^@/.test(text)) {
+        const handle = text.slice(1).replace(/[^a-z0-9._]/gi, '');
+        return handle ? `https://www.instagram.com/${handle}/` : '';
+      }
+      if (/^[a-z0-9-]+(\.[a-z0-9-]+)+(\/|$)/i.test(text)) return `https://${text}`;
+      if (instagramHandles && /^[a-z0-9._]{1,30}$/i.test(text)) return `https://www.instagram.com/${text}/`;
+      return '';
+    }
+
+    function formatCoverAmount(value) {
+      const text = String(value || '').trim();
+      if (!text) return 'Cover charge';
+      return /^\d+(\.\d{1,2})?$/.test(text) ? `$${text}` : text;
+    }
+
+    function buildAddMicRecord() {
+      const name = addMicFormValue('micName');
+      const venue = addMicFormValue('venue');
+      const street = addMicFormValue('street');
+      const city = addMicFormValue('city');
+      const state = addMicFormValue('state');
+      const zip = addMicFormValue('zip');
+      // Only compose an address once there's a street or city, so the live
+      // preview doesn't show a lone "WA" before anyone types.
+      const location = (street || city)
+        ? [street, city, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
+        : '';
+
+      const checkedDays = getAddMicChecked('days');
+      const days = OPEN_MIC_DAY_NAMES.filter((day) => checkedDays.includes(day));
+      const frequency = getAddMicRadio('frequency') || 'weekly';
+      const monthlyWeeks = getAddMicChecked('monthlyWeeks')
+        .map(Number)
+        .filter((nth) => Number.isInteger(nth))
+        .sort((a, b) => (a === -1 ? 99 : a) - (b === -1 ? 99 : b));
+      const anchorDate = addMicFormValue('anchorDate');
+
+      const signupType = getAddMicRadio('signupType') || 'in-person';
+      const signupTime = addMicFormValue('signupTime');
+      const startTime = addMicFormValue('startTime');
+      const endTime = addMicFormValue('endTime');
+      const webSignup = signupType === 'in-person' ? '' : normalizeAddMicUrl(addMicFormValue('webSignup'));
+
+      const micTypeKey = getAddMicRadio('micType');
+      const openMicType = micTypeKey === 'other'
+        ? addMicFormValue('micTypeOther')
+        : (ADD_MIC_TYPE_LABELS[micTypeKey] || '');
+      const ageRequirement = ADD_MIC_AGE_LABELS[getAddMicRadio('age')] || '';
+      const priceKey = getAddMicRadio('price') || 'free';
+      const priceForTime = priceKey === 'purchase'
+        ? 'Free; purchase required to perform'
+        : priceKey === 'cover'
+          ? formatCoverAmount(addMicFormValue('coverAmount'))
+          : 'Free';
+
+      const host = addMicFormValue('host');
+      const contact = normalizeAddMicUrl(addMicFormValue('contact'), { instagramHandles: true });
+      const website = normalizeAddMicUrl(addMicFormValue('website'));
+      const rules = addMicFormValue('rules');
+      const wheelchairAccessible = Boolean(addMicForm.elements.wheelchairAccessible?.checked);
+
+      // Recurrence, matching the shapes already in data/open-mics.json.
+      const dayText = joinNaturally(days);
+      const weekday = days[0] || '';
+      let recurrenceText = '';
+      let recurrence = null;
+      let showWhenInactive = false;
+      if (days.length) {
+        if (frequency === 'biweekly') {
+          recurrenceText = `Every Other ${dayText}`;
+          recurrence = { type: 'biweekly', weekday, ...(anchorDate ? { anchorDate } : {}) };
+          showWhenInactive = true;
+        } else if (frequency === 'monthly') {
+          if (monthlyWeeks.length === 1) {
+            const nth = monthlyWeeks[0];
+            recurrenceText = nth === -1
+              ? `Last ${dayText} of the Month`
+              : `Every ${ADD_MIC_ORDINALS[nth]} ${dayText}`;
+            recurrence = { type: 'monthly-nth-weekday', weekday, nth };
+          } else if (monthlyWeeks.length > 1) {
+            recurrenceText = `Every ${joinNaturally(monthlyWeeks.map((nth) => ADD_MIC_ORDINALS[nth]))} ${dayText}`;
+            recurrence = { type: 'monthly-multiple-nth-weekdays', weekday, nth: monthlyWeeks };
+          } else {
+            recurrenceText = `Monthly · ${dayText}`;
+          }
+          showWhenInactive = true;
+        } else {
+          recurrenceText = `Every ${dayText}`;
+          recurrence = { type: 'weekly', weekday };
+        }
+      }
+
+      // "7pm/7:30pm-9pm" = signup / start - end
+      const signupShort = formatTimeInputShort(signupTime);
+      const startShort = formatTimeInputShort(startTime);
+      const endShort = formatTimeInputShort(endTime);
+      const signupPart = signupShort || (signupType === 'online' ? 'online' : '');
+      const timeSignupStart = (signupPart || startShort)
+        ? `${signupPart}/${startShort}${startShort && endShort ? `-${endShort}` : ''}`
+        : '';
+
+      const signupLong = formatTimeInputLong(signupTime);
+      let signupDetails = addMicFormValue('signupDetails');
+      if (!signupDetails) {
+        if (signupType === 'online') {
+          signupDetails = 'Sign up online in advance.';
+        } else if (signupType === 'both') {
+          signupDetails = signupLong
+            ? `Sign up online in advance or in person at ${signupLong}.`
+            : 'Sign up online in advance or in person.';
+        } else if (signupLong) {
+          signupDetails = `In-person signup starts at ${signupLong}.`;
+        }
+      }
+
+      const record = {
+        id: slugifyAddMic(`${venue || name} ${location}`),
+        name,
+        ...(venue ? { venue } : {}),
+        location,
+        timeSignupStart,
+        signupType,
+        ...(signupDetails ? { signupDetails } : {}),
+        monday: days.includes('Monday') ? 'Yes' : 'no',
+        tuesday: days.includes('Tuesday') ? 'Yes' : 'no',
+        wednesday: days.includes('Wednesday') ? 'Yes' : 'no',
+        thursday: days.includes('Thursday') ? 'Yes' : 'no',
+        friday: days.includes('Friday') ? 'Yes' : 'no',
+        saturday: days.includes('Saturday') ? 'Yes' : 'no',
+        sunday: days.includes('Sunday') ? 'Yes' : 'no',
+        priceForTime,
+        openMicType,
+        ageRequirement,
+        requirementsInfo: rules,
+        ...(host ? { host } : {}),
+        ...(wheelchairAccessible ? { wheelchairAccessible: true } : {}),
+        ...(contact ? { contact } : {}),
+        ...(website ? { website } : {}),
+        webSignup,
+        ...(recurrenceText ? { recurrenceText } : {}),
+        ...(recurrence ? { recurrence } : {}),
+        ...(showWhenInactive ? { showWhenInactive: true } : {})
+      };
+
+      return {
+        record,
+        meta: { days, frequency, monthlyWeeks, anchorDate, signupType, signupTime, startTime, endTime }
+      };
+    }
+
+    function renderAddMicPreview() {
+      addMicPreviewFrame = null;
+      if (!addMicPreviewTargets.length) return;
+      const { record } = buildAddMicRecord();
+      const isPlaceholder = !record.name;
+      const mic = normalizeOpenMicRecord(isPlaceholder ? { ...record, name: 'Your Open Mic' } : record);
+
+      addMicPreviewTargets.forEach((target) => {
+        target.classList.toggle('addmic-preview--placeholder', isPlaceholder);
+        if (!mic) {
+          const empty = document.createElement('p');
+          empty.className = 'addmic-preview-empty';
+          empty.textContent = 'Start filling in the form and your listing will appear here.';
+          target.replaceChildren(empty);
+          return;
+        }
+        const card = renderOpenMicCard(mic, false, false, null, null, null);
+        card.removeAttribute('id');
+        card.classList.remove('cursor-pointer');
+        // The list card highlights itself on click; keep the preview static.
+        card.addEventListener('click', () => card.classList.remove('open-mic-card--active'));
+        target.replaceChildren(card);
+      });
+    }
+
+    function scheduleAddMicPreview() {
+      if (!addMicForm || addMicPreviewFrame !== null) return;
+      addMicPreviewFrame = window.requestAnimationFrame(renderAddMicPreview);
+    }
+
+    function updateAddMicAnchorWarning() {
+      if (!addMicAnchorDate || !addMicAnchorWarning) return;
+      const value = addMicAnchorDate.value;
+      const days = getAddMicChecked('days');
+      if (!value || addMicBiweeklyAnchor.hidden || !days.length) {
+        addMicAnchorWarning.hidden = true;
+        return;
+      }
+      const [year, month, day] = value.split('-').map(Number);
+      const picked = new Date(year, month - 1, day);
+      if (Number.isNaN(picked.getTime())) {
+        addMicAnchorWarning.hidden = true;
+        return;
+      }
+      const weekday = OPEN_MIC_CALENDAR_DAYS[picked.getDay()];
+      if (days.includes(weekday)) {
+        addMicAnchorWarning.hidden = true;
+        return;
+      }
+      const formatted = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(picked);
+      addMicAnchorWarning.textContent = `Heads up: ${formatted} is a ${weekday}, but you picked ${joinNaturally(days)}.`;
+      addMicAnchorWarning.hidden = false;
+    }
+
+    function syncAddMicConditionalFields() {
+      if (!addMicForm) return;
+      const frequency = getAddMicRadio('frequency');
+      addMicMonthlyWeeks.hidden = frequency !== 'monthly';
+      addMicBiweeklyAnchor.hidden = frequency !== 'biweekly';
+      addMicAnchorDate.required = frequency === 'biweekly';
+
+      const signupType = getAddMicRadio('signupType');
+      const needsLink = signupType === 'online' || signupType === 'both';
+      addMicOnlineLinkWrap.hidden = !needsLink;
+      addMicWebSignup.required = needsLink;
+      const signupTimeRequired = signupType !== 'online';
+      addMicSignupTime.required = signupTimeRequired;
+      addMicSignupRequiredMark.hidden = !signupTimeRequired;
+      addMicSignupOptionalMark.hidden = signupTimeRequired;
+
+      const micType = getAddMicRadio('micType');
+      addMicTypeOtherWrap.hidden = micType !== 'other';
+      addMicTypeOther.required = micType === 'other';
+
+      const price = getAddMicRadio('price');
+      addMicCoverAmountWrap.hidden = price !== 'cover';
+      addMicCoverAmount.required = price === 'cover';
+
+      updateAddMicAnchorWarning();
+    }
+
+    // Pill groups are custom controls, so they get custom required-checks.
+    function validateAddMicGroups() {
+      let firstInvalid = null;
+      ADD_MIC_GROUP_RULES.forEach((rule) => {
+        const group = addMicForm.querySelector(`[data-addmic-group="${rule.name}"]`);
+        if (!group) return;
+        const applies = rule.when ? rule.when() : true;
+        const invalid = applies && getAddMicChecked(rule.name).length === 0;
+        group.classList.toggle('addmic-group--invalid', invalid);
+        const error = group.querySelector('.addmic-error');
+        if (error) error.hidden = !invalid;
+        if (invalid && !firstInvalid) firstInvalid = group;
+      });
+      return firstInvalid;
+    }
+
+    function clearAddMicGroupErrors() {
+      addMicForm.querySelectorAll('[data-addmic-group]').forEach((group) => {
+        group.classList.remove('addmic-group--invalid');
+        const error = group.querySelector('.addmic-error');
+        if (error) error.hidden = true;
+      });
+    }
+
+    function showAddMicMessage(message, isError = false) {
+      addMicFormMessage.textContent = message;
+      addMicFormMessage.className = `text-center text-sm font-semibold ${isError ? 'text-red-400' : 'text-[#00C805]'}`;
+    }
+
+    function hideAddMicMessage() {
+      addMicFormMessage.textContent = '';
+      addMicFormMessage.classList.add('hidden');
+    }
+
+    function setAddMicSubmitting(isSubmitting, label = 'Submit my mic') {
+      addMicSubmissionInFlight = isSubmitting;
+      addMicSubmitButton.disabled = isSubmitting;
+      addMicSubmitButton.textContent = label;
+    }
+
+    function formatFileSize(bytes) {
+      return bytes >= 1048576
+        ? `${(bytes / 1048576).toFixed(1)} MB`
+        : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+    }
+
+    function clearAddMicFlyer() {
+      addMicFlyerFile = null;
+      if (addMicFlyerObjectUrl) {
+        URL.revokeObjectURL(addMicFlyerObjectUrl);
+        addMicFlyerObjectUrl = null;
+      }
+      addMicFlyerInput.value = '';
+      addMicFlyerThumb.removeAttribute('src');
+      addMicFlyerThumb.classList.remove('hidden');
+      addMicFlyerThumbFallback.classList.add('hidden');
+      addMicDropzone.classList.remove('has-file');
+      addMicDropzoneIdle.classList.remove('hidden');
+      addMicFlyerRemove.classList.add('hidden');
+    }
+
+    function setAddMicFlyer(file) {
+      addMicFlyerError.hidden = true;
+      if (!file) {
+        clearAddMicFlyer();
+        return;
+      }
+      const looksLikeImage = /^image\//i.test(file.type) || /\.(jpe?g|png|webp|gif|heic|heif)$/i.test(file.name);
+      if (!looksLikeImage) {
+        clearAddMicFlyer();
+        addMicFlyerError.textContent = 'Please choose an image file (JPG, PNG, WEBP, GIF or HEIC).';
+        addMicFlyerError.hidden = false;
+        return;
+      }
+      if (file.size > ADD_MIC_FLYER_MAX_BYTES) {
+        clearAddMicFlyer();
+        addMicFlyerError.textContent = 'That file is over 10 MB. Try a smaller export or a screenshot of the flyer.';
+        addMicFlyerError.hidden = false;
+        return;
+      }
+      if (addMicFlyerObjectUrl) URL.revokeObjectURL(addMicFlyerObjectUrl);
+      addMicFlyerFile = file;
+      addMicFlyerObjectUrl = URL.createObjectURL(file);
+      addMicFlyerThumb.classList.remove('hidden');
+      addMicFlyerThumbFallback.classList.add('hidden');
+      addMicFlyerThumb.src = addMicFlyerObjectUrl;
+      addMicFlyerName.textContent = file.name;
+      addMicFlyerSize.textContent = formatFileSize(file.size);
+      addMicDropzone.classList.add('has-file');
+      addMicDropzoneIdle.classList.add('hidden');
+      addMicFlyerRemove.classList.remove('hidden');
+    }
+
+    async function uploadAddMicFlyer(file, slug) {
+      const extension = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      const path = `${new Date().toISOString().slice(0, 10)}/${slug || 'open-mic'}-${Date.now().toString(36)}.${extension}`;
+      const { error } = await supabaseClient.storage
+        .from(ADD_MIC_FLYER_BUCKET)
+        .upload(path, file, {
+          contentType: file.type || undefined,
+          upsert: false,
+          cacheControl: '31536000'
+        });
+      if (error) throw error;
+      const { data } = supabaseClient.storage.from(ADD_MIC_FLYER_BUCKET).getPublicUrl(path);
+      return data?.publicUrl || null;
+    }
+
+    // supabase-js wraps non-2xx function responses; the useful message is in the body.
+    async function describeAddMicError(error, data) {
+      if (data?.error) return data.error;
+      if (!error) return 'unexpected response. Please try again.';
+      try {
+        const body = await error.context?.json?.();
+        if (body?.error) return body.error;
+      } catch {
+        // Body wasn't JSON; fall through to the generic message.
+      }
+      return error.message || 'please try again.';
+    }
+
+    function showAddMicSuccess(submitterName, micName, flyerFailed) {
+      addMicSuccessName.textContent = submitterName;
+      addMicSuccessMic.textContent = micName;
+      addMicSuccessFlyerNote.hidden = !flyerFailed;
+      addMicFormWrap.hidden = true;
+      addMicSuccessCard.classList.remove('hidden');
+      addMicSuccessCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      addMicSuccessTitle.focus({ preventScroll: true });
+    }
+
+    function resetAddMicForm() {
+      addMicForm.reset();
+      clearAddMicFlyer();
+      addMicFlyerError.hidden = true;
+      addMicAttemptedSubmit = false;
+      clearAddMicGroupErrors();
+      hideAddMicMessage();
+      setAddMicSubmitting(false);
+      syncAddMicConditionalFields();
+      scheduleAddMicPreview();
+    }
+
+    if (addMicForm) {
+      addMicForm.addEventListener('input', () => {
+        hideAddMicMessage();
+        scheduleAddMicPreview();
+      });
+
+      addMicForm.addEventListener('change', () => {
+        syncAddMicConditionalFields();
+        if (addMicAttemptedSubmit) validateAddMicGroups();
+        scheduleAddMicPreview();
+      });
+
+      addMicFlyerInput.addEventListener('change', () => setAddMicFlyer(addMicFlyerInput.files?.[0] || null));
+      addMicFlyerRemove.addEventListener('click', () => {
+        clearAddMicFlyer();
+        addMicFlyerError.hidden = true;
+      });
+      addMicFlyerThumb.addEventListener('error', () => {
+        // HEIC and friends won't render in most browsers; show a placeholder instead.
+        if (!addMicFlyerFile) return;
+        addMicFlyerThumb.classList.add('hidden');
+        addMicFlyerThumbFallback.classList.remove('hidden');
+      });
+      ['dragenter', 'dragover'].forEach((type) => {
+        addMicDropzone.addEventListener(type, (event) => {
+          event.preventDefault();
+          addMicDropzone.classList.add('is-dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach((type) => {
+        addMicDropzone.addEventListener(type, (event) => {
+          event.preventDefault();
+          addMicDropzone.classList.remove('is-dragover');
+        });
+      });
+      addMicDropzone.addEventListener('drop', (event) => {
+        const file = event.dataTransfer?.files?.[0];
+        if (file) setAddMicFlyer(file);
+      });
+
+      addMicSubmitAnother.addEventListener('click', () => {
+        resetAddMicForm();
+        addMicSuccessCard.classList.add('hidden');
+        addMicFormWrap.hidden = false;
+        addMicSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('addMicName')?.focus({ preventScroll: true });
+      });
+
+      addMicBackToList.addEventListener('click', () => {
+        resetAddMicForm();
+        addMicSuccessCard.classList.add('hidden');
+        addMicFormWrap.hidden = false;
+        setActiveNav('openmicmap');
+        showOpenMicMapView();
+        renderOpenMicMapView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      addMicForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (addMicSubmissionInFlight) return;
+        addMicAttemptedSubmit = true;
+        syncAddMicConditionalFields();
+
+        const firstInvalidGroup = validateAddMicGroups();
+        const firstInvalidField = addMicForm.checkValidity()
+          ? null
+          : addMicForm.querySelector('input:invalid, select:invalid, textarea:invalid');
+        if (firstInvalidGroup || firstInvalidField) {
+          // Surface whichever problem comes first on the page.
+          const groupComesFirst = firstInvalidGroup && (
+            !firstInvalidField
+            || Boolean(firstInvalidGroup.compareDocumentPosition(firstInvalidField) & Node.DOCUMENT_POSITION_FOLLOWING)
+          );
+          if (groupComesFirst) {
+            firstInvalidGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInvalidGroup.querySelector('input')?.focus({ preventScroll: true });
+          } else {
+            addMicForm.reportValidity();
+          }
+          showAddMicMessage('Please fill in the highlighted fields.', true);
+          return;
+        }
+
+        const submitterName = addMicFormValue('submitterName');
+        const submitterEmail = addMicFormValue('submitterEmail').toLowerCase();
+        const { record, meta } = buildAddMicRecord();
+
+        // Honeypot: bots fill the hidden "company" field. Pretend it worked.
+        if (addMicFormValue('company')) {
+          showAddMicSuccess(submitterName, record.name, false);
+          return;
+        }
+
+        if (!supabaseClient) {
+          showAddMicMessage('Submissions are temporarily unavailable. Please try again in a few minutes.', true);
+          return;
+        }
+
+        hideAddMicMessage();
+        setAddMicSubmitting(true, 'Submitting…');
+
+        let flyerUrl = null;
+        let flyerNote = '';
+        if (addMicFlyerFile) {
+          setAddMicSubmitting(true, 'Uploading flyer…');
+          try {
+            flyerUrl = await uploadAddMicFlyer(addMicFlyerFile, record.id);
+          } catch (err) {
+            console.error('Unable to upload flyer:', err);
+            flyerNote = `Flyer upload failed (${addMicFlyerFile.name}): ${err?.message || err}`;
+          }
+          setAddMicSubmitting(true, 'Submitting…');
+        }
+
+        const notes = addMicFormValue('notes');
+        const submission = {
+          submitter_name: submitterName,
+          submitter_email: submitterEmail,
+          submitter_instagram: addMicFormValue('submitterInstagram') || null,
+          submitter_role: addMicFormValue('submitterRole') || null,
+          submitter_notes: [notes, flyerNote].filter(Boolean).join('\n\n') || null,
+          mic_name: record.name,
+          venue: record.venue || null,
+          location: record.location,
+          days: meta.days,
+          recurrence_text: record.recurrenceText || null,
+          signup_time: meta.signupTime || null,
+          start_time: meta.startTime || null,
+          end_time: meta.endTime || null,
+          signup_type: meta.signupType,
+          web_signup: record.webSignup || null,
+          open_mic_type: record.openMicType || null,
+          age_requirement: record.ageRequirement || null,
+          price: record.priceForTime || null,
+          host: record.host || null,
+          flyer_url: flyerUrl,
+          record,
+          page_url: window.location.href
+        };
+
+        // The edge function saves the row with the service role and emails the
+        // admin, so the browser never writes to the table directly.
+        let result;
+        try {
+          result = await supabaseClient.functions.invoke('submit-open-mic', { body: submission });
+        } catch (err) {
+          // invoke normally reports failures in `error`, but a dropped
+          // connection can reject instead. Never leave the button spinning.
+          console.error('Unable to reach the open mic submission function:', err);
+          showAddMicMessage('Could not submit your mic. Check your connection and try again.', true);
+          setAddMicSubmitting(false);
+          return;
+        }
+
+        const { data, error } = result || {};
+
+        if (error || !data?.ok) {
+          console.error('Unable to save open mic submission:', error || data);
+          showAddMicMessage(`Could not submit your mic: ${await describeAddMicError(error, data)}`, true);
+          setAddMicSubmitting(false);
+          return;
+        }
+
+        setAddMicSubmitting(false);
+        showAddMicSuccess(submitterName, record.name, Boolean(addMicFlyerFile) && !flyerUrl);
+      });
+
+      syncAddMicConditionalFields();
+      scheduleAddMicPreview();
+    }
+
     async function initializeApp() {
       const configured = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
       if (!configured) {
@@ -3428,9 +4938,13 @@
       }
 
       const scheduledMode = getSeattleScheduleMode();
-      const lineupModeRequested = lineupRequested && !signupRequested;
+      const lineupModeRequested = lineupRequested && !signupRequested && !addMicRequested;
 
-      if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
+      if (addMicRequested) {
+        // Shared link for hosts: stagetimepnw.com/add-mic
+        setActiveNav('addmic');
+        showAddMicView();
+      } else if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
         setActiveNav('home');
         await loadLineup();
         startLineupRefreshTimer();
