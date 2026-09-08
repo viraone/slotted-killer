@@ -46,7 +46,8 @@
           <path stroke-linecap="round" stroke-linejoin="round"
             d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1v-9Z" />
         </svg>
-        <span class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Home</span>
+        <span
+          class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Home</span>
       </button>
       <button type="button" data-view="home"
         class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
@@ -56,8 +57,8 @@
             d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
         </svg>
         <span id="signupNavLabel"
-          class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Open Mic
-          Sign-Up</span>
+          class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Open
+          Mic Sign-Up</span>
       </button>
       <button type="button" data-view="addmic"
         class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
@@ -67,8 +68,9 @@
             d="M12 15a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v5a4 4 0 0 0 4 4Zm0 0v4m-4 0h8M5 10.5a7 7 0 0 0 14 0" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 3.5v4m-2-2h4" />
         </svg>
-        <span class="whitespace-nowrap text-[11px] font-semibold leading-none md:text-base md:leading-normal">Add Your
-          Mic</span>
+        <span
+          class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Submit
+          Your Open Mic</span>
       </button>
     </nav>
   </aside>
@@ -362,7 +364,7 @@
       <section id="addmic-section" hidden aria-labelledby="addmic-title" class="min-w-0">
         <header class="addmic-hero mb-6 rounded-2xl border border-zinc-800 p-5 sm:p-7">
           <div class="relative">
-            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Add Your Mic</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Submit Your Open Mic</p>
             <h1 id="addmic-title" class="mt-1 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">Put your
               open mic on the map.</h1>
             <p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">Host, book, or run a mic anywhere in
@@ -4220,7 +4222,7 @@
       }
     }
 
-    // --- Add Your Mic form ---
+    // --- Submit Your Open Mic form (internally: the "addmic" view, /add-mic) ---
     // Hosts submit a mic; the submission is stored in Supabase
     // (public.open_mic_submissions) with a `record` already shaped like an
     // entry in data/open-mics.json, so approving one is a copy-paste plus a
