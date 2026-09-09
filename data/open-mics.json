@@ -1465,5 +1465,34 @@
     },
     "latitude": 47.5158507,
     "longitude": -122.3557004
+  },
+  {
+    "id": "chop-suey-scrambler-jam-1325-e-madison-st-seattle-wa-98122",
+    "name": "Chop Suey (Scrambler Jam)",
+    "location": "1325 E Madison St, Seattle, WA 98122",
+    "timeSignupStart": "7pm/8pm",
+    "monday": "no",
+    "tuesday": "REQ. ->",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Mix Mic / Comedy allowed",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Part open mic, part open jam session, with comics in supporting roles. Full backline provided. Sign ups start at 7:00 PM and the show starts at 8:00 PM.",
+    "signupDetails": "Sign up in person at 7:00 PM. Show at 8:00 PM.",
+    "showWhenInactive": true,
+    "contact": "https://chopsuey.com/tm-event/scrambler-jam-12/",
+    "webSignup": "",
+    "recurrenceText": "Every 4th Tuesday of the Month",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Tuesday",
+      "nth": 4
+    },
+    "latitude": 47.61492,
+    "longitude": -122.31453
   }
 ]
