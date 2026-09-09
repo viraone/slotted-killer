@@ -1199,9 +1199,12 @@
   },
   {
     "id": "halcyon-8564-greenwood-ave-n-seattle-wa-98103",
-    "name": "Halcyon",
+    "name": "Comedy Night at Halcyon Brewing Co.",
+    "venue": "Halcyon Brewing Company",
     "location": "8564 Greenwood Ave N, Seattle, WA 98103",
-    "timeSignupStart": "online/8pm",
+    "timeSignupStart": "7:30pm/8pm",
+    "signupType": "in-person",
+    "signupDetails": "Doors/seating at 7:30 PM, show starts at 8:00 PM.",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
@@ -1209,12 +1212,15 @@
     "friday": "no",
     "saturday": "REQ. ->",
     "sunday": "no",
-    "priceForTime": "",
+    "priceForTime": "Free",
     "openMicType": "Only Comedy",
-    "ageRequirement": "",
-    "requirementsInfo": "Contest-style mic voted by the audience. Host: rotating. Wheelchair accessible.",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSeUHNTMSYbHLL1XyPOKS-wZH-gE-ixeCCu5bRFWYTP15mrDPQ/viewform?fbclid=IwY2xjawOEjcdleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEe6zxZK2BeFdPOkodMbjFSYDSOpQXm9th6DwbI-xBARf3KfuYZCjKV5gx0CIE_aem_t6tR4pAcRu2eWzOBzTl7oA",
-    "contact": "https://www.instagram.com/openmiccollectivepnw/",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Free comedy show presented by Open Mic Collective PNW. Seating at 7:30 PM, show at 8:00 PM.",
+    "hostSchedule": {
+      "2026-09-12": "Lori Sibal Peck"
+    },
+    "contact": "https://www.facebook.com/lori.peck.9",
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSeUHNTMSYbHLL1XyPOKS-wZH-gE-ixeCCu5bRFWYTP15mrDPQ/viewform",
     "recurrenceText": "Every 2nd and 4th Saturday",
     "recurrence": {
       "type": "monthly-multiple-nth-weekdays",
@@ -1223,10 +1229,6 @@
         2,
         4
       ]
-    },
-    "source": {
-      "name": "Killer Set Productions",
-      "url": "https://www.killersetproductions.com/open-mic-in-pnw#saturday"
     },
     "latitude": 47.691822,
     "longitude": -122.355083
