@@ -652,6 +652,7 @@
   {
     "id": "flight-path-1832-s-120th-st-burien-wa-98168",
     "name": "Flight Path",
+    "host": "Brandon White",
     "location": "1832 S 120th St, Burien, WA 98168",
     "timeSignupStart": "8pm/8:30pm-10pm",
     "monday": "no",
