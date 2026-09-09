@@ -71,9 +71,9 @@
           class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Submit
           Your Open Mic</span>
       </button>
-      <!-- Unhidden only after is_app_admin() comes back true. -->
-      <button type="button" data-view="admin" id="adminNavButton" hidden
-        class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
+      <!-- Rendered as a faint "disabled-looking" ghost tab; restored to normal after is_app_admin() comes back true. -->
+      <button type="button" data-view="admin" id="adminNavButton" tabindex="-1"
+        class="nav-button nav-button--ghost flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
         <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -1063,6 +1063,20 @@
       max-width: 1240px;
       padding-left: clamp(16px, 2vw, 32px);
       padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    /* Admin nav tab: looks like a greyed-out, disabled item until an admin session is confirmed. */
+    .nav-button--ghost,
+    .nav-button--ghost[aria-current="page"] {
+      color: rgb(63 63 70) !important;
+      opacity: .35;
+      cursor: default;
+    }
+
+    .nav-button--ghost:hover,
+    .nav-button--ghost:focus-visible {
+      background: transparent;
+      outline: none;
     }
 
     /* Admin review panel */
@@ -5125,6 +5139,14 @@
     const adminSignInButton = document.getElementById('adminSignInButton');
     const adminSignInMessage = document.getElementById('adminSignInMessage');
     const adminNavButton = document.getElementById('adminNavButton');
+
+    // The tab is always in the DOM (still clickable) but styled like a dead,
+    // greyed-out item for everyone except a confirmed admin.
+    function setAdminNavGhost(ghost) {
+      adminNavButton.classList.toggle('nav-button--ghost', ghost);
+      if (ghost) adminNavButton.setAttribute('tabindex', '-1');
+      else adminNavButton.removeAttribute('tabindex');
+    }
     const adminPanel = document.getElementById('adminPanel');
     const adminStatusFilter = document.getElementById('adminStatusFilter');
     const adminRefreshButton = document.getElementById('adminRefreshButton');
@@ -5324,7 +5346,7 @@
     async function refreshAdminAuthorization(session) {
       if (!session?.user?.email) {
         adminIsAuthorized = false;
-        adminNavButton.hidden = true;
+        setAdminNavGhost(true);
         adminPanel.hidden = true;
         adminSignInCard.hidden = false;
         return false;
@@ -5341,7 +5363,7 @@
       }
 
       adminIsAuthorized = authorized;
-      adminNavButton.hidden = !authorized;
+      setAdminNavGhost(!authorized);
       adminPanel.hidden = !authorized;
       adminSignInCard.hidden = authorized;
 
@@ -5845,7 +5867,7 @@
       if (session?.user?.email) {
         supabaseClient.rpc('is_app_admin').then(({ data }) => {
           adminIsAuthorized = data === true;
-          adminNavButton.hidden = !adminIsAuthorized;
+          setAdminNavGhost(!adminIsAuthorized);
           adminPanel.hidden = !adminIsAuthorized;
           adminSignInCard.hidden = adminIsAuthorized;
           if (adminIsAuthorized) adminWhoami.textContent = `Signed in as ${session.user.email}`;
