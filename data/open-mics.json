@@ -679,7 +679,7 @@
     "id": "remedy-speakeasy-602-4th-st-bremerton-wa-98337",
     "name": "Remedy Speakeasy",
     "location": "602 4th St, Bremerton, WA 98337",
-    "timeSignupStart": "8:30pm/9pm",
+    "timeSignupStart": "7pm/8pm",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "Yes",
@@ -691,7 +691,7 @@
     "openMicType": "Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic.",
-    "signupDetails": "Signups in person at 6:30 PM",
+    "signupDetails": "Signups in person at 7:00 PM",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
