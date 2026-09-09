@@ -190,9 +190,9 @@ Deno.test("buildNotification includes the mic, the submitter and the pasteable r
   assert.match(text, /- Instagram: @calherc/);
   assert.match(text, /- Notes: Starting next week\./);
   assert.match(text, /Submission #12 received Sep 7, 2026, 2:05 PM \(Seattle time\)/);
+  assert.match(text, /- Approve or reject it: https:\/\/stagetimepnw\.com\/\?admin=1/);
   assert.match(text, /dashboard\/project\/ldodkbdzljfpbnzrpxpu\/editor/);
   assert.match(text, /pull-open-mic-submissions\.mjs/);
-  assert.match(text, /geocode-open-mics\.mjs --write/);
   assert.match(text, /"name": "Broadview Comedy Open Mic"/);
 });
 

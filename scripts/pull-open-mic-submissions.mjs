@@ -4,6 +4,13 @@
  * Pull "Add Your Mic" submissions out of Supabase as paste-ready
  * data/open-mics.json records.
  *
+ * The normal way to review a submission is the admin panel at
+ * https://stagetimepnw.com/?admin=1 — approving there publishes the mic to
+ * public.published_open_mics and it is live in seconds. This script is the
+ * offline fallback, and the way to fold a published record into the JSON file
+ * so it lives in git (after which the panel flags the published row as safe to
+ * hide, since the file wins on an id collision).
+ *
  * Needs the project's service role key (submissions are not readable with the
  * anon key). Put it in .env as SUPABASE_SERVICE_ROLE_KEY=... or pass it in the
  * environment. Never commit it.

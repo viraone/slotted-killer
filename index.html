@@ -72,6 +72,18 @@
           class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Submit
           Your Open Mic</span>
       </button>
+      <!-- Unhidden only after is_app_admin() comes back true. -->
+      <button type="button" data-view="admin" id="adminNavButton" hidden
+        class="nav-button flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-zinc-400 transition hover:bg-zinc-900 md:flex-none md:flex-row md:justify-start md:gap-4 md:px-4 md:py-3">
+        <svg class="h-6 w-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+        </svg>
+        <span
+          class="text-center text-[11px] font-semibold leading-tight md:whitespace-nowrap md:text-base md:leading-normal">Review
+          Mics</span>
+      </button>
     </nav>
   </aside>
 
@@ -859,6 +871,73 @@
         </div>
       </section>
 
+      <section id="admin-section" hidden aria-labelledby="admin-title" class="min-w-0">
+        <header class="addmic-hero mb-6 rounded-2xl border border-zinc-800 p-5 sm:p-7">
+          <div class="relative">
+            <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-[#00C805]">Admin</p>
+            <h1 id="admin-title" class="mt-1 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">Review open mic
+              submissions.</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">Approving a mic here publishes it to
+              the list within seconds — no commit, no redeploy.</p>
+          </div>
+        </header>
+
+        <div id="adminSignInCard" class="addmic-card max-w-md">
+          <header class="addmic-card__header">
+            <div>
+              <h2 class="addmic-card__title">Admin sign-in</h2>
+              <p class="addmic-card__subtitle">We'll email you a magic link. Only admin addresses can get in.</p>
+            </div>
+          </header>
+          <form id="adminSignInForm" class="space-y-3" novalidate>
+            <input id="adminEmail" type="email" class="field" placeholder="you@example.com" autocomplete="email"
+              required aria-label="Admin email address">
+            <button id="adminSignInButton" type="submit"
+              class="w-full rounded-lg bg-[#00C805] px-4 py-3 text-base font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">Email
+              me a link</button>
+          </form>
+          <p id="adminSignInMessage" class="mt-3 text-sm text-zinc-400" role="status" aria-live="polite"></p>
+        </div>
+
+        <div id="adminPanel" hidden class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <label for="adminStatusFilter" class="text-xs font-bold uppercase tracking-wider text-zinc-500">Show</label>
+              <select id="adminStatusFilter" class="field w-auto py-2 text-sm">
+                <option value="new">New</option>
+                <option value="added">Added</option>
+                <option value="rejected">Rejected</option>
+                <option value="duplicate">Duplicate</option>
+                <option value="all">All</option>
+              </select>
+              <button id="adminRefreshButton" type="button"
+                class="rounded-lg border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-300 transition hover:bg-zinc-900">Refresh</button>
+            </div>
+            <div class="flex items-center gap-3">
+              <span id="adminWhoami" class="text-xs text-zinc-500"></span>
+              <button id="adminSignOutButton" type="button"
+                class="rounded-lg border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-300 transition hover:bg-zinc-900">Sign
+                out</button>
+            </div>
+          </div>
+
+          <p id="adminQueueStatus" class="text-sm text-zinc-400" role="status" aria-live="polite">Loading submissions…
+          </p>
+          <div id="adminQueue" class="space-y-5"></div>
+
+          <section class="addmic-card" aria-labelledby="adminPublishedTitle">
+            <header class="addmic-card__header">
+              <div>
+                <h2 id="adminPublishedTitle" class="addmic-card__title">Published mics</h2>
+                <p class="addmic-card__subtitle">Live from Supabase, merged on top of data/open-mics.json.</p>
+              </div>
+            </header>
+            <p id="adminPublishedStatus" class="text-sm text-zinc-400" role="status" aria-live="polite"></p>
+            <div id="adminPublishedList" class="space-y-3"></div>
+          </section>
+        </div>
+      </section>
+
     </div>
   </main>
 
@@ -985,6 +1064,52 @@
       max-width: 1240px;
       padding-left: clamp(16px, 2vw, 32px);
       padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    /* Admin review panel */
+    body.admin-mode>main>div {
+      max-width: 1240px;
+      padding-left: clamp(16px, 2vw, 32px);
+      padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    #admin-section {
+      color-scheme: dark;
+    }
+
+    #admin-section textarea.field {
+      min-height: 16rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #27272a;
+      border-radius: 999px;
+      padding: 3px 10px;
+      background: rgba(9, 9, 11, 0.7);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a1a1aa;
+    }
+
+    .admin-badge--new {
+      border-color: rgba(0, 200, 5, 0.45);
+      background: rgba(0, 200, 5, 0.12);
+      color: #00C805;
+    }
+
+    .admin-badge--warn {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.12);
+      color: #facc15;
     }
 
     #addmic-section {
@@ -2180,6 +2305,7 @@
     const lineupRows = document.getElementById('lineupRows');
     const lineupStatus = document.getElementById('lineupStatus');
     const addMicSection = document.getElementById('addmic-section');
+    const adminSection = document.getElementById('admin-section');
     const signupCard = document.getElementById('signupCard');
     const signupForm = document.getElementById('signupForm');
     const emailInput = document.getElementById('email');
@@ -2204,6 +2330,10 @@
       new URLSearchParams(window.location.search).get('lineup') === '1';
     const addMicRequested =
       new URLSearchParams(window.location.search).get('addmic') === '1';
+    // Unlisted entry point for the review panel: stagetimepnw.com/?admin=1
+    // Verification takes precedence if both params somehow appear together.
+    const adminRequested = !verificationTabRequested
+      && new URLSearchParams(window.location.search).get('admin') === '1';
 
     let supabaseClient = null;
     let verificationInProgress = false;
@@ -2226,8 +2356,10 @@
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
       addMicSection.hidden = true;
+      adminSection.hidden = true;
       verificationSection.hidden = false;
       document.body.classList.remove('addmic-mode');
+      document.body.classList.remove('admin-mode');
       stopLineupRefreshTimer();
     }
 
@@ -2259,10 +2391,12 @@
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
       addMicSection.hidden = true;
+      adminSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
       document.body.classList.remove('addmic-mode');
+      document.body.classList.remove('admin-mode');
     }
 
     function showOpenMicMapView() {
@@ -2272,9 +2406,11 @@
       openMicMapSection.hidden = false;
       lineupSection.hidden = true;
       addMicSection.hidden = true;
+      adminSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.remove('addmic-mode');
+      document.body.classList.remove('admin-mode');
       document.body.classList.add('openmicmap-mode');
     }
 
@@ -2285,11 +2421,28 @@
       openMicMapSection.hidden = true;
       lineupSection.hidden = true;
       addMicSection.hidden = false;
+      adminSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.remove('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
+      document.body.classList.remove('admin-mode');
       document.body.classList.add('addmic-mode');
       scheduleAddMicPreview();
+    }
+
+    function showAdminView() {
+      if (verificationTabRequested) return;
+      stopLineupRefreshTimer();
+      homeSection.hidden = true;
+      openMicMapSection.hidden = true;
+      lineupSection.hidden = true;
+      addMicSection.hidden = true;
+      adminSection.hidden = false;
+      verificationSection.hidden = true;
+      document.body.classList.remove('lineup-mode');
+      document.body.classList.remove('openmicmap-mode');
+      document.body.classList.remove('addmic-mode');
+      document.body.classList.add('admin-mode');
     }
 
     function showLineupView() {
@@ -2298,10 +2451,12 @@
       openMicMapSection.hidden = true;
       lineupSection.hidden = false;
       addMicSection.hidden = true;
+      adminSection.hidden = true;
       verificationSection.hidden = true;
       document.body.classList.add('lineup-mode');
       document.body.classList.remove('openmicmap-mode');
       document.body.classList.remove('addmic-mode');
+      document.body.classList.remove('admin-mode');
     }
 
     function setActiveNav(view) {
@@ -2344,6 +2499,9 @@
           renderOpenMicMapView();
         } else if (view === 'addmic') {
           showAddMicView();
+        } else if (view === 'admin') {
+          showAdminView();
+          loadAdminData();
         } else if (isLineupWindowActive()) {
           loadLineup();
           startLineupRefreshTimer();
@@ -2397,6 +2555,9 @@
 
     // --- Open Mic Map ---
     const OPEN_MIC_JSON_URL = 'data/open-mics.json';
+    // Mics approved in the admin panel, merged in on top of the JSON file above.
+    const PUBLISHED_OPEN_MICS_URL =
+      `${SUPABASE_URL}/rest/v1/published_open_mics?select=record&is_active=eq.true`;
     const OPEN_MIC_DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const OPEN_MIC_CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const EARTH_RADIUS_MILES = 3958.8;
@@ -2552,21 +2713,68 @@
       return mic.host;
     }
 
+    // Mics approved in the admin panel live in Supabase rather than the JSON file, so
+    // they show up without a redeploy. On an id collision the file wins: once a record
+    // has been folded into data/open-mics.json that git-reviewed copy is the one to
+    // trust, and the panel flags the leftover published row so it can be hidden.
+    function mergeOpenMicRecords(fileRecords, publishedRecords) {
+      const byId = new Map();
+      const add = (record) => {
+        if (!record || typeof record !== 'object' || Array.isArray(record)) return;
+        const id = String(record.id || '').trim().toLowerCase();
+        // Records without an id can't collide, so keep every one of them.
+        const key = id || `untitled:${byId.size}`;
+        if (byId.has(key)) return;
+        byId.set(key, record);
+      };
+      (Array.isArray(fileRecords) ? fileRecords : []).forEach(add);
+      (Array.isArray(publishedRecords) ? publishedRecords : []).forEach(add);
+      return [...byId.values()];
+    }
+
+    // A Supabase hiccup must never blank the list: the JSON file alone is a fine page.
+    async function fetchPublishedOpenMicRecords() {
+      try {
+        const response = await fetch(PUBLISHED_OPEN_MICS_URL, {
+          headers: { apikey: SUPABASE_ANON_KEY, authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = await response.json();
+        return Array.isArray(rows) ? rows.map((row) => row?.record).filter(Boolean) : [];
+      } catch (err) {
+        console.error('Unable to load published open mics:', err);
+        return [];
+      }
+    }
+
     let openMicDataPromise = null;
     function loadOpenMicData() {
       if (!openMicDataPromise) {
         openMicDataPromise = (async () => {
-          const response = await fetch(OPEN_MIC_JSON_URL);
-          if (!response.ok) throw new Error(`Failed to fetch open mic JSON: HTTP ${response.status}`);
-          const records = await response.json();
-          if (!Array.isArray(records)) throw new Error('Open mic JSON must contain an array of records');
-          return records.map(normalizeOpenMicRecord).filter(Boolean);
+          const [fileRecords, publishedRecords] = await Promise.all([
+            (async () => {
+              const response = await fetch(OPEN_MIC_JSON_URL);
+              if (!response.ok) throw new Error(`Failed to fetch open mic JSON: HTTP ${response.status}`);
+              const records = await response.json();
+              if (!Array.isArray(records)) throw new Error('Open mic JSON must contain an array of records');
+              return records;
+            })(),
+            fetchPublishedOpenMicRecords()
+          ]);
+          return mergeOpenMicRecords(fileRecords, publishedRecords)
+            .map(normalizeOpenMicRecord)
+            .filter(Boolean);
         })().catch((err) => {
           openMicDataPromise = null;
           throw err;
         });
       }
       return openMicDataPromise;
+    }
+
+    // Called after the admin panel publishes or hides a mic, so the next render refetches.
+    function invalidateOpenMicData() {
+      openMicDataPromise = null;
     }
 
     function getSeattleNow(date = new Date()) {
@@ -4225,8 +4433,9 @@
     // --- Submit Your Open Mic form (internally: the "addmic" view, /add-mic) ---
     // Hosts submit a mic; the submission is stored in Supabase
     // (public.open_mic_submissions) with a `record` already shaped like an
-    // entry in data/open-mics.json, so approving one is a copy-paste plus a
-    // run of scripts/geocode-open-mics.mjs for coordinates.
+    // entry in data/open-mics.json. Review and publish it in the admin panel
+    // (/?admin=1), which geocodes the address and copies the record into
+    // public.published_open_mics.
     const ADD_MIC_FLYER_BUCKET = 'open-mic-flyers';
     const ADD_MIC_FLYER_MAX_BYTES = 10 * 1024 * 1024;
     const ADD_MIC_ORDINALS = { 1: '1st', 2: '2nd', 3: '3rd', 4: '4th', '-1': 'Last' };
@@ -4888,6 +5097,681 @@
       scheduleAddMicPreview();
     }
 
+    // --- Admin review panel (internally: the "admin" view, /?admin=1) ---
+    // Approving a submission copies its record into public.published_open_mics via
+    // approve_open_mic_submission(); loadOpenMicData() merges that table on top of
+    // data/open-mics.json, so the mic is live in seconds with no redeploy. Every
+    // write goes through an admin-gated security-definer RPC — the browser holds no
+    // write grants on either table.
+    const ADMIN_STATUS_LABELS = {
+      new: 'New',
+      added: 'Published',
+      rejected: 'Rejected',
+      duplicate: 'Duplicate'
+    };
+    // The same sanity box scripts/geocode-open-mics.mjs uses.
+    const ADMIN_WASHINGTON_BOUNDS = {
+      minLatitude: 45.4,
+      maxLatitude: 49.1,
+      minLongitude: -124.9,
+      maxLongitude: -116.8
+    };
+    const ADMIN_CENSUS_ENDPOINT = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress';
+    const ADMIN_NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
+    const ADMIN_NOMINATIM_DELAY_MS = 1100;
+
+    const adminSignInCard = document.getElementById('adminSignInCard');
+    const adminSignInForm = document.getElementById('adminSignInForm');
+    const adminEmailInput = document.getElementById('adminEmail');
+    const adminSignInButton = document.getElementById('adminSignInButton');
+    const adminSignInMessage = document.getElementById('adminSignInMessage');
+    const adminNavButton = document.getElementById('adminNavButton');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminStatusFilter = document.getElementById('adminStatusFilter');
+    const adminRefreshButton = document.getElementById('adminRefreshButton');
+    const adminSignOutButton = document.getElementById('adminSignOutButton');
+    const adminWhoami = document.getElementById('adminWhoami');
+    const adminQueue = document.getElementById('adminQueue');
+    const adminQueueStatus = document.getElementById('adminQueueStatus');
+    const adminPublishedList = document.getElementById('adminPublishedList');
+    const adminPublishedStatus = document.getElementById('adminPublishedStatus');
+
+    const ADMIN_PRIMARY_BUTTON =
+      'rounded-lg bg-[#00C805] px-4 py-2 text-sm font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60';
+    const ADMIN_SECONDARY_BUTTON =
+      'rounded-lg border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-300 transition hover:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-60';
+
+    let adminIsAuthorized = false;
+    // Edits made in the queue, keyed by submission id, so a half-finished record
+    // survives a re-render of the list.
+    const adminEditedRecords = new Map();
+    // Ids already committed to data/open-mics.json. A published row sharing one is
+    // shadowed by the file (see mergeOpenMicRecords), so the panel flags it.
+    let adminFileIds = new Set();
+
+    function adminEl(tag, className, textContent) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (textContent !== undefined) node.textContent = textContent;
+      return node;
+    }
+
+    function showAdminSignInMessage(message, isError = false) {
+      adminSignInMessage.textContent = message;
+      adminSignInMessage.className = `mt-3 text-sm ${isError ? 'text-red-400' : 'text-emerald-400'}`;
+    }
+
+    function isUsableOpenMicCoordinate(latitude, longitude) {
+      return Number.isFinite(latitude)
+        && Number.isFinite(longitude)
+        && latitude >= ADMIN_WASHINGTON_BOUNDS.minLatitude
+        && latitude <= ADMIN_WASHINGTON_BOUNDS.maxLatitude
+        && longitude >= ADMIN_WASHINGTON_BOUNDS.minLongitude
+        && longitude <= ADMIN_WASHINGTON_BOUNDS.maxLongitude;
+    }
+
+    // Ported from scripts/geocode-open-mics.mjs so the panel and the offline
+    // geocoder try the same address variants for a stubborn address.
+    function buildOpenMicGeocodeQueries(location) {
+      const value = String(location || '').trim();
+      const parts = value.split(',').map((part) => part.trim()).filter(Boolean);
+      const firstAddressPart = parts.findIndex((part) => /\d/.test(part));
+      const addressOnly = firstAddressPart > 0 ? parts.slice(firstAddressPart).join(', ') : '';
+      const withoutUnit = value
+        .replace(/\s+(?:#\s*\w+|suite\s*#?\w+|ste\s*\w+|units?\s+[a-z](?:-[a-z])?|annex building)(?=,|$)/i, '')
+        .trim();
+      const withoutConflictingDirectional = withoutUnit
+        .replace(/\b(NE|NW|SE|SW)\s+(?:NE|NW|SE|SW)(?=,)/i, '$1');
+      const withoutUnitParts = withoutUnit.split(',').map((part) => part.trim()).filter(Boolean);
+      const firstCleanAddressPart = withoutUnitParts.findIndex((part) => /\d/.test(part));
+      const cleanAddressOnly = firstCleanAddressPart > 0
+        ? withoutUnitParts.slice(firstCleanAddressPart).join(', ')
+        : '';
+      return [...new Set([
+        value,
+        addressOnly,
+        withoutUnit,
+        cleanAddressOnly,
+        withoutConflictingDirectional
+      ].filter(Boolean))];
+    }
+
+    async function geocodeWithCensus(query) {
+      if (!/\d/.test(query)) return null;
+      const url = new URL(ADMIN_CENSUS_ENDPOINT);
+      url.searchParams.set('address', query);
+      url.searchParams.set('benchmark', 'Public_AR_Current');
+      url.searchParams.set('format', 'json');
+
+      const response = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`Census Geocoder returned HTTP ${response.status}`);
+      const payload = await response.json();
+      const match = payload?.result?.addressMatches?.[0];
+      const latitude = Number(match?.coordinates?.y);
+      const longitude = Number(match?.coordinates?.x);
+      return isUsableOpenMicCoordinate(latitude, longitude) ? { latitude, longitude } : null;
+    }
+
+    async function geocodeWithNominatim(query) {
+      const url = new URL(ADMIN_NOMINATIM_ENDPOINT);
+      url.searchParams.set('q', query);
+      url.searchParams.set('format', 'jsonv2');
+      url.searchParams.set('limit', '1');
+      url.searchParams.set('countrycodes', 'us');
+      url.searchParams.set('viewbox', '-124.9,49.1,-116.8,45.4');
+      url.searchParams.set('bounded', '1');
+
+      const response = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error(`Nominatim returned HTTP ${response.status}`);
+      const results = await response.json();
+      const latitude = Number(results?.[0]?.lat);
+      const longitude = Number(results?.[0]?.lon);
+      return isUsableOpenMicCoordinate(latitude, longitude) ? { latitude, longitude } : null;
+    }
+
+    // Census first: no API key, CORS headers, and no User-Agent requirement — which
+    // a browser can't satisfy anyway, and Nominatim's usage policy asks for one. So
+    // Nominatim is only the fallback, throttled to its one-request-per-second rule.
+    async function geocodeOpenMicAddress(location) {
+      const queries = buildOpenMicGeocodeQueries(location);
+      if (!queries.length) return null;
+
+      for (const query of queries) {
+        try {
+          const coordinates = await geocodeWithCensus(query);
+          if (coordinates) return coordinates;
+        } catch (err) {
+          console.error(`Census lookup failed for "${query}":`, err);
+        }
+      }
+
+      for (const [index, query] of queries.entries()) {
+        if (index > 0) await new Promise((resolve) => window.setTimeout(resolve, ADMIN_NOMINATIM_DELAY_MS));
+        try {
+          const coordinates = await geocodeWithNominatim(query);
+          if (coordinates) return coordinates;
+        } catch (err) {
+          console.error(`Nominatim lookup failed for "${query}":`, err);
+        }
+      }
+
+      return null;
+    }
+
+    // "19:30" -> "7:30 PM", matching the edge function's formatClock.
+    function formatAdminClock(value) {
+      const match = /^(\d{1,2}):(\d{2})/.exec(String(value || ''));
+      if (!match) return String(value || '').trim() || '—';
+      const hour24 = Number(match[1]) % 24;
+      return `${hour24 % 12 || 12}:${match[2]} ${hour24 >= 12 ? 'PM' : 'AM'}`;
+    }
+
+    function formatAdminTimestamp(value) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime())
+        ? String(value || '')
+        : date.toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles',
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        });
+    }
+
+    function normalizeAdminId(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    async function sendAdminMagicLink(email) {
+      const redirectUrl = new URL(window.location.origin + window.location.pathname);
+      redirectUrl.searchParams.set('admin', '1');
+      // shouldCreateUser:false — a typo'd address must never mint a new auth user.
+      return supabaseClient.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: redirectUrl.toString(), shouldCreateUser: false }
+      });
+    }
+
+    adminSignInForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = adminEmailInput.value.trim().toLowerCase();
+      if (!email) {
+        showAdminSignInMessage('Enter your admin email address.', true);
+        return;
+      }
+
+      adminSignInButton.disabled = true;
+      adminSignInButton.textContent = 'Sending…';
+      const { error } = await sendAdminMagicLink(email);
+      adminSignInButton.disabled = false;
+      adminSignInButton.textContent = 'Email me a link';
+
+      // Deliberately the same answer either way: with shouldCreateUser off, a
+      // specific error would tell a stranger which addresses are admins.
+      if (error) console.error('Unable to send the admin magic link:', error);
+      showAdminSignInMessage('If that address is an admin, the sign-in link is on its way.');
+    });
+
+    adminSignOutButton.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      adminEditedRecords.clear();
+      showAdminSignInMessage('Signed out.');
+    });
+
+    adminStatusFilter.addEventListener('change', () => loadAdminSubmissions());
+    adminRefreshButton.addEventListener('click', () => loadAdminData());
+
+    // Reveals the panel only when the RPC agrees the signed-in email is an admin.
+    // The RPC is also what every write re-checks, so this is UI, not the gate.
+    async function refreshAdminAuthorization(session) {
+      if (!session?.user?.email) {
+        adminIsAuthorized = false;
+        adminNavButton.hidden = true;
+        adminPanel.hidden = true;
+        adminSignInCard.hidden = false;
+        return false;
+      }
+
+      const email = session.user.email;
+      let authorized = false;
+      try {
+        const { data, error } = await supabaseClient.rpc('is_app_admin');
+        if (error) throw error;
+        authorized = data === true;
+      } catch (err) {
+        console.error('Unable to check admin access:', err);
+      }
+
+      adminIsAuthorized = authorized;
+      adminNavButton.hidden = !authorized;
+      adminPanel.hidden = !authorized;
+      adminSignInCard.hidden = authorized;
+
+      if (!authorized) {
+        showAdminSignInMessage(`${email} is not an admin account.`, true);
+        await supabaseClient.auth.signOut();
+        return false;
+      }
+
+      adminWhoami.textContent = `Signed in as ${email}`;
+      return true;
+    }
+
+    async function loadAdminFileIds() {
+      try {
+        const response = await fetch(OPEN_MIC_JSON_URL);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const records = await response.json();
+        adminFileIds = new Set(
+          (Array.isArray(records) ? records : [])
+            .map((record) => normalizeAdminId(record?.id))
+            .filter(Boolean)
+        );
+      } catch (err) {
+        console.error('Unable to read data/open-mics.json for the admin panel:', err);
+      }
+    }
+
+    async function loadAdminData() {
+      if (!adminIsAuthorized) return;
+      await loadAdminFileIds();
+      await Promise.all([loadAdminSubmissions(), loadAdminPublished()]);
+    }
+
+    // Acting on a card removes it from the queue, so the outcome has to be
+    // reported outside the card that is about to be re-rendered away.
+    function setAdminQueueNotice(text, tone = 'text-zinc-400') {
+      adminQueueStatus.hidden = false;
+      adminQueueStatus.className = `text-sm ${tone}`;
+      adminQueueStatus.textContent = text;
+    }
+
+    async function loadAdminSubmissions() {
+      if (!adminIsAuthorized) return;
+      setAdminQueueNotice('Loading submissions…');
+      adminQueue.replaceChildren();
+
+      const status = adminStatusFilter.value;
+      let request = supabaseClient
+        .from('open_mic_submissions')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (status !== 'all') request = request.eq('status', status);
+
+      const { data, error } = await request;
+      if (error) {
+        console.error('Unable to load submissions:', error);
+        setAdminQueueNotice(`Could not load submissions: ${error.message}`, 'text-red-400');
+        return;
+      }
+      if (!data?.length) {
+        setAdminQueueNotice(status === 'all' ? 'No submissions yet.' : `No ${status} submissions.`);
+        return;
+      }
+
+      adminQueueStatus.hidden = true;
+      data.forEach((row) => adminQueue.append(renderAdminSubmissionCard(row)));
+    }
+
+    async function loadAdminPublished() {
+      if (!adminIsAuthorized) return;
+      adminPublishedStatus.hidden = false;
+      adminPublishedStatus.textContent = 'Loading published mics…';
+      adminPublishedList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from('published_open_mics')
+        .select('id, record, is_active, published_by, updated_at')
+        .order('updated_at', { ascending: false });
+      if (error) {
+        console.error('Unable to load published mics:', error);
+        adminPublishedStatus.textContent = `Could not load published mics: ${error.message}`;
+        return;
+      }
+      if (!data?.length) {
+        adminPublishedStatus.textContent = 'Nothing published yet.';
+        return;
+      }
+
+      adminPublishedStatus.hidden = true;
+      data.forEach((row) => adminPublishedList.append(renderAdminPublishedRow(row)));
+    }
+
+    function renderAdminSubmissionCard(row) {
+      const card = adminEl('article', 'addmic-card');
+      const startingRecord = adminEditedRecords.get(row.id)
+        || (row.record && typeof row.record === 'object' && !Array.isArray(row.record) ? row.record : {});
+
+      const header = adminEl('div', 'mb-4 flex flex-wrap items-start justify-between gap-3');
+      const heading = adminEl('div', 'min-w-0');
+      heading.append(adminEl('h3', 'text-lg font-black text-zinc-50', `#${row.id} · ${row.mic_name}`));
+      heading.append(adminEl('p', 'text-sm text-zinc-400', row.location));
+      header.append(heading);
+
+      const badges = adminEl('div', 'flex flex-wrap items-center gap-2');
+      badges.append(adminEl(
+        'span',
+        `admin-badge${row.status === 'new' ? ' admin-badge--new' : ''}`,
+        ADMIN_STATUS_LABELS[row.status] || row.status
+      ));
+      if (adminFileIds.has(normalizeAdminId(startingRecord.id))) {
+        badges.append(adminEl('span', 'admin-badge admin-badge--warn', 'Already in JSON'));
+      }
+      header.append(badges);
+      card.append(header);
+
+      const facts = adminEl('dl', 'grid gap-x-6 gap-y-1 text-sm text-zinc-300 sm:grid-cols-2');
+      const fact = (label, value) => {
+        if (!value) return;
+        const wrap = adminEl('div', 'flex min-w-0 gap-2');
+        wrap.append(adminEl('dt', 'shrink-0 font-semibold text-zinc-500', `${label}:`));
+        wrap.append(adminEl('dd', 'min-w-0 break-words', value));
+        facts.append(wrap);
+      };
+      fact('Venue', row.venue);
+      fact('Schedule', row.recurrence_text || (row.days || []).join(', '));
+      fact(
+        'Sign-up',
+        `${formatAdminClock(row.signup_time)} · show ${formatAdminClock(row.start_time)}`
+        + `${row.end_time ? ` – ${formatAdminClock(row.end_time)}` : ''}`
+      );
+      fact('Method', [row.signup_type, row.web_signup].filter(Boolean).join(' · '));
+      fact('Details', [row.open_mic_type, row.age_requirement, row.price].filter(Boolean).join(' · '));
+      fact('Host', row.host);
+      fact(
+        'From',
+        `${row.submitter_name} <${row.submitter_email}>${row.submitter_role ? ` (${row.submitter_role})` : ''}`
+      );
+      fact('Instagram', row.submitter_instagram);
+      fact('Received', formatAdminTimestamp(row.created_at));
+      fact('Their notes', row.submitter_notes);
+      fact('Review notes', row.review_notes);
+      card.append(facts);
+
+      if (row.flyer_url) {
+        const flyer = adminEl('a', 'mt-3 inline-block text-sm font-semibold text-[#00C805] underline', 'Open the flyer');
+        flyer.href = row.flyer_url;
+        flyer.target = '_blank';
+        flyer.rel = 'noopener noreferrer';
+        card.append(flyer);
+      }
+
+      // Editable record beside a live listing preview, using the same
+      // normalize/render pair the Submit Your Open Mic preview uses.
+      const grid = adminEl(
+        'div',
+        'mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] xl:items-start'
+      );
+      const editorWrap = adminEl('div', 'min-w-0');
+      editorWrap.append(adminEl(
+        'label',
+        'mb-1 block text-xs font-bold uppercase tracking-wider text-zinc-500',
+        'open-mics.json record'
+      ));
+      const editor = adminEl('textarea', 'field');
+      editor.value = JSON.stringify(startingRecord, null, 2);
+      editor.spellcheck = false;
+      editorWrap.append(editor);
+      const editorError = adminEl('p', 'mt-1 text-sm text-red-400');
+      editorError.hidden = true;
+      editorWrap.append(editorError);
+      grid.append(editorWrap);
+
+      const previewWrap = adminEl('div', 'addmic-preview min-w-0');
+      grid.append(previewWrap);
+      card.append(grid);
+
+      function readEditor() {
+        try {
+          const parsed = JSON.parse(editor.value);
+          if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            throw new Error('the record must be a JSON object');
+          }
+          editorError.hidden = true;
+          return parsed;
+        } catch (err) {
+          editorError.textContent = `Invalid JSON: ${err.message}`;
+          editorError.hidden = false;
+          return null;
+        }
+      }
+
+      function renderPreview() {
+        const parsed = readEditor();
+        const mic = parsed ? normalizeOpenMicRecord(parsed) : null;
+        if (!mic) {
+          previewWrap.replaceChildren(
+            adminEl('p', 'addmic-preview-empty', 'The record needs a name before it can preview.')
+          );
+          return;
+        }
+        const previewCard = renderOpenMicCard(mic, false, false, null, null, null);
+        previewCard.removeAttribute('id');
+        previewCard.classList.remove('cursor-pointer');
+        previewWrap.replaceChildren(previewCard);
+      }
+
+      editor.addEventListener('input', () => {
+        const parsed = readEditor();
+        if (parsed) adminEditedRecords.set(row.id, parsed);
+        renderPreview();
+      });
+      renderPreview();
+
+      // Coordinates. Submitted records never carry them, so approving geocodes the
+      // address first — otherwise the mic would list without a map pin.
+      const coordsRow = adminEl('div', 'mt-4 flex flex-wrap items-end gap-2');
+      const makeCoordInput = (label, value) => {
+        const wrap = adminEl('div');
+        wrap.append(adminEl('label', 'mb-1 block text-xs font-bold uppercase tracking-wider text-zinc-500', label));
+        const input = adminEl('input', 'field w-36 py-2 text-sm');
+        input.type = 'text';
+        input.inputMode = 'decimal';
+        input.value = Number.isFinite(Number(value)) && value !== undefined && value !== null && value !== ''
+          ? String(value)
+          : '';
+        wrap.append(input);
+        coordsRow.append(wrap);
+        return input;
+      };
+      const latitudeInput = makeCoordInput('Latitude', startingRecord.latitude);
+      const longitudeInput = makeCoordInput('Longitude', startingRecord.longitude);
+      const lookupButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Look up address');
+      lookupButton.type = 'button';
+      coordsRow.append(lookupButton);
+      card.append(coordsRow);
+
+      const notesInput = adminEl('input', 'field mt-4 py-2 text-sm');
+      notesInput.type = 'text';
+      notesInput.placeholder = 'Review notes (saved with Reject or Duplicate)';
+      notesInput.value = row.review_notes || '';
+      card.append(notesInput);
+
+      const actions = adminEl('div', 'mt-4 flex flex-wrap items-center gap-2');
+      const approveButton = adminEl('button', ADMIN_PRIMARY_BUTTON, 'Approve & publish');
+      approveButton.type = 'button';
+      const rejectButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Reject');
+      rejectButton.type = 'button';
+      const duplicateButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Mark duplicate');
+      duplicateButton.type = 'button';
+      const reopenButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Back to new');
+      reopenButton.type = 'button';
+      actions.append(approveButton, rejectButton, duplicateButton, reopenButton);
+      card.append(actions);
+
+      const message = adminEl('p', 'mt-3 text-sm text-zinc-400');
+      message.hidden = true;
+      card.append(message);
+
+      const buttons = [approveButton, rejectButton, duplicateButton, reopenButton, lookupButton];
+      function setBusy(busy) {
+        buttons.forEach((button) => { button.disabled = busy; });
+      }
+      function say(text, tone = 'text-zinc-400') {
+        message.hidden = false;
+        message.className = `mt-3 text-sm ${tone}`;
+        message.textContent = text;
+      }
+
+      function readCoordinates() {
+        const latitude = Number(latitudeInput.value.trim());
+        const longitude = Number(longitudeInput.value.trim());
+        const provided = latitudeInput.value.trim() !== '' || longitudeInput.value.trim() !== '';
+        return { latitude, longitude, provided, usable: isUsableOpenMicCoordinate(latitude, longitude) };
+      }
+
+      async function lookupCoordinates(address) {
+        say('Looking up the address…');
+        const coordinates = await geocodeOpenMicAddress(address);
+        if (!coordinates) return null;
+        latitudeInput.value = String(coordinates.latitude);
+        longitudeInput.value = String(coordinates.longitude);
+        return coordinates;
+      }
+
+      lookupButton.addEventListener('click', async () => {
+        setBusy(true);
+        const parsed = readEditor();
+        const coordinates = await lookupCoordinates(parsed?.location || row.location);
+        setBusy(false);
+        say(
+          coordinates
+            ? `Found ${coordinates.latitude}, ${coordinates.longitude}.`
+            : 'No match. Enter the coordinates by hand, or publish without a map pin.',
+          coordinates ? 'text-emerald-400' : 'text-yellow-400'
+        );
+      });
+
+      // Set once the admin has been warned that a mic would publish with no pin;
+      // pressing Approve again goes ahead anyway.
+      let approveWithoutCoordinatesConfirmed = false;
+
+      approveButton.addEventListener('click', async () => {
+        const parsed = readEditor();
+        if (!parsed) {
+          say('Fix the JSON above before publishing.', 'text-red-400');
+          return;
+        }
+
+        setBusy(true);
+        let coordinates = readCoordinates();
+        if (!coordinates.usable && !coordinates.provided && !approveWithoutCoordinatesConfirmed) {
+          await lookupCoordinates(parsed.location || row.location);
+          coordinates = readCoordinates();
+        }
+
+        if (!coordinates.usable && !approveWithoutCoordinatesConfirmed) {
+          approveWithoutCoordinatesConfirmed = true;
+          setBusy(false);
+          say(
+            coordinates.provided
+              ? 'Those coordinates are outside Washington. Fix them, or press Approve again to publish without a map pin.'
+              : 'Could not geocode that address. Add coordinates, or press Approve again to publish without a map pin.',
+            'text-yellow-400'
+          );
+          return;
+        }
+
+        const record = { ...parsed };
+        if (coordinates.usable) {
+          record.latitude = coordinates.latitude;
+          record.longitude = coordinates.longitude;
+        }
+
+        const { error } = await supabaseClient.rpc('approve_open_mic_submission', {
+          p_submission_id: row.id,
+          p_record: record
+        });
+        setBusy(false);
+
+        if (error) {
+          console.error('Unable to publish the submission:', error);
+          say(`Could not publish: ${error.message}`, 'text-red-400');
+          return;
+        }
+
+        adminEditedRecords.delete(row.id);
+        invalidateOpenMicData();
+        await loadAdminData();
+        setAdminQueueNotice(
+          `Published “${record.name || row.mic_name}”${coordinates.usable ? '' : ' without a map pin'}.`
+          + ' It is live on the list now.',
+          'text-emerald-400'
+        );
+      });
+
+      async function review(status, label) {
+        setBusy(true);
+        const { error } = await supabaseClient.rpc('review_open_mic_submission', {
+          p_submission_id: row.id,
+          p_status: status,
+          p_notes: notesInput.value.trim() || null
+        });
+        setBusy(false);
+
+        if (error) {
+          console.error(`Unable to mark the submission ${status}:`, error);
+          say(`Could not mark it ${label}: ${error.message}`, 'text-red-400');
+          return;
+        }
+        await loadAdminData();
+        setAdminQueueNotice(`#${row.id} ${row.mic_name} is now marked ${label}.`, 'text-emerald-400');
+      }
+
+      rejectButton.addEventListener('click', () => review('rejected', 'rejected'));
+      duplicateButton.addEventListener('click', () => review('duplicate', 'a duplicate'));
+      reopenButton.addEventListener('click', () => review('new', 'new'));
+
+      return card;
+    }
+
+    function renderAdminPublishedRow(row) {
+      const wrap = adminEl(
+        'div',
+        'flex flex-wrap items-center justify-between gap-3 rounded-xl border border-zinc-800 p-3'
+      );
+
+      const info = adminEl('div', 'min-w-0');
+      info.append(adminEl('p', 'font-bold text-zinc-100', row.record?.name || row.id));
+      info.append(adminEl(
+        'p',
+        'text-xs text-zinc-500 break-all',
+        `${row.id} · ${row.published_by || 'unknown'} · ${formatAdminTimestamp(row.updated_at)}`
+      ));
+      wrap.append(info);
+
+      const right = adminEl('div', 'flex flex-wrap items-center gap-2');
+      if (!row.is_active) right.append(adminEl('span', 'admin-badge', 'Hidden'));
+      if (!isUsableOpenMicCoordinate(Number(row.record?.latitude), Number(row.record?.longitude))) {
+        right.append(adminEl('span', 'admin-badge admin-badge--warn', 'No map pin'));
+      }
+      if (adminFileIds.has(normalizeAdminId(row.id))) {
+        right.append(adminEl('span', 'admin-badge admin-badge--warn', 'In the JSON file — safe to hide'));
+      }
+
+      const toggle = adminEl('button', ADMIN_SECONDARY_BUTTON, row.is_active ? 'Hide' : 'Show');
+      toggle.type = 'button';
+      toggle.addEventListener('click', async () => {
+        toggle.disabled = true;
+        const { error } = await supabaseClient.rpc('set_published_open_mic_active', {
+          p_id: row.id,
+          p_active: !row.is_active
+        });
+        toggle.disabled = false;
+        if (error) {
+          console.error('Unable to change the published mic:', error);
+          adminPublishedStatus.hidden = false;
+          adminPublishedStatus.textContent = `Could not update ${row.id}: ${error.message}`;
+          return;
+        }
+        invalidateOpenMicData();
+        await loadAdminPublished();
+      });
+      right.append(toggle);
+      wrap.append(right);
+
+      return wrap;
+    }
+
     async function initializeApp() {
       const configured = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
       if (!configured) {
@@ -4905,6 +5789,17 @@
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        // The admin panel keeps its session; verification signs itself out again.
+        // INITIAL_SESSION is initializeApp's job, so this only handles the magic
+        // link landing and sign-out.
+        if (adminRequested) {
+          if (event === 'INITIAL_SESSION') return;
+          const wasAuthorized = adminIsAuthorized;
+          const authorized = await refreshAdminAuthorization(session);
+          if (authorized && !wasAuthorized) await loadAdminData();
+          return;
+        }
+
         if (!verificationTabRequested) return;
 
         const hasVerificationSession = Boolean(session?.user?.email);
@@ -4937,6 +5832,25 @@
           }, 5000);
         }
         return;
+      }
+
+      if (adminRequested) {
+        setActiveNav('admin');
+        showAdminView();
+        if (await refreshAdminAuthorization(session)) await loadAdminData();
+        return;
+      }
+
+      // Not on ?admin=1, but an admin session may still be live from an earlier
+      // visit — reveal the nav tab so the panel is one tap away.
+      if (session?.user?.email) {
+        supabaseClient.rpc('is_app_admin').then(({ data }) => {
+          adminIsAuthorized = data === true;
+          adminNavButton.hidden = !adminIsAuthorized;
+          adminPanel.hidden = !adminIsAuthorized;
+          adminSignInCard.hidden = adminIsAuthorized;
+          if (adminIsAuthorized) adminWhoami.textContent = `Signed in as ${session.user.email}`;
+        }).catch((err) => console.error('Unable to check admin access:', err));
       }
 
       const scheduledMode = getSeattleScheduleMode();
