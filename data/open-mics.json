@@ -1372,7 +1372,7 @@
     "webSignup": "",
     "recurrenceText": "Last Thursday of the Month",
     "recurrence": {
-      "type": "weekly",
+      "type": "monthly-last-weekday",
       "weekday": "Thursday"
     },
     "latitude": 47.61462,
