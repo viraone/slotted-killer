@@ -12,17 +12,11 @@ body.addmic-mode>main>div {
 }
 
 /* Admin nav tab: looks like a greyed-out, disabled item until an admin session is confirmed. */
+/* The review tab is hidden outright for non-admins rather than dimmed. A
+   greyed-but-legible "Review Mics" still told every visitor the panel exists. */
 .nav-button--ghost,
 .nav-button--ghost[aria-current="page"] {
-  color: rgb(63 63 70) !important;
-  opacity: .35;
-  cursor: default;
-}
-
-.nav-button--ghost:hover,
-.nav-button--ghost:focus-visible {
-  background: transparent;
-  outline: none;
+  display: none !important;
 }
 
 /* Admin review panel */

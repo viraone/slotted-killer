@@ -65,7 +65,7 @@ const lineupRequested =
   new URLSearchParams(window.location.search).get('lineup') === '1';
 const addMicRequested =
   new URLSearchParams(window.location.search).get('addmic') === '1';
-// Unlisted entry point for the review panel: stagetimepnw.com/?admin=1
+// Unlisted entry point for the review panel.
 // Verification takes precedence if both params somehow appear together.
 const adminRequested = !verificationTabRequested
   && new URLSearchParams(window.location.search).get('admin') === '1';
@@ -2175,8 +2175,8 @@ async function verifyPendingSignup(session) {
 // --- Submit Your Open Mic form (internally: the "addmic" view, /add-mic) ---
 // Hosts submit a mic; the submission is stored in Supabase
 // (public.open_mic_submissions) with a `record` already shaped like an
-// entry in data/open-mics.json. Review and publish it in the admin panel
-// (/?admin=1), which geocodes the address and copies the record into
+// entry in data/open-mics.json. Review and publish it in the admin panel,
+// which geocodes the address and copies the record into
 // public.published_open_mics.
 const ADD_MIC_FLYER_BUCKET = 'open-mic-flyers';
 const ADD_MIC_FLYER_MAX_BYTES = 10 * 1024 * 1024;
@@ -2839,7 +2839,7 @@ if (addMicForm) {
   scheduleAddMicPreview();
 }
 
-// --- Admin review panel (internally: the "admin" view, /?admin=1) ---
+// --- Admin review panel (internally: the "admin" view) ---
 // Approving a submission copies its record into public.published_open_mics via
 // approve_open_mic_submission(); loadOpenMicData() merges that table on top of
 // data/open-mics.json, so the mic is live in seconds with no redeploy. Every
@@ -3522,8 +3522,8 @@ async function initializeApp() {
     return;
   }
 
-  // Not on ?admin=1, but an admin session may still be live from an earlier
-  // visit — reveal the nav tab so the panel is one tap away.
+  // Not on the review entry point, but an admin session may still be live from
+  // an earlier visit — reveal the nav tab so the panel is one tap away.
   if (session?.user?.email) {
     supabaseClient.rpc('is_app_admin').then(({ data }) => {
       adminIsAuthorized = data === true;
