@@ -2876,8 +2876,7 @@ const adminSignOutButton = document.getElementById('adminSignOutButton');
 const adminWhoami = document.getElementById('adminWhoami');
 const adminQueue = document.getElementById('adminQueue');
 const adminQueueStatus = document.getElementById('adminQueueStatus');
-const adminPublishedList = document.getElementById('adminPublishedList');
-const adminPublishedStatus = document.getElementById('adminPublishedStatus');
+
 
 const ADMIN_PRIMARY_BUTTON =
   'rounded-lg bg-[#00C805] px-4 py-2 text-sm font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60';
@@ -3117,7 +3116,8 @@ async function loadAdminFileIds() {
 async function loadAdminData() {
   if (!adminIsAuthorized) return;
   await loadAdminFileIds();
-  await Promise.all([loadAdminSubmissions(), loadAdminPublished()]);
+  await loadAdminSubmissions();
+}
 }
 
 // Acting on a card removes it from the queue, so the outcome has to be
@@ -3154,30 +3154,8 @@ async function loadAdminSubmissions() {
   adminQueueStatus.hidden = true;
   data.forEach((row) => adminQueue.append(renderAdminSubmissionCard(row)));
 }
+ 
 
-async function loadAdminPublished() {
-  if (!adminIsAuthorized) return;
-  adminPublishedStatus.hidden = false;
-  adminPublishedStatus.textContent = 'Loading published mics…';
-  adminPublishedList.replaceChildren();
-
-  const { data, error } = await supabaseClient
-    .from('published_open_mics')
-    .select('id, record, is_active, published_by, updated_at')
-    .order('updated_at', { ascending: false });
-  if (error) {
-    console.error('Unable to load published mics:', error);
-    adminPublishedStatus.textContent = `Could not load published mics: ${error.message}`;
-    return;
-  }
-  if (!data?.length) {
-    adminPublishedStatus.textContent = 'Nothing published yet.';
-    return;
-  }
-
-  adminPublishedStatus.hidden = true;
-  data.forEach((row) => adminPublishedList.append(renderAdminPublishedRow(row)));
-}
 
 function renderAdminSubmissionCard(row) {
   const card = adminEl('article', 'addmic-card');
@@ -3467,53 +3445,6 @@ function renderAdminSubmissionCard(row) {
   return card;
 }
 
-function renderAdminPublishedRow(row) {
-  const wrap = adminEl(
-    'div',
-    'flex flex-wrap items-center justify-between gap-3 rounded-xl border border-zinc-800 p-3'
-  );
-
-  const info = adminEl('div', 'min-w-0');
-  info.append(adminEl('p', 'font-bold text-zinc-100', row.record?.name || row.id));
-  info.append(adminEl(
-    'p',
-    'text-xs text-zinc-500 break-all',
-    `${row.id} · ${row.published_by || 'unknown'} · ${formatAdminTimestamp(row.updated_at)}`
-  ));
-  wrap.append(info);
-
-  const right = adminEl('div', 'flex flex-wrap items-center gap-2');
-  if (!row.is_active) right.append(adminEl('span', 'admin-badge', 'Hidden'));
-  if (!isUsableOpenMicCoordinate(Number(row.record?.latitude), Number(row.record?.longitude))) {
-    right.append(adminEl('span', 'admin-badge admin-badge--warn', 'No map pin'));
-  }
-  if (adminFileIds.has(normalizeAdminId(row.id))) {
-    right.append(adminEl('span', 'admin-badge admin-badge--warn', 'In the JSON file — safe to hide'));
-  }
-
-  const toggle = adminEl('button', ADMIN_SECONDARY_BUTTON, row.is_active ? 'Hide' : 'Show');
-  toggle.type = 'button';
-  toggle.addEventListener('click', async () => {
-    toggle.disabled = true;
-    const { error } = await supabaseClient.rpc('set_published_open_mic_active', {
-      p_id: row.id,
-      p_active: !row.is_active
-    });
-    toggle.disabled = false;
-    if (error) {
-      console.error('Unable to change the published mic:', error);
-      adminPublishedStatus.hidden = false;
-      adminPublishedStatus.textContent = `Could not update ${row.id}: ${error.message}`;
-      return;
-    }
-    invalidateOpenMicData();
-    await loadAdminPublished();
-  });
-  right.append(toggle);
-  wrap.append(right);
-
-  return wrap;
-}
 
 async function initializeApp() {
   const configured = !SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_');
