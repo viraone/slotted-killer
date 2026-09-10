@@ -3118,7 +3118,7 @@ async function loadAdminData() {
   await loadAdminFileIds();
   await loadAdminSubmissions();
 }
-}
+
 
 // Acting on a card removes it from the queue, so the outcome has to be
 // reported outside the card that is about to be re-rendered away.
