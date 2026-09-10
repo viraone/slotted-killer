@@ -1371,6 +1371,13 @@ function setActiveOpenMicCard(card) {
   card.classList.add('open-mic-card--active');
 }
 
+// Card actions were easy to miss on phones, so they run at a 44px touch
+// target rather than the 11px pill they started as.
+const MIC_ACTION_BUTTON_CLASS =
+  'inline-flex min-h-[44px] items-center justify-center rounded-md border border-zinc-600 '
+  + 'px-4 py-2.5 text-[13px] font-semibold text-zinc-200 transition '
+  + 'hover:border-[#00C805] hover:text-[#00C805]';
+
 function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
   const isLockedPreview = Boolean(upcomingDate);
   const card = document.createElement('article');
@@ -1616,7 +1623,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
       websiteLink.href = mic.website;
       websiteLink.target = '_blank';
       websiteLink.rel = 'noopener noreferrer';
-      websiteLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+      websiteLink.className = MIC_ACTION_BUTTON_CLASS;
       websiteLink.textContent = mic.signupType === 'online' ? 'Online Signup' : 'Website / Signup';
       actions.append(websiteLink);
     }
@@ -1626,7 +1633,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
       signupDetailsButton.type = 'button';
       signupDetailsButton.setAttribute('aria-haspopup', 'dialog');
       signupDetailsButton.setAttribute('aria-controls', 'signupDetailsModal');
-      signupDetailsButton.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+      signupDetailsButton.className = MIC_ACTION_BUTTON_CLASS;
       signupDetailsButton.textContent = 'Signup details';
       signupDetailsButton.addEventListener('click', () => openSignupDetailsModal(mic, signupDetailsButton));
       actions.append(signupDetailsButton);
@@ -1642,7 +1649,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
         buildHostBadgeContent(listLink);
         listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
       } else {
-        listLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+        listLink.className = MIC_ACTION_BUTTON_CLASS;
         listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
       }
       actions.append(listLink);
@@ -1653,7 +1660,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
       contactLink.href = mic.contact;
       contactLink.target = '_blank';
       contactLink.rel = 'noopener noreferrer';
-      contactLink.className = 'rounded-md border border-zinc-700 px-3 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:border-[#00C805] hover:text-[#00C805]';
+      contactLink.className = MIC_ACTION_BUTTON_CLASS;
       contactLink.textContent = 'Contact';
       actions.append(contactLink);
     }
