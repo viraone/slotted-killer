@@ -3405,15 +3405,22 @@ function renderAdminSubmissionCard(row) {
       record.longitude = coordinates.longitude;
     }
 
-    const { error } = await supabaseClient.rpc('approve_open_mic_submission', {
-      p_submission_id: row.id,
-      p_record: record
-    });
-    setBusy(false);
+    let result;
+    try {
+      result = await supabaseClient.functions.invoke('approve-open-mic', {
+        body: { submission_id: row.id, record }
+      });
+    } catch (err) {
+      say('Could not confirm approval. Refresh the queue to check the listing before trying again.', 'text-red-400');
+      return;
+    } finally {
+      setBusy(false);
+    }
+    const { data, error } = result || {};
 
-    if (error) {
+    if (error || !data?.ok) {
       console.error('Unable to publish the submission:', error);
-      say(`Could not publish: ${error.message}`, 'text-red-400');
+      say(`Could not publish: ${await describeAddMicError(error, data)}`, 'text-red-400');
       return;
     }
 
@@ -3422,8 +3429,11 @@ function renderAdminSubmissionCard(row) {
     await loadAdminData();
     setAdminQueueNotice(
       `Published “${record.name || row.mic_name}”${coordinates.usable ? '' : ' without a map pin'}.`
-      + ' It is live on the list now.',
-      'text-emerald-400'
+      + ' It is live on the list now.'
+      + (data.emailSent
+        ? ' The confirmation email has been sent to the submitter.'
+        : ' The confirmation email could not be confirmed. Open this submission under Added and approve again to retry.'),
+      data.emailSent ? 'text-emerald-400' : 'text-yellow-400'
     );
   });
 

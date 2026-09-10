@@ -6,3 +6,7 @@ verify_jwt = false
 # Called from the public "Add Your Mic" form with the publishable key (not a JWT).
 [functions.submit-open-mic]
 verify_jwt = false
+
+# Handler validates the session with Auth and checks is_app_admin before writes.
+[functions.approve-open-mic]
+verify_jwt = false
