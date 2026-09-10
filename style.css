@@ -1219,3 +1219,30 @@ body.verification-mode main {
   margin-left: 0 !important;
   padding-bottom: 0 !important;
 }
+
+/* The admin surfaces sit on a public URL (?admin=1), so they are deliberately
+   dull — no green accents, no glow, nothing that reads as a feature worth
+   poking at. Scoped to #admin-section so the public Add Mic page keeps its
+   styling. Cosmetic only: access is enforced by is_app_admin + RLS. */
+#admin-section .addmic-hero {
+  background: rgba(24, 24, 27, 0.28);
+}
+
+#admin-section .addmic-hero::after {
+  content: none;
+}
+
+#admin-section .addmic-card {
+  border-color: #1c1c1f;
+  background: rgba(24, 24, 27, 0.22);
+}
+
+#admin-section .addmic-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a1a1aa;
+}
+
+#admin-section .addmic-card__subtitle {
+  color: #52525b;
+}
