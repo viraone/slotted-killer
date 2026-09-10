@@ -1,15 +1,15 @@
 const fs = require('fs');
 
-const indexHtml = fs.readFileSync('index.html', 'utf8');
-const functionStart = indexHtml.indexOf('function mergeOpenMicRecords(');
-const functionEnd = indexHtml.indexOf('async function fetchPublishedOpenMicRecords(', functionStart);
+const appSource = fs.readFileSync('app.js', 'utf8');
+const functionStart = appSource.indexOf('function mergeOpenMicRecords(');
+const functionEnd = appSource.indexOf('async function fetchPublishedOpenMicRecords(', functionStart);
 
 if (functionStart === -1 || functionEnd === -1) {
-  console.error('Could not find mergeOpenMicRecords function in index.html');
+  console.error('Could not find mergeOpenMicRecords function in app.js');
   process.exit(1);
 }
 
-eval(indexHtml.slice(functionStart, functionEnd));
+eval(appSource.slice(functionStart, functionEnd));
 
 const file = (id, extra = {}) => ({ id, name: `${id} from file`, ...extra });
 const published = (id, extra = {}) => ({ id, name: `${id} from Supabase`, ...extra });

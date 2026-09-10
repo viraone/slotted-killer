@@ -1,15 +1,15 @@
 const fs = require('fs');
 
-const indexHtml = fs.readFileSync('index.html', 'utf8');
-const functionStart = indexHtml.indexOf('function getSeattleScheduleMode(');
-const functionEnd = indexHtml.indexOf('function prioritizeVerificationView(', functionStart);
+const appSource = fs.readFileSync('app.js', 'utf8');
+const functionStart = appSource.indexOf('function getSeattleScheduleMode(');
+const functionEnd = appSource.indexOf('function prioritizeVerificationView(', functionStart);
 
 if (functionStart === -1 || functionEnd === -1) {
-  console.error('Could not find getSeattleScheduleMode function in index.html');
+  console.error('Could not find getSeattleScheduleMode function in app.js');
   process.exit(1);
 }
 
-eval(indexHtml.slice(functionStart, functionEnd));
+eval(appSource.slice(functionStart, functionEnd));
 
 const testCases = [
   { name: 'Thursday 11:59 PM', date: '2023-10-26T23:59:00-07:00', expected: 'signup' },
@@ -39,8 +39,12 @@ for (const testCase of testCases) {
   }
 }
 
-const usesSeattleTimezone = indexHtml.includes("timeZone: 'America/Los_Angeles'");
-console.log(`PASS: America/Los_Angeles configured = ${usesSeattleTimezone}`);
-if (!usesSeattleTimezone) allPassed = false;
+const usesSeattleTimezone = appSource.includes("timeZone: 'America/Los_Angeles'");
+if (usesSeattleTimezone) {
+  console.log('PASS: America/Los_Angeles configured');
+} else {
+  console.error('FAIL: America/Los_Angeles is not configured');
+  allPassed = false;
+}
 
 if (!allPassed) process.exit(1);
