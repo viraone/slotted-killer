@@ -127,6 +127,7 @@
     "openMicType": "Variety / Mix Mic / Anything is allowed",
     "ageRequirement": "21+",
     "requirementsInfo": "Variety mix mic: comedy, music, spoken word, anything allowed.",
+    "host": "rotating",
     "webSignup": "N/A",
     "recurrenceText": "Every Monday",
     "recurrence": {
@@ -639,6 +640,7 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic.",
     "signupDetails": "Signups in person at 9:00 PM",
+    "host": "Masih Ahmad",
     "webSignup": "N/A",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
@@ -692,6 +694,7 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic.",
     "signupDetails": "Signups in person at 7:00 PM",
+    "host": "rotating",
     "webSignup": "",
     "recurrenceText": "Every Wednesday",
     "recurrence": {
@@ -892,6 +895,7 @@
     "openMicType": "Anything is allowed",
     "ageRequirement": "",
     "requirementsInfo": "Comedy, music, spoken word, etc.",
+    "host": "Coral",
     "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSfGId1vxT4Hn88vufd15lpNs7biki4uoUpK8XsxBU7o6lcR0A/viewform",
     "latitude": 47.679649,
     "longitude": -122.374907
@@ -1254,6 +1258,7 @@
     "requirementsInfo": "Comics get 25% off food and drinks while performing.",
     "webSignup": "",
     "contact": "https://www.instagram.com/therickshawhaha/",
+    "host": "rotating",
     "recurrenceText": "Every 1st Sunday",
     "recurrence": {
       "type": "monthly-nth-weekday",
@@ -1279,6 +1284,7 @@
     "openMicType": "Variety Open Mic",
     "ageRequirement": "",
     "requirementsInfo": "Comedy, music, poetry, etc. Show up, go up. Free cookies, limited quantities.",
+    "host": "Yogi Paliwal",
     "webSignup": "",
     "contact": "https://www.instagram.com/yogipaliwal/",
     "recurrenceText": "Every Sunday",
