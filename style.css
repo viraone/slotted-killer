@@ -993,17 +993,11 @@ body.trip-intel-open {
   display: none;
 }
 
+/* The poster still runs edge to edge inside <main>, but the nav shell stays
+   put: the Friday window takes over the view automatically, so hiding the
+   tabs left visitors with no way back to the mic list. */
 body.lineup-mode {
-  padding-bottom: 0;
   background: #d9cfb4;
-}
-
-body.lineup-mode>aside {
-  display: none;
-}
-
-body.lineup-mode>main {
-  margin-left: 0;
 }
 
 body.lineup-mode>main>div {
