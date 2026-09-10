@@ -1496,5 +1496,37 @@
     },
     "latitude": 47.61492,
     "longitude": -122.31453
+  },
+  {
+    "id": "le-voyeur-404-4th-ave-e-olympia-wa-98501",
+    "name": "Vomity",
+    "venue": "Le Voyeur",
+    "location": "404 4th Ave E, Olympia, WA 98501",
+    "timeSignupStart": "/8pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "REQ. ->",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Vomity is a show that prioritizes both the audience's feelings of safety as well as the performers' safety. Homophobic, racist, misogynistic, and transphobic material will not be tolerated. If you do similar material again you will be asked not to perform. We understand that these rules may seem like censorship however this show came into existence for Olympia comedians to have our own space, and there are plenty of other spaces where anything goes. We also know that sometimes it may be hard to tell if you are crossing a line, and we want to encourage folks to do material about Race, gender, and sexuality without punching down.",
+    "host": "rotating",
+    "webSignup": "https://www.facebook.com/vomity/",
+    "contact": "https://www.facebook.com/vomity/",
+    "recurrenceText": "Every Other Wednesday",
+    "showWhenInactive": true,
+    "recurrence": {
+      "type": "biweekly",
+      "weekday": "Wednesday",
+      "anchorDate": "2026-09-09"
+    },
+    "latitude": 47.04523,
+    "longitude": -122.89539
   }
 ]
