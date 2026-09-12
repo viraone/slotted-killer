@@ -1388,11 +1388,39 @@ function setActiveOpenMicCard(card) {
 }
 
 // Card actions were easy to miss on phones, so they run at a 44px touch
-// target rather than the 11px pill they started as.
+// target rather than the 11px pill they started as. The accent has to sit in
+// the resting state too: a phone never fires :hover, so buttons that only
+// turned green on hover read as plain labels to every visitor on a handset.
 const MIC_ACTION_BUTTON_CLASS =
-  'inline-flex min-h-[44px] items-center justify-center rounded-md border border-zinc-600 '
-  + 'px-4 py-2.5 text-[13px] font-semibold text-zinc-200 transition '
-  + 'hover:border-[#00C805] hover:text-[#00C805]';
+  'inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-md '
+  + 'border border-[#00C805]/50 bg-[#00C805]/10 px-4 py-2.5 text-[13px] font-semibold '
+  + 'text-[#00C805] transition hover:border-[#00C805] hover:bg-[#00C805]/20 '
+  + 'active:bg-[#00C805]/30 active:translate-y-px';
+
+// Two kinds of action share that row: one opens a panel on this page, the
+// other hands off to Instagram or the dialer. The mark says which, so nobody
+// loses their place in the list by tapping the wrong one. U+FE0E keeps the
+// symbols as monochrome text rather than letting the phone swap in emoji.
+const MIC_ACTION_MARK_MODAL = 'ⓘ';
+const MIC_ACTION_MARK_EXTERNAL = '↗︎';
+const MIC_ACTION_MARK_PHONE = '☎︎';
+
+function setMicActionContent(button, label, { leading = '', trailing = '' } = {}) {
+  const parts = [];
+  const mark = (symbol, className) => {
+    const span = document.createElement('span');
+    span.setAttribute('aria-hidden', 'true');
+    if (className) span.className = className;
+    span.textContent = symbol;
+    return span;
+  };
+  if (leading) parts.push(mark(leading));
+  const text = document.createElement('span');
+  text.textContent = label;
+  parts.push(text);
+  if (trailing) parts.push(mark(trailing, 'text-[#00C805]/70'));
+  button.replaceChildren(...parts);
+}
 
 function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
   const isLockedPreview = Boolean(upcomingDate);
@@ -1640,7 +1668,11 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
       websiteLink.target = '_blank';
       websiteLink.rel = 'noopener noreferrer';
       websiteLink.className = MIC_ACTION_BUTTON_CLASS;
-      websiteLink.textContent = mic.signupType === 'online' ? 'Online Signup' : 'Website / Signup';
+      setMicActionContent(
+        websiteLink,
+        mic.signupType === 'online' ? 'Online Signup' : 'Website / Signup',
+        { trailing: MIC_ACTION_MARK_EXTERNAL }
+      );
       actions.append(websiteLink);
     }
 
@@ -1650,7 +1682,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
       signupDetailsButton.setAttribute('aria-haspopup', 'dialog');
       signupDetailsButton.setAttribute('aria-controls', 'signupDetailsModal');
       signupDetailsButton.className = MIC_ACTION_BUTTON_CLASS;
-      signupDetailsButton.textContent = 'Signup details';
+      setMicActionContent(signupDetailsButton, 'Signup details', { leading: MIC_ACTION_MARK_MODAL });
       signupDetailsButton.addEventListener('click', () => openSignupDetailsModal(mic, signupDetailsButton));
       actions.append(signupDetailsButton);
     }
@@ -1666,7 +1698,9 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
         listLink.title = buildOpenMicListButtonLabel(mic.listLabel);
       } else {
         listLink.className = MIC_ACTION_BUTTON_CLASS;
-        listLink.textContent = buildOpenMicListButtonLabel(mic.listLabel);
+        setMicActionContent(listLink, buildOpenMicListButtonLabel(mic.listLabel), {
+          trailing: MIC_ACTION_MARK_EXTERNAL
+        });
       }
       actions.append(listLink);
     }
@@ -1679,7 +1713,9 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
         contactLink.rel = 'noopener noreferrer';
       }
       contactLink.className = MIC_ACTION_BUTTON_CLASS;
-      contactLink.textContent = mic.contactLabel;
+      setMicActionContent(contactLink, mic.contactLabel, mic.contactIsLink
+        ? { trailing: MIC_ACTION_MARK_EXTERNAL }
+        : { leading: MIC_ACTION_MARK_PHONE });
       actions.append(contactLink);
     }
 
