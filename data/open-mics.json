@@ -1208,6 +1208,33 @@
     "longitude": -122.365986
   },
   {
+    "id": "cornercopia-comedy-club-289-nw-chehalis-ave-chehalis-wa-98532",
+    "name": "Cornercopia Comedy Club",
+    "location": "289 NW Chehalis Ave, Chehalis, WA 98532",
+    "timeSignupStart": "7pm/8pm",
+    "signupType": "in-person",
+    "signupDetails": "In-person signup starts at 7:00 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Comedy",
+    "ageRequirement": "",
+    "requirementsInfo": "All jokes, all styles, everyone's welcome. Show starts at 8:00 PM.",
+    "webSignup": "",
+    "recurrenceText": "Every Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday"
+    },
+    "latitude": 46.663216,
+    "longitude": -122.97033
+  },
+  {
     "id": "inside-1313-4th-ave-seattle-wa-98101",
     "name": "Inside",
     "location": "1313 4th Ave, Seattle, WA 98101",
