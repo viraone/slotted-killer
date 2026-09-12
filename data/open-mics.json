@@ -202,6 +202,34 @@
     }
   },
   {
+    "id": "log-cabin-bar-grill-7035-pacific-ave-se-olympia-wa-98503",
+    "name": "Log Cabin Bar & Grill",
+    "location": "7035 Pacific Ave SE, Olympia, WA 98503",
+    "timeSignupStart": "6pm/7pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "In-person signup starts at 6:00 PM.",
+    "monday": "Yes",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "",
+    "requirementsInfo": "Log Cabin Comedy Open Mic, presented by Stoned Goose Productions. Show up, go up.",
+    "contact": "https://www.instagram.com/stonedgooseproductions/",
+    "webSignup": "",
+    "recurrenceText": "Every Monday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Monday"
+    },
+    "latitude": 47.040864,
+    "longitude": -122.790478
+  },
+  {
     "id": "the-growler-guys-8500-lake-city-way-ne-seattle-wa-98115",
     "name": "The Growler Guys",
     "location": "8500 Lake City Way NE, Seattle, WA 98115",
