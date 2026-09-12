@@ -365,6 +365,20 @@ function parseSignupStartTimes(rawTime) {
   return { signupMinutes, startMinutes };
 }
 
+// Hosts hand us either a link or a phone number. Links open in a new tab and
+// say "Contact"; a phone number dials and shows the digits, so it is obvious
+// on a card that calling is the only way to reach that mic.
+function normalizeOpenMicContact(value) {
+  const text = String(value || '').trim();
+  if (!text) return { href: '', label: '', isLink: false };
+  if (/^https?:\/\//i.test(text)) return { href: text, label: 'Contact', isLink: true };
+
+  const digits = text.replace(/\D/g, '');
+  const national = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+  if (national.length !== 10) return { href: '', label: '', isLink: false };
+  return { href: `tel:+1${national}`, label: text, isLink: false };
+}
+
 function normalizeOpenMicRecord(record) {
   if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
   const name = String(record.name || '').trim();
@@ -379,7 +393,7 @@ function normalizeOpenMicRecord(record) {
   });
 
   const website = String(record.webSignup || '').trim();
-  const contact = String(record.contact || '').trim();
+  const contact = normalizeOpenMicContact(record.contact);
   const listLabel = String(record.listLabel || '').trim();
   const listUrl = String(record.listUrl || '').trim();
   const coordinateOverride = OPEN_MIC_COORDINATE_OVERRIDES[String(record.id || '').trim()];
@@ -415,7 +429,9 @@ function normalizeOpenMicRecord(record) {
     hostSchedule: normalizeHostSchedule(record.hostSchedule),
     wheelchairAccessible: record.wheelchairAccessible === true,
     website: /^https?:\/\//i.test(website) ? website : '',
-    contact: /^https?:\/\//i.test(contact) ? contact : '',
+    contact: contact.href,
+    contactLabel: contact.label,
+    contactIsLink: contact.isLink,
     listLabel,
     listUrl: /^https?:\/\//i.test(listUrl) ? listUrl : '',
     latitude: Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 ? latitude : null,
@@ -1658,10 +1674,12 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     if (mic.contact) {
       const contactLink = document.createElement('a');
       contactLink.href = mic.contact;
-      contactLink.target = '_blank';
-      contactLink.rel = 'noopener noreferrer';
+      if (mic.contactIsLink) {
+        contactLink.target = '_blank';
+        contactLink.rel = 'noopener noreferrer';
+      }
       contactLink.className = MIC_ACTION_BUTTON_CLASS;
-      contactLink.textContent = 'Contact';
+      contactLink.textContent = mic.contactLabel;
       actions.append(contactLink);
     }
 
