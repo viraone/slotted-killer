@@ -127,7 +127,7 @@
     "openMicType": "Variety / Mix Mic / Anything is allowed",
     "ageRequirement": "21+",
     "requirementsInfo": "Variety mix mic: comedy, music, spoken word, anything allowed.",
-    "host": "rotating",
+    "host": "Adam Perkowski",
     "webSignup": "N/A",
     "recurrenceText": "Every Monday",
     "recurrence": {
@@ -179,7 +179,7 @@
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
-    "priceForTime": "Free",
+    "priceForTime": "$5",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic. Sign up in person or check monthly list online.",
