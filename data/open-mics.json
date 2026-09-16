@@ -195,7 +195,6 @@
     "latitude": 47.255369,
     "longitude": -122.48735,
     "hostSchedule": {
-      "2026-09-14": "James Fitz",
       "2026-09-21": "Jes Anderson",
       "2026-09-24": "Narin Vann",
       "2026-09-28": "Erica Tausch"
@@ -503,7 +502,9 @@
     "recurrence": {
       "type": "monthly-multiple-nth-weekdays",
       "weekday": "Tuesday",
-      "additionalDates": ["2026-09-15"],
+      "additionalDates": [
+        "2026-09-15"
+      ],
       "nth": [
         2,
         4
