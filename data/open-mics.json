@@ -477,6 +477,38 @@
     "longitude": -122.3174
   },
   {
+    "id": "broadview-tap-house-217-n-125th-st-seattle-wa-98133",
+    "name": "TourComedy Open Mic @ Broadview Tap House",
+    "venue": "Broadview Tap House",
+    "location": "217 N 125th St, Seattle, WA 98133",
+    "timeSignupStart": "7:30pm/7:30pm-9:55pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up at 7:30pm, first come first placement, no pre-registration.",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "3 min set, anything goes if it's funny",
+    "host": "Callan Hercules (1st), rotating",
+    "wheelchairAccessible": true,
+    "contact": "https://www.instagram.com/tourcomedy/",
+    "website": "https://www.broadviewtaphouse.com/",
+    "webSignup": "",
+    "recurrenceText": "Every Tuesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Tuesday"
+    },
+    "latitude": 47.7193324,
+    "longitude": -122.3561739
+  },
+  {
     "id": "j-michaels-pub-and-eatery-15770-redmond-way-redmond-wa-98052",
     "name": "J. Michael's Comedy Open Mic",
     "location": "15770 Redmond Way, Redmond, WA 98052",
