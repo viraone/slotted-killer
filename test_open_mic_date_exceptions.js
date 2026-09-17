@@ -23,4 +23,16 @@ assert.equal(occurs(10, 20), false, 'Exception does not repeat next month');
 assert.equal(occurs(9, 14, 'Monday'), false, 'Incorrect flyer date remains inactive');
 assert.equal(mic.timeSignupStart, '7pm/7:30pm');
 assert.equal(mic.host, 'Amy Staugh');
+
+const risingStar = records.find(record => record.id === 'rising-star-comedy-phoenix-pub-12510-pacific-ave-s-tacoma-wa-98444');
+assert.ok(risingStar);
+const risingStarOccurs = (month, dayOfMonth) => context.openMicOccursOnSeattleDate(risingStar, {
+  year: 2026,
+  month,
+  dayOfMonth,
+  dayName: 'Tuesday'
+});
+assert.equal(risingStarOccurs(9, 22), false, 'Rising Star does not appear before its start date');
+assert.equal(risingStarOccurs(10, 13), true, 'Rising Star appears on its start date');
+assert.equal(risingStarOccurs(10, 27), true, 'Rising Star continues on the fourth Tuesday');
 console.log('PASS: one-time date, regular recurrence, flyer details, and neighboring dates');

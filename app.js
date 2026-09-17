@@ -623,6 +623,9 @@ function openMicOccursOnSeattleDate(mic, seattleNow) {
   if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
 
   const dateKey = `${seattleNow.year}-${String(seattleNow.month).padStart(2, '0')}-${String(seattleNow.dayOfMonth).padStart(2, '0')}`;
+  const startDate = String(recurrence.startDate || '').trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(startDate) && dateKey < startDate) return false;
+
   if (Array.isArray(recurrence.additionalDates) && recurrence.additionalDates.includes(dateKey)) {
     return true;
   }

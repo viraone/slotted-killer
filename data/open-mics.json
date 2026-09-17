@@ -1648,6 +1648,7 @@
     "recurrence": {
       "type": "monthly-multiple-nth-weekdays",
       "weekday": "Tuesday",
+      "startDate": "2026-10-13",
       "nth": [
         2,
         4
