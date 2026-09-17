@@ -1622,5 +1622,36 @@
     },
     "latitude": 47.04523,
     "longitude": -122.89539
+  },
+  {
+    "id": "rising-star-comedy-phoenix-pub-12510-pacific-ave-s-tacoma-wa-98444",
+    "name": "Rising Star Comedy",
+    "venue": "The Phoenix Pub",
+    "location": "12510 Pacific Ave S, Tacoma, WA 98444",
+    "timeSignupStart": "/7pm",
+    "signupType": "in-person",
+    "monday": "no",
+    "tuesday": "REQ. ->",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "",
+    "requirementsInfo": "No cover. Presented by Open Mic Collective PNW & The Phoenix Pub. Begins October 13th!",
+    "contact": "https://www.instagram.com/openmiccollectivepnw/",
+    "webSignup": "",
+    "recurrenceText": "Every 2nd & 4th Tuesday",
+    "showWhenInactive": true,
+    "recurrence": {
+      "type": "monthly-multiple-nth-weekdays",
+      "weekday": "Tuesday",
+      "nth": [
+        2,
+        4
+      ]
+    }
   }
 ]
