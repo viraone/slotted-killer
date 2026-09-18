@@ -1169,14 +1169,14 @@
   },
   {
     "id": "the-rendezvous-2322-2nd-ave-seattle-wa-98121",
-    "name": "Almost Friday",
+    "name": "The Rendezvous",
     "venue": "The Rendezvous (Downstairs)",
     "location": "2322 2nd Ave, Seattle, WA 98121",
     "timeSignupStart": "7pm/7:30pm-9pm",
-    "monday": "no",
+    "monday": "Yes",
     "tuesday": "no",
     "wednesday": "no",
-    "thursday": "Yes",
+    "thursday": "no",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
@@ -1188,10 +1188,10 @@
     "host": "Ahmed Guyo",
     "contact": "https://www.instagram.com/guyo_upnxt/",
     "webSignup": "",
-    "recurrenceText": "Every Thursday",
+    "recurrenceText": "Every Monday",
     "recurrence": {
       "type": "weekly",
-      "weekday": "Thursday"
+      "weekday": "Monday"
     },
     "latitude": 47.614624,
     "longitude": -122.346296
