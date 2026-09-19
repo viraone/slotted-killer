@@ -558,6 +558,19 @@ details.addmic-card[open] .addmic-summary-chevron {
   background: #71717a;
 }
 
+/* Halloween Costume Contest: submissions closed for now, so the pill reads as
+   "not open yet" rather than the greyed-out "closed after this week's show"
+   state above. Orange keeps it distinct from the Friday form's green/grey. */
+.signup-window-status--pending {
+  border-color: rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.1);
+  color: #fb923c;
+}
+
+.signup-window-status--pending .signup-window-status__dot {
+  background: #f97316;
+}
+
 body.trip-intel-open {
   overflow: hidden;
 }

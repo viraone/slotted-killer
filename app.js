@@ -57,14 +57,32 @@ const verificationLoadingCard = document.getElementById('verificationLoadingCard
 const verificationSuccessCard = document.getElementById('verificationSuccessCard');
 const verificationErrorCard = document.getElementById('verificationErrorCard');
 const verificationErrorMessage = document.getElementById('verificationErrorMessage');
+const verificationSuccessDetail = document.getElementById('verificationSuccessDetail');
+const halloweenSection = document.getElementById('halloween-section');
+const halloweenWindowStatus = document.getElementById('halloweenWindowStatus');
+const halloweenWindowStatusText = document.getElementById('halloweenWindowStatusText');
+const halloweenSignupCard = document.getElementById('halloweenSignupCard');
+const halloweenForm = document.getElementById('halloweenForm');
+const halloweenEmailInput = document.getElementById('halloweenEmail');
+const halloweenSubmitButton = document.getElementById('halloweenSubmitButton');
+const halloweenFormMessage = document.getElementById('halloweenFormMessage');
+const halloweenVerificationSentCard = document.getElementById('halloweenVerificationSentCard');
+const halloweenSuccessCard = document.getElementById('halloweenSuccessCard');
 const verificationTabRequested =
   new URLSearchParams(window.location.search).get('verify') === '1';
+// Which form a verification link belongs to. Set on the redirect URL when the
+// Halloween form sends its magic link; claim_pending_signup vs
+// claim_pending_halloween_signup and the success copy both depend on it.
+const verificationKind =
+  new URLSearchParams(window.location.search).get('kind') === 'halloween' ? 'halloween' : 'friday';
 const signupRequested =
   new URLSearchParams(window.location.search).get('signup') === '1';
 const lineupRequested =
   new URLSearchParams(window.location.search).get('lineup') === '1';
 const addMicRequested =
   new URLSearchParams(window.location.search).get('addmic') === '1';
+const halloweenRequested =
+  new URLSearchParams(window.location.search).get('halloween') === '1';
 // Unlisted entry point for the review panel.
 // Verification takes precedence if both params somehow appear together.
 const adminRequested = !verificationTabRequested
@@ -92,6 +110,7 @@ function enterStandaloneVerificationMode() {
   lineupSection.hidden = true;
   addMicSection.hidden = true;
   adminSection.hidden = true;
+  halloweenSection.hidden = true;
   verificationSection.hidden = false;
   document.body.classList.remove('addmic-mode');
   document.body.classList.remove('admin-mode');
@@ -127,6 +146,7 @@ function showHomeView() {
   lineupSection.hidden = true;
   addMicSection.hidden = true;
   adminSection.hidden = true;
+  halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
@@ -142,6 +162,7 @@ function showOpenMicMapView() {
   lineupSection.hidden = true;
   addMicSection.hidden = true;
   adminSection.hidden = true;
+  halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('addmic-mode');
@@ -157,6 +178,7 @@ function showAddMicView() {
   lineupSection.hidden = true;
   addMicSection.hidden = false;
   adminSection.hidden = true;
+  halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
@@ -173,6 +195,7 @@ function showAdminView() {
   lineupSection.hidden = true;
   addMicSection.hidden = true;
   adminSection.hidden = false;
+  halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
@@ -187,8 +210,25 @@ function showLineupView() {
   lineupSection.hidden = false;
   addMicSection.hidden = true;
   adminSection.hidden = true;
+  halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.add('lineup-mode');
+  document.body.classList.remove('openmicmap-mode');
+  document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('admin-mode');
+}
+
+function showHalloweenView() {
+  if (verificationTabRequested) return;
+  stopLineupRefreshTimer();
+  homeSection.hidden = true;
+  openMicMapSection.hidden = true;
+  lineupSection.hidden = true;
+  addMicSection.hidden = true;
+  adminSection.hidden = true;
+  halloweenSection.hidden = false;
+  verificationSection.hidden = true;
+  document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
   document.body.classList.remove('addmic-mode');
   document.body.classList.remove('admin-mode');
@@ -234,6 +274,9 @@ document.querySelectorAll('.nav-button').forEach((btn) => {
       renderOpenMicMapView();
     } else if (view === 'addmic') {
       showAddMicView();
+    } else if (view === 'halloween') {
+      showHalloweenView();
+      refreshHalloweenSignupsOpen();
     } else if (view === 'admin') {
       showAdminView();
       loadAdminData();
@@ -309,6 +352,7 @@ const OPEN_MIC_COORDINATE_OVERRIDES = {
 let selectedOpenMicDayName = null;
 let selectedOpenMicType = 'all';
 let userOpenMicLocation = null;
+let activeOpenMicId = null;
 const openMicReachabilityRequests = new Set();
 
 openMicDayButtons.forEach((button) => {
@@ -1361,12 +1405,15 @@ function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-[#00C805]';
+    button.dataset.openMicTonightItem = mic.id;
 
     const time = document.createElement('span');
+    time.dataset.time = '';
     time.className = `w-16 shrink-0 text-xs font-black ${isNext ? 'text-[#00C805]' : 'text-zinc-500'}`;
     time.textContent = formatMinutesToClock(mic.startMinutes) || 'TBD';
 
     const name = document.createElement('span');
+    name.dataset.name = '';
     name.className = `min-w-0 flex-1 truncate text-sm font-semibold ${isNext ? 'text-white font-bold' : 'text-zinc-300'} group-hover:text-white`;
     name.textContent = mic.name;
 
@@ -1377,9 +1424,9 @@ function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
 
     button.append(time, name, arrow);
     button.addEventListener('click', () => {
+      setActiveOpenMic(mic.id);
       const card = document.getElementById(`open-mic-card-${mic.id}`);
       if (!card) return;
-      setActiveOpenMicCard(card);
       card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       card.focus({ preventScroll: true });
     });
@@ -1388,11 +1435,21 @@ function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
   openMicTonightList.replaceChildren(...items);
 }
 
-function setActiveOpenMicCard(card) {
-  document.querySelectorAll('.open-mic-card--active').forEach((el) => {
-    if (el !== card) el.classList.remove('open-mic-card--active');
+function refreshOpenMicActiveHighlight() {
+  document.querySelectorAll('[data-open-mic-tonight-item]').forEach((button) => {
+    const isActive = button.dataset.openMicTonightItem === activeOpenMicId;
+    const time = button.querySelector('[data-time]');
+    const name = button.querySelector('[data-name]');
+    if (time) time.className = `w-16 shrink-0 text-xs font-black ${isActive ? 'text-[#00C805]' : 'text-zinc-500'}`;
+    if (name) name.className = `min-w-0 flex-1 truncate text-sm font-semibold ${isActive ? 'text-white font-bold' : 'text-zinc-300'} group-hover:text-white`;
   });
-  card.classList.add('open-mic-card--active');
+}
+
+function setActiveOpenMic(id) {
+  activeOpenMicId = id;
+  document.querySelectorAll('.open-mic-card--active').forEach((el) => el.classList.remove('open-mic-card--active'));
+  document.getElementById(`open-mic-card-${id}`)?.classList.add('open-mic-card--active');
+  refreshOpenMicActiveHighlight();
 }
 
 // Card actions were easy to miss on phones, so they run at a 44px touch
@@ -1442,7 +1499,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   if (!isLockedPreview) {
     // Highlight the soonest mic by default; clicking any card moves the highlight.
     if (isNext) card.classList.add('open-mic-card--active');
-    card.addEventListener('click', () => setActiveOpenMicCard(card));
+    card.addEventListener('click', () => setActiveOpenMic(mic.id));
   }
 
   const badges = document.createElement('div');
@@ -1759,6 +1816,7 @@ async function renderOpenMicMapView() {
       selectedDate.isToday
     );
     lastRenderedOpenMicNextId = nextMic ? nextMic.id : null;
+    activeOpenMicId = nextMic ? nextMic.id : null;
     const selectedSeattleDate = getSeattleNow(selectedDate.date);
     const upcomingPreviews = allMics
       .filter((mic) => (
@@ -1776,6 +1834,7 @@ async function renderOpenMicMapView() {
 
     // Render sidebar with chronologically sorted order
     renderOpenMicTonightPanel(todays, nextMic, lastMic);
+    refreshOpenMicActiveHighlight();
 
     if (todays.length === 0 && upcomingPreviews.length === 0) {
       const dayPhrase = selectedDate.isToday ? 'today' : 'this day';
@@ -2072,6 +2131,11 @@ emailInput.addEventListener('input', () => {
   formMessage.classList.add('hidden');
 });
 
+halloweenEmailInput.addEventListener('input', () => {
+  halloweenFormMessage.textContent = '';
+  halloweenFormMessage.classList.add('hidden');
+});
+
 signupForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!signupForm.reportValidity()) return;
@@ -2188,6 +2252,168 @@ signupForm.addEventListener('submit', async (event) => {
   submitButton.textContent = 'Submit & Verify Email';
 });
 
+// --- Halloween Costume Contest sign-up ---
+// Same shape as the Friday form above (insert -> signInWithOtp -> claim on
+// the /?verify=1&kind=halloween redirect), but against its own table and its
+// own open/closed gate. Submissions are closed until is_halloween_signups_open()
+// returns true — flip that by updating the app_settings row it reads
+// (see supabase/migrations/20260918000000_halloween_costume_contest_signups.sql).
+// The whole form is disabled client-side while closed, and the database
+// rejects any insert attempted anyway (belt-and-suspenders against someone
+// bypassing the disabled UI in devtools).
+const HALLOWEEN_CLOSED_BANNER_TEXT = 'Sign Ups Not Open Yet — Check Back Soon';
+const HALLOWEEN_OPEN_BANNER_TEXT = 'Sign Up Requests Open — Closes Monday, October 26 at 10:00 PM';
+const HALLOWEEN_CLOSED_BUTTON_TEXT = 'Sign Ups Opening Soon';
+const HALLOWEEN_OPEN_BUTTON_TEXT = 'Submit & Verify Email';
+
+let halloweenSignupsOpen = false;
+let halloweenSubmissionInFlight = false;
+
+function showHalloweenFormMessage(message, isError = false) {
+  halloweenFormMessage.textContent = message;
+  halloweenFormMessage.className = `text-center text-sm ${isError ? 'text-red-400' : 'text-emerald-400'}`;
+}
+
+function setHalloweenFormEnabled(isOpen) {
+  if (!halloweenForm) return;
+  halloweenForm.querySelectorAll('input').forEach((input) => {
+    input.disabled = !isOpen;
+  });
+  if (halloweenSubmissionInFlight) return;
+  halloweenSubmitButton.disabled = !isOpen;
+  halloweenSubmitButton.textContent = isOpen ? HALLOWEEN_OPEN_BUTTON_TEXT : HALLOWEEN_CLOSED_BUTTON_TEXT;
+}
+
+function renderHalloweenWindowStatus() {
+  if (!halloweenWindowStatus || !halloweenWindowStatusText) return;
+
+  halloweenWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--pending');
+
+  if (halloweenSignupsOpen) {
+    halloweenWindowStatus.classList.add('signup-window-status--open');
+    halloweenWindowStatusText.textContent = HALLOWEEN_OPEN_BANNER_TEXT;
+  } else {
+    halloweenWindowStatus.classList.add('signup-window-status--pending');
+    halloweenWindowStatusText.textContent = HALLOWEEN_CLOSED_BANNER_TEXT;
+  }
+
+  setHalloweenFormEnabled(halloweenSignupsOpen);
+}
+
+async function refreshHalloweenSignupsOpen() {
+  if (!supabaseClient) return;
+  try {
+    const { data, error } = await supabaseClient.rpc('is_halloween_signups_open');
+    if (error) throw error;
+    halloweenSignupsOpen = data === true;
+  } catch (err) {
+    console.error('Unable to check the Halloween sign-up status:', err);
+    halloweenSignupsOpen = false;
+  }
+  renderHalloweenWindowStatus();
+}
+
+function resetHalloweenSubmitState() {
+  halloweenSubmissionInFlight = false;
+  setHalloweenFormEnabled(halloweenSignupsOpen);
+}
+
+halloweenForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!halloweenForm.reportValidity()) return;
+  if (!halloweenSignupsOpen) {
+    showHalloweenFormMessage('Sign ups are not open yet.', true);
+    return;
+  }
+  if (!supabaseClient) {
+    showHalloweenFormMessage('Add your Supabase URL and anon key in index.html before submitting.', true);
+    return;
+  }
+
+  const name = document.getElementById('halloweenName').value.trim();
+  const email = halloweenEmailInput.value.trim().toLowerCase();
+  const instagram = document.getElementById('halloweenInstagram')?.value.trim() || '@n/a';
+  const costume = document.getElementById('halloweenCostume').value.trim();
+  const performedBefore = new FormData(halloweenForm).get('performed_before') === 'true';
+
+  halloweenSubmissionInFlight = true;
+  halloweenSubmitButton.disabled = true;
+  halloweenSubmitButton.textContent = 'Sending Verification…';
+  halloweenFormMessage.classList.add('hidden');
+
+  const { data: hasActiveVerifiedSignup, error: duplicateCheckError } = await supabaseClient.rpc(
+    'has_active_verified_halloween_signup',
+    { p_email: email }
+  );
+
+  if (duplicateCheckError || typeof hasActiveVerifiedSignup !== 'boolean') {
+    console.error('Unable to check for an existing verified sign-up:', duplicateCheckError);
+    showHalloweenFormMessage('Could not check this email address. Please try again.', true);
+    resetHalloweenSubmitState();
+    return;
+  }
+
+  if (hasActiveVerifiedSignup === true) {
+    showHalloweenFormMessage('An account has already been verified with this email address. Please use a different email to continue.', true);
+    resetHalloweenSubmitState();
+    return;
+  }
+
+  const signupRecord = {
+    name,
+    email,
+    instagram: instagram || '@n/a',
+    performed_before: performedBefore,
+    costume,
+    costume_agreement: true,
+    vote_agreement: true,
+    no_show_agreement: true,
+    guarantee_agreement: true,
+    is_verified: false
+  };
+
+  const { data: insertedSignup, error: insertError } = await supabaseClient
+    .from('halloween_signups')
+    .insert([signupRecord])
+    .select('id')
+    .single();
+
+  if (insertError) {
+    console.error('Unable to save sign-up:', insertError);
+    showHalloweenFormMessage(`Could not save your submission: ${insertError.message}`, true);
+    resetHalloweenSubmitState();
+    return;
+  }
+
+  if (insertedSignup?.id == null) {
+    console.error('Unable to save sign-up: no signup ID was returned.');
+    showHalloweenFormMessage('Could not save your submission. Please try again.', true);
+    resetHalloweenSubmitState();
+    return;
+  }
+
+  const redirectUrl = new URL(window.location.origin + window.location.pathname);
+  redirectUrl.searchParams.set('verify', '1');
+  redirectUrl.searchParams.set('kind', 'halloween');
+
+  const { error: authError } = await supabaseClient.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: redirectUrl.toString() }
+  });
+
+  if (authError) {
+    console.error('Unable to send magic link:', authError);
+    showHalloweenFormMessage(`Your submission was saved, but the verification email could not be sent: ${authError.message}`, true);
+    resetHalloweenSubmitState();
+    return;
+  }
+
+  halloweenForm.reset();
+  halloweenSignupCard.classList.add('hidden');
+  halloweenVerificationSentCard.classList.remove('hidden');
+  resetHalloweenSubmitState();
+});
+
 async function verifyPendingSignup(session) {
   if (!verificationTabRequested) return;
   const userEmail = session?.user?.email;
@@ -2196,10 +2422,10 @@ async function verifyPendingSignup(session) {
   enterStandaloneVerificationMode();
   verificationInProgress = true;
 
+  const claimRpc = verificationKind === 'halloween' ? 'claim_pending_halloween_signup' : 'claim_pending_signup';
+
   try {
-    const { data: claimSucceeded, error: claimError } = await supabaseClient.rpc(
-      'claim_pending_signup'
-    );
+    const { data: claimSucceeded, error: claimError } = await supabaseClient.rpc(claimRpc);
 
     if (claimError) {
       console.error('Unable to claim verified sign-up:', claimError);
@@ -2223,6 +2449,11 @@ async function verifyPendingSignup(session) {
     verificationHandled = true;
     verificationLoadingCard.classList.add('hidden');
     verificationErrorCard.classList.add('hidden');
+    if (verificationSuccessDetail) {
+      verificationSuccessDetail.textContent = verificationKind === 'halloween'
+        ? "We'll notify you if you're selected for the Halloween Costume Contest lineup."
+        : "We'll notify you if you're selected for this Friday's lineup.";
+    }
     verificationSuccessCard.classList.remove('hidden');
     await supabaseClient.auth.signOut();
   } catch (err) {
@@ -3613,6 +3844,11 @@ async function initializeApp() {
     // Shared link for hosts: stagetimepnw.com/add-mic
     setActiveNav('addmic');
     showAddMicView();
+  } else if (halloweenRequested) {
+    // Shared link: stagetimepnw.com/halloween
+    setActiveNav('halloween');
+    showHalloweenView();
+    await refreshHalloweenSignupsOpen();
   } else if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
     setActiveNav('home');
     await loadLineup();
