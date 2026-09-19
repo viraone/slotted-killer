@@ -2334,7 +2334,6 @@ halloweenForm.addEventListener('submit', async (event) => {
   const email = halloweenEmailInput.value.trim().toLowerCase();
   const instagram = document.getElementById('halloweenInstagram')?.value.trim() || '@n/a';
   const costume = document.getElementById('halloweenCostume').value.trim();
-  const performedBefore = new FormData(halloweenForm).get('performed_before') === 'true';
 
   halloweenSubmissionInFlight = true;
   halloweenSubmitButton.disabled = true;
@@ -2363,7 +2362,6 @@ halloweenForm.addEventListener('submit', async (event) => {
     name,
     email,
     instagram: instagram || '@n/a',
-    performed_before: performedBefore,
     costume,
     costume_agreement: true,
     vote_agreement: true,
