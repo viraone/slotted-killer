@@ -100,6 +100,20 @@ const SIGNUP_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const SIGNUP_CLOSE_MINUTES = 22 * 60; // Thu 10:00 PM
 const SIGNUP_REOPEN_MINUTES = 21 * 60 + 40; // Fri 9:40 PM
 
+// Rickshaw is hosting a special show on 9/25/2026 instead of the regular
+// open mic, so Read The Room requests are closed for that week. This
+// override auto-expires at the normal Friday reopen boundary, so no
+// follow-up is needed — delete this block once it's no longer relevant.
+const SPECIAL_CLOSURE_UNTIL = new Date('2026-09-25T21:40:00-07:00');
+const SPECIAL_CLOSURE_STATUS_MESSAGE =
+  'Sign Up Requests Closed — Rickshaw Is Hosting a Special Show This Week';
+const SPECIAL_CLOSURE_FORM_MESSAGE =
+  'No open mic sign-ups this week — Rickshaw is hosting a special show instead.';
+
+function isSpecialClosureActive(date = new Date()) {
+  return date < SPECIAL_CLOSURE_UNTIL;
+}
+
 let signupWindowIsOpen = true;
 let signupSubmissionInFlight = false;
 
@@ -1932,6 +1946,7 @@ function getSeattleWeekdayAndMinutes(date = new Date()) {
 }
 
 function isSignupRequestWindowOpen(date = new Date()) {
+  if (isSpecialClosureActive(date)) return false;
   const { weekday, minutesSinceMidnight } = getSeattleWeekdayAndMinutes(date);
   if (weekday === 'Thu' && minutesSinceMidnight >= SIGNUP_CLOSE_MINUTES) return false;
   if (weekday === 'Fri' && minutesSinceMidnight < SIGNUP_REOPEN_MINUTES) return false;
@@ -1955,6 +1970,9 @@ function updateSignupWindowStatus() {
   if (signupWindowIsOpen) {
     signupWindowStatus.classList.add('signup-window-status--open');
     signupWindowStatusText.textContent = 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
+  } else if (isSpecialClosureActive(now)) {
+    signupWindowStatus.classList.add('signup-window-status--closed');
+    signupWindowStatusText.textContent = SPECIAL_CLOSURE_STATUS_MESSAGE;
   } else {
     signupWindowStatus.classList.add('signup-window-status--closed');
     signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
@@ -2140,7 +2158,12 @@ signupForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!signupForm.reportValidity()) return;
   if (!signupWindowIsOpen) {
-    showFormMessage('Requests for this week have closed. Check back after Friday’s show.', true);
+    showFormMessage(
+      isSpecialClosureActive()
+        ? SPECIAL_CLOSURE_FORM_MESSAGE
+        : 'Requests for this week have closed. Check back after Friday’s show.',
+      true
+    );
     return;
   }
   if (!supabaseClient) {
