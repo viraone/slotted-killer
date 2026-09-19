@@ -914,34 +914,46 @@
                 placeholder="e.g. Dracula, Shrek" class="field" disabled>
             </div>
 
-            <div class="space-y-3 border-t border-zinc-800 pt-5">
-              <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+            <div
+              class="space-y-3 rounded-2xl border-2 border-orange-500/60 bg-orange-950/10 p-4 shadow-[0_0_25px_rgba(249,115,22,0.15)] sm:p-5">
+              <p class="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-orange-400">
+                <span aria-hidden="true">⚠️</span> Read before you sign up
+              </p>
+
+              <label
+                class="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-900/50 bg-zinc-950 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                 <input id="halloweenCostumeAgreement" name="costume_agreement" type="checkbox" required
-                  class="mt-0.5 h-4 w-4 shrink-0 accent-orange-500" disabled>
-                <span class="text-sm leading-6 text-zinc-300">I understand I must perform my 5-minute set in full
-                  costume. <span class="text-red-500">*</span></span>
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-orange-500" disabled>
+                <span class="text-base font-semibold leading-7 text-zinc-100">I understand I must perform my 5-minute
+                  set in <span class="text-orange-400">full costume</span>. <span class="text-red-500">*</span></span>
               </label>
 
-              <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+              <label
+                class="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-900/50 bg-zinc-950 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                 <input id="halloweenVoteAgreement" name="vote_agreement" type="checkbox" required
-                  class="mt-0.5 h-4 w-4 shrink-0 accent-orange-500" disabled>
-                <span class="text-sm leading-6 text-zinc-300">I understand the winner is chosen by audience vote, and
-                  I'll stay until the winner is announced (around 8:41pm). <span class="text-red-500">*</span></span>
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-orange-500" disabled>
+                <span class="text-base font-semibold leading-7 text-zinc-100">I understand the winner is chosen by
+                  <span class="text-orange-400">audience vote</span>, and I'll stay until the winner is announced
+                  (<span class="text-orange-400">around 8:41pm</span>). <span class="text-red-500">*</span></span>
               </label>
 
-              <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+              <label
+                class="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-900/50 bg-zinc-950 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                 <input id="halloweenNoShowAgreement" name="no_show_agreement" type="checkbox" required
-                  class="mt-0.5 h-4 w-4 shrink-0 accent-orange-500" disabled>
-                <span class="text-sm leading-6 text-zinc-300">I understand that if I miss my spot without notifying the
-                  host, it may affect future bookings. <span class="text-red-500">*</span></span>
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-orange-500" disabled>
+                <span class="text-base font-semibold leading-7 text-zinc-100">I understand that if I miss my spot
+                  without notifying the host, <span class="text-orange-400">it may affect future bookings</span>.
+                  <span class="text-red-500">*</span></span>
               </label>
 
-              <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-950/70 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+              <label
+                class="flex cursor-pointer items-start gap-3 rounded-lg border border-orange-900/50 bg-zinc-950 p-4 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                 <input id="halloweenGuaranteeAgreement" name="guarantee_agreement" type="checkbox" required
-                  class="mt-0.5 h-4 w-4 shrink-0 accent-orange-500" disabled>
-                <span class="text-sm leading-6 text-zinc-300">I understand that submission does not guarantee a spot.
-                  Notifications go out on Wednesday, October 28. If you're not selected, come to the show and join the
-                  standby list. <span class="text-red-500">*</span></span>
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-orange-500" disabled>
+                <span class="text-base font-semibold leading-7 text-zinc-100">I understand that submission does
+                  <span class="text-orange-400">not guarantee a spot</span>. Notifications go out on
+                  <span class="text-orange-400">Wednesday, October 28</span>. If you're not selected, come to the show
+                  and join the standby list. <span class="text-red-500">*</span></span>
               </label>
             </div>
 
