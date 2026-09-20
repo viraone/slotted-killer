@@ -1,15 +1,20 @@
 const fs = require('fs');
 
 const appSource = fs.readFileSync('app.js', 'utf8');
+const signupConstantsStart = appSource.indexOf('const SIGNUP_WEEKDAYS');
+const signupConstantsEnd = appSource.indexOf('let signupWindowIsOpen', signupConstantsStart);
 const functionStart = appSource.indexOf('function getSeattleScheduleMode(');
 const functionEnd = appSource.indexOf('function prioritizeVerificationView(', functionStart);
 
-if (functionStart === -1 || functionEnd === -1) {
-  console.error('Could not find getSeattleScheduleMode function in app.js');
+if (signupConstantsStart === -1 || signupConstantsEnd === -1 || functionStart === -1 || functionEnd === -1) {
+  console.error('Could not find signup schedule logic in app.js');
   process.exit(1);
 }
 
-eval(appSource.slice(functionStart, functionEnd));
+eval(
+  appSource.slice(signupConstantsStart, signupConstantsEnd)
+  + appSource.slice(functionStart, functionEnd)
+);
 
 const testCases = [
   { name: 'Thursday 11:59 PM', date: '2023-10-26T23:59:00-07:00', expected: 'signup' },
@@ -35,6 +40,24 @@ for (const testCase of testCases) {
     console.log(`PASS: ${testCase.name} = ${actual}`);
   } else {
     console.error(`FAIL: ${testCase.name}; expected ${testCase.expected}, got ${actual}`);
+    allPassed = false;
+  }
+}
+
+const signupWindowCases = [
+  { name: 'reopened special-event week', date: '2026-09-20T12:00:00-07:00', expected: true },
+  { name: 'Thursday before close', date: '2026-09-24T21:59:00-07:00', expected: true },
+  { name: 'Thursday at close', date: '2026-09-24T22:00:00-07:00', expected: false },
+  { name: 'Friday before reopen', date: '2026-09-25T21:39:00-07:00', expected: false },
+  { name: 'Friday at reopen', date: '2026-09-25T21:40:00-07:00', expected: true }
+];
+
+for (const testCase of signupWindowCases) {
+  const actual = isSignupRequestWindowOpen(new Date(testCase.date));
+  if (actual === testCase.expected) {
+    console.log(`PASS: ${testCase.name} signup window = ${actual ? 'open' : 'closed'}`);
+  } else {
+    console.error(`FAIL: ${testCase.name}; expected signup window ${testCase.expected ? 'open' : 'closed'}, got ${actual ? 'open' : 'closed'}`);
     allPassed = false;
   }
 }
