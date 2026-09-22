@@ -603,6 +603,36 @@
     "longitude": -122.312828
   },
   {
+    "id": "kitchen-sink-open-mic-hostel-fish-2327-2nd-ave-seattle-wa-98121",
+    "name": "Kitchen Sink Open Mic",
+    "venue": "Hostel Fish Seattle",
+    "location": "2327 2nd Ave, Seattle, WA 98121",
+    "timeSignupStart": "online/8pm",
+    "signupType": "online",
+    "signupDetails": "Sign up online via the Google Form.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety Comedy",
+    "ageRequirement": "",
+    "requirementsInfo": "Stand-up, improv, sketch, and other forms of comedy are welcome.",
+    "host": "rotating",
+    "contact": "https://www.instagram.com/kitchensinkseattle/",
+    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSf5KBEn7mllWB1L7FeNnmhk5nmqCB1mc84F-BKGsh75X8vzbg/viewform",
+    "recurrenceText": "Every Wednesday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Wednesday"
+    },
+    "latitude": 47.614407,
+    "longitude": -122.34687
+  },
+  {
     "id": "darrells-tavern-18041-aurora-ave-n-shoreline-wa-98133",
     "name": "Darrell's Tavern",
     "location": "18041 Aurora Ave N, Shoreline, WA 98133",
