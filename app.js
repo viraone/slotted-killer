@@ -1493,7 +1493,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   card.id = `open-mic-card-${mic.id}`;
   card.tabIndex = -1;
   card.className = isLockedPreview
-    ? 'open-mic-card relative rounded-xl border border-dashed border-zinc-700 bg-zinc-950/35 p-4 opacity-60 grayscale-[35%] shadow-inner shadow-black/30 transition hover:opacity-80'
+    ? 'open-mic-card relative rounded-xl border border-dashed border-zinc-600 bg-zinc-900/40 p-4 opacity-90 transition hover:opacity-100'
     : 'open-mic-card relative cursor-pointer rounded-xl border border-zinc-800 bg-zinc-900/45 p-4 transition hover:border-zinc-700 hover:bg-zinc-900/70';
 
   if (!isLockedPreview) {
@@ -1507,9 +1507,16 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
 
   if (isLockedPreview) {
     const badge = document.createElement('span');
-    badge.className = 'inline-block rounded-lg border border-zinc-500 bg-zinc-900 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-zinc-100 shadow-sm';
-    badge.textContent = `Next Open Mic ${formatUpcomingOpenMicDate(upcomingDate)}`;
+    // Monthly mics have odd schedules, so the card just says whether the mic is
+    // on for the selected day rather than quoting a date the reader has to check.
+    badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
+    badge.textContent = isToday ? 'Not happening tonight' : `Not happening this ${getSeattleNow(selectedDateObj).dayName}`;
     badges.append(badge);
+
+    const nextBadge = document.createElement('span');
+    nextBadge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
+    nextBadge.textContent = `Next one: ${formatUpcomingOpenMicDate(upcomingDate)}`;
+    badges.append(nextBadge);
 
   } else if (isNext) {
     const badge = document.createElement('span');
@@ -1530,7 +1537,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj) {
     const confirmBadge = document.createElement('span');
     confirmBadge.className = 'inline-block rounded border border-[#00C805]/50 bg-[#00C805]/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#00C805]';
-    confirmBadge.textContent = `✓ Happening ${formatUpcomingOpenMicDate(selectedDateObj)}`;
+    confirmBadge.textContent = isToday ? '✓ Happening tonight!' : `✓ Happening this ${getSeattleNow(selectedDateObj).dayName}!`;
     badges.append(confirmBadge);
   }
 
@@ -3452,7 +3459,7 @@ async function loadAdminSubmissions() {
   adminQueueStatus.hidden = true;
   data.forEach((row) => adminQueue.append(renderAdminSubmissionCard(row)));
 }
- 
+
 
 
 function renderAdminSubmissionCard(row) {

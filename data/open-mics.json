@@ -509,7 +509,7 @@
   },
   {
     "id": "j-michaels-pub-and-eatery-15770-redmond-way-redmond-wa-98052",
-    "name": "J. Michael's Comedy Open Mic",
+    "name": "J. Michael's Open Mic",
     "location": "15770 Redmond Way, Redmond, WA 98052",
     "timeSignupStart": "7pm/7:30pm",
     "signupType": "in-person",
@@ -522,22 +522,20 @@
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
-    "openMicType": "Comedy",
+    "openMicType": "Mix Mic / Comedy allowed",
     "ageRequirement": "21+",
-    "requirementsInfo": "All levels welcome. Free beverage for performing comics. No judging or voting. Mic starts at 7:30 PM.",
+    "requirementsInfo": "All levels welcome. Free beverage for performing comics. No judging or voting. Mic starts at 7:30 PM. 3rd Tuesday is comedy; 2nd & 4th Tuesdays are a regular mixed open mic (comedy welcome).",
     "signupDetails": "Sign up in person at 7:00 PM.",
     "host": "Amy Staugh",
     "contact": "https://www.facebook.com/groups/254872864606146/user/100024879318853/",
     "webSignup": "",
-    "recurrenceText": "Every 2nd & 4th Tuesday; also September 15, 2026 (one-time exception)",
+    "recurrenceText": "2nd, 3rd & 4th Tuesdays. 3rd Tuesday = comedy; 2nd & 4th = mixed open mic.",
     "recurrence": {
       "type": "monthly-multiple-nth-weekdays",
       "weekday": "Tuesday",
-      "additionalDates": [
-        "2026-09-15"
-      ],
       "nth": [
         2,
+        3,
         4
       ]
     },
