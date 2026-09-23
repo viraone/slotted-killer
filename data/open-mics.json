@@ -1681,5 +1681,36 @@
         4
       ]
     }
+  },
+  {
+    "id": "the-fishbowl-323-2nd-ave-w-seattle-wa-98119",
+    "name": "The Fishbowl Open Mic",
+    "venue": "The Fishbowl",
+    "location": "323 2nd Ave W, Seattle, WA 98119",
+    "timeSignupStart": "6pm/6:30pm-8pm",
+    "signupType": "in-person",
+    "signupDetails": "In-person sign-up opens at 6:00 PM. Show up, sign up, go up. Event runs from 6:30 PM to 8:00 PM.",
+    "showWhenInactive": true,
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Suggested donation $1–15",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "All ages",
+    "requirementsInfo": "Monthly variety open mic for performers, poets, storytellers, and musicians. All ages. Sign up in person at 6:00 PM, event starts at 6:30 PM. Suggested donation of $1–15. Co-presented with @isiszystridpoetry.",
+    "contact": "https://www.instagram.com/thefishbowlseattle/",
+    "webSignup": "",
+    "recurrenceText": "Every 4th Thursday of the Month",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Thursday",
+      "nth": 4
+    },
+    "latitude": 47.621282,
+    "longitude": -122.359468
   }
 ]
