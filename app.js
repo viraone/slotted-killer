@@ -2371,8 +2371,9 @@ halloweenForm.addEventListener('submit', async (event) => {
     instagram: instagram || '@n/a',
     costume,
     costume_agreement: true,
-    vote_agreement: true,
-    no_show_agreement: true,
+    // The vote and no-show checkboxes were removed from the form; both columns are still NOT NULL.
+    vote_agreement: false,
+    no_show_agreement: false,
     guarantee_agreement: true,
     is_verified: false
   };
