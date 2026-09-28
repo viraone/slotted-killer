@@ -184,7 +184,7 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic. Sign up in person or check monthly list online.",
     "webSignup": "https://www.barkentertainment.com/open-mic",
-    "listLabel": "6th & Proctor September List",
+    "listLabel": "6th & Proctor October List",
     "listUrl": "https://www.barkentertainment.com/copy-of-tcc2-june-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
     "recurrenceText": "Every Monday & Thursday",
@@ -195,7 +195,13 @@
     "latitude": 47.255369,
     "longitude": -122.48735,
     "hostSchedule": {
-      "2026-09-28": "Erica Tausch"
+      "2026-09-28": "Erica Tausch",
+      "2026-10-01": "Heath Richardson Thor",
+      "2026-10-12": "Jes Anderson",
+      "2026-10-15": "Bruce Detore",
+      "2026-10-22": "Jes Anderson",
+      "2026-10-26": "Logan Cantrell",
+      "2026-10-29": "David Knott"
     }
   },
   {
@@ -305,11 +311,16 @@
     },
     "latitude": 47.253971,
     "longitude": -122.441551,
-    "listLabel": "Downtown September List",
+    "listLabel": "Downtown October List",
     "listUrl": "https://www.barkentertainment.com/copy-of-bricktown-may-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
     "hostSchedule": {
-      "2026-09-29": "Joe McHugh"
+      "2026-09-29": "Joe McHugh",
+      "2026-10-06": "Garrett Iverson",
+      "2026-10-07": "Peter Artman",
+      "2026-10-13": "Joe Crudo",
+      "2026-10-14": "Erica Tausch Allison",
+      "2026-10-27": "Ryan Padilla Corey Bennett"
     }
   },
   {
