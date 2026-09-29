@@ -2477,8 +2477,7 @@ const VERIFICATION_SUCCESS_COPY = {
     eyebrow: '\u{1F383} Halloween Costume Contest',
     title: 'Your Costume Is In!',
     lead: 'Your entry has been received for Friday, October 30 at the Rickshaw Lounge.',
-    detail: "We review every costume idea and pick 10 comics. If you're selected, we'll email you, "
-      + 'and you\u2019ll perform your 5-minute set in character. The crowd votes, so bring your people.',
+    detail: "We'll email you if you're selected.",
     closing: 'Start planning your costume \u2014 you may now close this tab.'
   }
 };
@@ -2487,7 +2486,9 @@ function renderVerificationSuccess(kind) {
   const copy = VERIFICATION_SUCCESS_COPY[kind] || VERIFICATION_SUCCESS_COPY.friday;
   const setText = (id, text) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = text;
+    if (!el) return;
+    el.textContent = text;
+    el.classList.toggle('hidden', !text);
   };
   setText('verificationSuccessEyebrow', copy.eyebrow);
   setText('verificationSuccessTitle', copy.title);
