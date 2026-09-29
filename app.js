@@ -2378,22 +2378,17 @@ halloweenForm.addEventListener('submit', async (event) => {
     is_verified: false
   };
 
-  const { data: insertedSignup, error: insertError } = await supabaseClient
+  // No .select() here: halloween_signups only grants INSERT to the anon key
+  // (see 20260918000000_halloween_costume_contest_signups.sql), and asking
+  // PostgREST to return the new row needs SELECT, which failed every
+  // submission with "permission denied for table halloween_signups".
+  const { error: insertError } = await supabaseClient
     .from('halloween_signups')
-    .insert([signupRecord])
-    .select('id')
-    .single();
+    .insert([signupRecord]);
 
   if (insertError) {
     console.error('Unable to save sign-up:', insertError);
     showHalloweenFormMessage(`Could not save your submission: ${insertError.message}`, true);
-    resetHalloweenSubmitState();
-    return;
-  }
-
-  if (insertedSignup?.id == null) {
-    console.error('Unable to save sign-up: no signup ID was returned.');
-    showHalloweenFormMessage('Could not save your submission. Please try again.', true);
     resetHalloweenSubmitState();
     return;
   }
