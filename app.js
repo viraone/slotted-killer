@@ -2450,12 +2450,7 @@ async function verifyPendingSignup(session) {
     verificationHandled = true;
     verificationLoadingCard.classList.add('hidden');
     verificationErrorCard.classList.add('hidden');
-    if (verificationSuccessDetail) {
-      verificationSuccessDetail.textContent = verificationKind === 'halloween'
-        ? "We'll notify you if you're selected for the Halloween Costume Contest lineup."
-        : "We'll notify you if you're selected for this Friday's lineup.";
-    }
-    verificationSuccessCard.classList.remove('hidden');
+    renderVerificationSuccess(verificationKind);
     await supabaseClient.auth.signOut();
   } catch (err) {
     console.error('Unexpected error during verification:', err);
@@ -2464,6 +2459,43 @@ async function verifyPendingSignup(session) {
   } finally {
     verificationInProgress = false;
   }
+}
+
+// Fills in and shows the "Email Verified!" card for the form the link came
+// from. The Halloween version swaps the green for candle-orange (see
+// .verify-card--halloween in style.css) and restates the contest rules so the
+// comic knows what they just entered.
+const VERIFICATION_SUCCESS_COPY = {
+  friday: {
+    eyebrow: 'Stagetime PNW',
+    title: 'Email Verified!',
+    lead: 'Your request has been successfully received.',
+    detail: "We'll notify you if you're selected for this Friday's lineup.",
+    closing: 'You may now close this tab.'
+  },
+  halloween: {
+    eyebrow: '\u{1F383} Halloween Costume Contest',
+    title: 'Your Costume Is In!',
+    lead: 'Your entry has been received for Friday, October 30 at the Rickshaw Lounge.',
+    detail: "We review every costume idea and pick 10 comics. If you're selected, we'll email you, "
+      + 'and you\u2019ll perform your 5-minute set in character. The crowd votes, so bring your people.',
+    closing: 'Start planning your costume \u2014 you may now close this tab.'
+  }
+};
+
+function renderVerificationSuccess(kind) {
+  const copy = VERIFICATION_SUCCESS_COPY[kind] || VERIFICATION_SUCCESS_COPY.friday;
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+  setText('verificationSuccessEyebrow', copy.eyebrow);
+  setText('verificationSuccessTitle', copy.title);
+  setText('verificationSuccessLead', copy.lead);
+  setText('verificationSuccessDetail', copy.detail);
+  setText('verificationSuccessClosing', copy.closing);
+  verificationSuccessCard.classList.toggle('verify-card--halloween', kind === 'halloween');
+  verificationSuccessCard.classList.remove('hidden');
 }
 
 // --- Submit Your Open Mic form (internally: the "addmic" view, /add-mic) ---

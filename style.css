@@ -532,10 +532,106 @@ details.addmic-card[open] .addmic-summary-chevron {
   to { opacity: 1; transform: none; }
 }
 
+/* Halloween Costume Contest variant: same card, candle-orange instead of
+   green, a purple fog at the base and a few embers drifting up. app.js adds
+   verify-card--halloween when the verification link carries kind=halloween. */
+.verify-card--halloween {
+  background: linear-gradient(160deg, rgba(249, 115, 22, 0.85), rgba(249, 115, 22, 0.1) 45%, rgba(88, 28, 135, 0.55));
+  box-shadow: 0 0 70px rgba(249, 115, 22, 0.16), 0 30px 60px -20px rgba(0, 0, 0, 0.85);
+}
+
+.verify-card--halloween .verify-card__inner {
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(249, 115, 22, 0.26), transparent 60%),
+    radial-gradient(90% 55% at 50% 110%, rgba(126, 34, 206, 0.28), transparent 65%),
+    linear-gradient(180deg, #151013, #09090b);
+}
+
+.verify-card--halloween .verify-check__ring {
+  border-color: rgba(251, 146, 60, 0.5);
+}
+
+.verify-card--halloween .verify-check__svg {
+  background: radial-gradient(circle at 50% 40%, rgba(249, 115, 22, 0.34), rgba(249, 115, 22, 0.07) 70%);
+  box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.3), 0 0 32px rgba(249, 115, 22, 0.4);
+  animation: verify-pop .5s cubic-bezier(.34, 1.56, .64, 1) .15s both, verify-flicker 3.2s ease-in-out 1.2s infinite;
+}
+
+.verify-card--halloween .verify-check__circle {
+  stroke: #fb923c;
+}
+
+.verify-card--halloween .verify-check__mark {
+  filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.95));
+}
+
+.verify-card--halloween .verify-eyebrow {
+  color: #fb923c;
+}
+
+.verify-card--halloween .verify-divider {
+  background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.6), transparent);
+}
+
+.verify-embers {
+  display: none;
+}
+
+.verify-card--halloween .verify-embers {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Keep the copy above the embers. */
+.verify-card--halloween .verify-card__inner > :not(.verify-embers) {
+  position: relative;
+  z-index: 1;
+}
+
+.verify-embers span {
+  position: absolute;
+  bottom: -6px;
+  left: var(--x);
+  width: var(--s);
+  height: var(--s);
+  border-radius: 9999px;
+  background: #fdba74;
+  box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.7);
+  opacity: 0;
+  animation: verify-ember var(--t) linear var(--d) infinite;
+}
+
+.verify-embers span:nth-child(1) { --x: 12%; --s: 3px; --t: 7s;   --d: 0s; }
+.verify-embers span:nth-child(2) { --x: 24%; --s: 2px; --t: 9s;   --d: 2.2s; }
+.verify-embers span:nth-child(3) { --x: 41%; --s: 4px; --t: 8s;   --d: 4.1s; }
+.verify-embers span:nth-child(4) { --x: 57%; --s: 2px; --t: 10s;  --d: 1.3s; }
+.verify-embers span:nth-child(5) { --x: 70%; --s: 3px; --t: 7.5s; --d: 5.4s; }
+.verify-embers span:nth-child(6) { --x: 83%; --s: 2px; --t: 9.5s; --d: 3.2s; }
+.verify-embers span:nth-child(7) { --x: 92%; --s: 3px; --t: 8.5s; --d: 6.6s; }
+
+@keyframes verify-ember {
+  0%   { transform: translate(0, 0) scale(.6); opacity: 0; }
+  12%  { opacity: .9; }
+  60%  { opacity: .7; }
+  100% { transform: translate(14px, -420px) scale(1); opacity: 0; }
+}
+
+@keyframes verify-flicker {
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.3), 0 0 32px rgba(249, 115, 22, 0.4); }
+  35%      { box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.3), 0 0 40px rgba(249, 115, 22, 0.55); }
+  50%      { box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.3), 0 0 26px rgba(249, 115, 22, 0.32); }
+  72%      { box-shadow: inset 0 0 0 1px rgba(251, 146, 60, 0.3), 0 0 44px rgba(249, 115, 22, 0.6); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .verify-card, .verify-check__svg, .verify-rise { animation: none; opacity: 1; }
   .verify-check__ring { display: none; }
   .verify-check__circle, .verify-check__mark { animation: none; stroke-dashoffset: 0; }
+  .verify-card--halloween .verify-embers { display: none; }
 }
 
 .signup-window-status--open {
