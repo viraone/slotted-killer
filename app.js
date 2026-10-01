@@ -1973,6 +1973,18 @@ function updateSignupWindowStatus() {
   }
 }
 
+// The Oct 17 showcase ad runs on the sign-up page and the open mic map, and
+// comes down at midnight Pacific after the show.
+const SPONSORED_SHOWCASE_ENDS_AT = new Date('2026-10-18T00:00:00-07:00');
+const sponsoredShowcase = document.getElementById('sponsoredShowcase');
+if (sponsoredShowcase && new Date() >= SPONSORED_SHOWCASE_ENDS_AT) {
+  sponsoredShowcase.remove();
+} else if (sponsoredShowcase) {
+  const mapCopy = sponsoredShowcase.cloneNode(true);
+  mapCopy.removeAttribute('id');
+  openMicMapSection.prepend(mapCopy);
+}
+
 function prioritizeVerificationView() {
   if (verificationTabRequested) {
     enterStandaloneVerificationMode();
