@@ -106,18 +106,32 @@
         <aside id="sponsoredShowcase" aria-label="Sponsored" class="mb-6">
           <a href="https://www.eventbrite.com/e/jokeman-brand-presents-a-comedy-showcase-at-astir-tickets-2002457586546"
             target="_blank" rel="noopener sponsored"
-            class="flex items-center gap-3 rounded-lg bg-[#faf7f2] px-3 py-2 shadow-lg shadow-black/40 transition hover:bg-white">
+            class="flex items-center gap-3 rounded-lg bg-[#faf7f2] px-3 py-2 shadow-lg shadow-black/40 transition hover:bg-white lg:gap-4 lg:px-4">
             <p class="shrink-0 font-serif text-2xl font-bold leading-none tracking-tight text-[#e07b39]">a<span
                 class="text-[#7f9a5a]">/</span>stir</p>
-            <div class="min-w-0 border-l border-[#e07b39]/30 pl-3 text-left">
+            <div class="min-w-0 border-l border-[#e07b39]/30 pl-3 text-left lg:shrink-0 lg:pl-4">
               <p class="truncate text-[13px] font-bold leading-5 text-[#e07b39]">Showcase · Sat, Oct 17, 8 PM</p>
-              <p class="truncate text-xs leading-5 text-zinc-700">Support local comics · <span
-                  class="font-semibold text-[#5f7a3e] underline underline-offset-2">Get tickets ›</span></p>
+              <p class="truncate text-xs leading-5 text-zinc-700">Support local comics<span class="lg:hidden"> · <span
+                    class="font-semibold text-[#5f7a3e] underline underline-offset-2">Get tickets ›</span></span></p>
               <p class="flex items-center gap-1.5 truncate text-[11px] leading-4 text-zinc-500">
                 <span class="rounded-sm border border-zinc-400 px-0.5 text-[9px] font-bold uppercase leading-3 text-zinc-500">Ad</span>
                 Jokeman Brand · $15 · 21+
               </p>
             </div>
+            <!-- Desktop only: lineup, doors and address, plus a ticket button. -->
+            <div class="hidden min-w-0 flex-1 border-l border-[#e07b39]/30 pl-4 text-left text-xs leading-5 text-zinc-700 lg:block">
+              <p><span class="font-semibold text-[#7f9a5a]">Host</span> Masih Ahmad</p>
+              <p><span class="font-semibold text-[#7f9a5a]">Featuring</span>
+                <span class="whitespace-nowrap">Julie Zack</span> ·
+                <span class="whitespace-nowrap">Viradeth Xay-Ananh</span> ·
+                <span class="whitespace-nowrap">Ali Brenes</span> ·
+                <span class="whitespace-nowrap">Danny Anderson</span>
+              </p>
+              <p class="text-[11px] leading-4 text-zinc-500">Doors 6 PM · 818 E Pike St, Seattle</p>
+            </div>
+            <span
+              class="hidden shrink-0 rounded-full bg-[#e07b39] px-4 py-2 text-sm font-bold text-white lg:inline-block">Get
+              tickets</span>
           </a>
         </aside>
 
