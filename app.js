@@ -1961,7 +1961,7 @@ function updateSignupWindowStatus() {
 
   if (signupWindowIsOpen) {
     signupWindowStatus.classList.add('signup-window-status--open');
-    signupWindowStatusText.textContent = 'Sign Up Requests Open — Closes Thursday at 10:00 PM';
+    signupWindowStatusText.textContent = 'Requests Open — Closes Thu 10 PM';
   } else {
     signupWindowStatus.classList.add('signup-window-status--closed');
     signupWindowStatusText.textContent = 'Sign Up Requests Closed — Reopens After Friday’s Show';
