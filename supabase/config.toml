@@ -14,3 +14,9 @@ verify_jwt = false
 # Handler validates the session with Auth and checks is_app_admin before writes.
 [functions.approve-open-mic]
 verify_jwt = false
+
+[functions.lineup-feed]
+verify_jwt = false
+
+[functions.notify-selected]
+verify_jwt = false
