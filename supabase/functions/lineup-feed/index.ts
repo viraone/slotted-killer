@@ -32,8 +32,8 @@ export async function handler(request: Request): Promise<Response> {
   if (request.method !== "GET" && request.method !== "POST") return json({ error: "Method not allowed" }, 405);
   try {
     const [rows, email] = await Promise.all([readSheetRows(), emailOf(request)]);
-    const lineup = lineupOf(rows);
     const mine = email ? selectionFor(rows, email) : undefined;
+    const lineup = lineupOf(rows, mine);
     return json(
       {
         show_date: showDate(new Date()),

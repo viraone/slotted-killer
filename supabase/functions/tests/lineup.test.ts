@@ -33,6 +33,21 @@ Deno.test("the lineup keeps sheet order and formats set and time", () => {
   ]);
 });
 
+Deno.test("the asking comic's own row is marked, wherever it sits, and nobody else's", () => {
+  const rows = parseSheet(sheet);
+  const mine = selectionFor(rows, "lori@example.com");
+  const marked = lineupOf(rows, mine).filter((e) => e.mine).map((e) => e.name);
+  assert.deepEqual(marked, ["Lori Peck"]);
+  // The host moves her to the bottom of the sheet: the mark moves with her.
+  const moved = parseSheet([...sheet.filter((r) => r[0] !== "Lori Peck"), sheet.find((r) => r[0] === "Lori Peck")!]);
+  const lineup = lineupOf(moved, selectionFor(moved, "LORI@example.com"));
+  assert.equal(lineup[lineup.length - 1].name, "Lori Peck");
+  assert.equal(lineup[lineup.length - 1].mine, true);
+  // Signed out, or not in the lineup: no mark, and the public output has no `mine` key at all.
+  assert.ok(lineupOf(rows).every((e) => !("mine" in e)));
+  assert.ok(lineupOf(rows, selectionFor(rows, "jason@example.com")).every((e) => !e.mine));
+});
+
 Deno.test("formatters", () => {
   assert.equal(formatSetLength("5"), "5 min");
   assert.equal(formatSetLength("Headliner"), "Headliner");

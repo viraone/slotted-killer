@@ -17,6 +17,8 @@ export interface LineupEntry {
   name: string;
   set_length: string;
   start_time: string;
+  /** Set only on the asking comic's own row, so the page can mark it. */
+  mine?: true;
 }
 
 const clean = (v: unknown): string => (v == null ? "" : String(v).trim());
@@ -72,11 +74,13 @@ export function formatStartTime(value: string): string {
   return `${h % 12 || 12}:${m[2]} ${h >= 12 ? "PM" : "AM"}`;
 }
 
-export function lineupOf(rows: SheetRow[]): LineupEntry[] {
+export function lineupOf(rows: SheetRow[], mine?: SheetRow): LineupEntry[] {
   return rows.filter(isSelected).map((r) => ({
     name: r.name,
     set_length: formatSetLength(r.setLength),
     start_time: formatStartTime(r.startTime),
+    // Marked by row, not by position or name, so it follows the comic when the host moves them.
+    ...(mine && r === mine ? { mine: true as const } : {}),
   }));
 }
 
