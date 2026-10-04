@@ -826,7 +826,10 @@
       ]
     },
     "latitude": 47.55354,
-    "longitude": -122.280464
+    "longitude": -122.280464,
+    "featureSchedule": {
+      "2026-10-07": "Robert Pidde"
+    }
   },
   {
     "id": "camp-bar-1310-tacoma-ave-s-tacoma-wa-98402",

@@ -471,6 +471,7 @@ function normalizeOpenMicRecord(record) {
       : null,
     host: String(record.host || '').trim(),
     hostSchedule: normalizeHostSchedule(record.hostSchedule),
+    featureSchedule: normalizeHostSchedule(record.featureSchedule),
     wheelchairAccessible: record.wheelchairAccessible === true,
     website: /^https?:\/\//i.test(website) ? website : '',
     contact: contact.href,
@@ -486,6 +487,7 @@ function normalizeOpenMicRecord(record) {
 
 
 // Per-date hosts (e.g. the MC scraped from the BARK monthly list), keyed YYYY-MM-DD.
+// Also used for featureSchedule (the featured comic named on a show's flyer).
 function normalizeHostSchedule(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
   return Object.fromEntries(
@@ -506,6 +508,12 @@ function getOpenMicHost(mic, date) {
     if (scheduled) return scheduled;
   }
   return mic.host;
+}
+
+// A feature only exists for the dates a flyer names; there is no default.
+function getOpenMicFeature(mic, date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+  return mic.featureSchedule?.[formatSeattleIsoDate(date)] || '';
 }
 
 // Mics approved in the admin panel live in Supabase rather than the JSON file, so
@@ -1714,13 +1722,31 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     name.textContent = cardHost;
     el.replaceChildren(icon, label, name);
   };
-  if (cardHost && !hostOnListButton) {
+  const cardFeature = getOpenMicFeature(mic, upcomingDate || selectedDateObj);
+  if ((cardHost && !hostOnListButton) || cardFeature) {
     const hostRow = document.createElement('div');
     hostRow.className = 'mt-3 flex flex-wrap items-center gap-2';
-    const hostBadge = document.createElement('span');
-    hostBadge.className = hostBadgeClass;
-    buildHostBadgeContent(hostBadge);
-    hostRow.append(hostBadge);
+    if (cardHost && !hostOnListButton) {
+      const hostBadge = document.createElement('span');
+      hostBadge.className = hostBadgeClass;
+      buildHostBadgeContent(hostBadge);
+      hostRow.append(hostBadge);
+    }
+    if (cardFeature) {
+      const featureBadge = document.createElement('span');
+      featureBadge.className = 'inline-flex items-center gap-1.5 rounded-md border border-fuchsia-400/70 bg-gradient-to-r from-fuchsia-500/20 to-fuchsia-400/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-fuchsia-200';
+      const icon = document.createElement('span');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = '⭐';
+      const label = document.createElement('span');
+      label.className = 'text-fuchsia-300/90 font-bold normal-case tracking-normal';
+      label.textContent = 'Featuring:';
+      const name = document.createElement('span');
+      name.className = 'normal-case tracking-normal text-white';
+      name.textContent = cardFeature;
+      featureBadge.replaceChildren(icon, label, name);
+      hostRow.append(featureBadge);
+    }
     card.append(hostRow);
   }
   if (mic.wheelchairAccessible) {
