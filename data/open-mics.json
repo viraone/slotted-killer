@@ -1725,5 +1725,38 @@
     },
     "latitude": 47.621282,
     "longitude": -122.359468
+  },
+  {
+    "id": "tequila-sal-y-limon-14912-ambaum-blvd-sw-burien-wa-98166",
+    "name": "Who Said, Qué? Comedy Open Mic",
+    "venue": "Tequila Sal Y Limon",
+    "location": "14912 Ambaum Blvd SW, Burien, WA 98166",
+    "timeSignupStart": "9pm/9:30pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up at 9:00 PM, show starts at 9:30 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "Yes",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Who said, Qué? comedy open mic presented by La Santa Productions. Sign up at 9:00 PM, show starts at 9:30 PM. Hosted by Ali Brenes. One night: Friday, October 9.",
+    "host": "Ali Brenes",
+    "contact": "https://www.instagram.com/lasantaproductions/",
+    "webSignup": "",
+    "recurrenceText": "One Night · Fri, Oct 9",
+    "recurrence": {
+      "type": "one-time",
+      "weekday": "Friday",
+      "additionalDates": [
+        "2026-10-09"
+      ]
+    },
+    "latitude": 47.469339,
+    "longitude": -122.346359
   }
 ]
