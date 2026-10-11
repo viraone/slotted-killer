@@ -1157,23 +1157,35 @@
   },
   {
     "id": "the-whit-s-end-6510-phinney-ave-n-seattle-wa-98103",
-    "name": "The Whit's End",
+    "name": "The Whit's End Neighborhood Bar",
     "location": "6510 Phinney Ave N, Seattle, WA 98103",
-    "timeSignupStart": "/8pm",
+    "timeSignupStart": "7:30pm/8pm-12am",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
-    "thursday": "REQ. ->",
+    "thursday": "Yes",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "",
-    "requirementsInfo": "2nd, 4th Thurs.",
+    "requirementsInfo": "Open mic 8 PM to midnight. All styles welcome, including spoken word. Play solo or with a band, or sing behind a backing track. Drums, keys and bass available to play. 15-minute sets.",
     "webSignup": "",
     "latitude": 47.676351,
-    "longitude": -122.354123
+    "longitude": -122.354123,
+    "signupType": "in-person",
+    "signupDetails": "Sign-up goes out at 7:30 PM, first come first served. Message the host to sign up for a later spot after 10 PM.",
+    "recurrenceText": "Every 2nd & 4th Thursday",
+    "recurrence": {
+      "type": "monthly-multiple-nth-weekdays",
+      "weekday": "Thursday",
+      "nth": [
+        2,
+        4
+      ]
+    },
+    "showWhenInactive": true
   },
   {
     "id": "swamp-cow-kava-lounge-159-denny-way-suite-105-seattle-wa-98109",
