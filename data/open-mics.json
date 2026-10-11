@@ -1782,5 +1782,35 @@
     },
     "latitude": 47.469339,
     "longitude": -122.346359
+  },
+  {
+    "id": "the-porch-light-bar-grill-2708-6th-ave-tacoma-wa-98406",
+    "name": "Open Mic Night",
+    "venue": "The Porch Light Bar & Grill",
+    "location": "2708 6th Ave, Tacoma, WA 98406",
+    "timeSignupStart": "/7pm-9pm",
+    "signupType": "",
+    "signupDetails": "",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "",
+    "requirementsInfo": "Open mic for any genre of music or talent: singers, comedians, beat makers, DJs, spoken word. Presented by The Porch Light and Reign One.",
+    "host": "",
+    "contact": "",
+    "webSignup": "",
+    "recurrenceText": "Every Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday"
+    },
+    "latitude": 47.255383,
+    "longitude": -122.471522
   }
 ]
