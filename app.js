@@ -99,6 +99,12 @@ let lineupRefreshTimer = null;
 const SIGNUP_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const SIGNUP_CLOSE_MINUTES = 22 * 60; // Thu 10:00 PM
 const SIGNUP_REOPEN_MINUTES = 21 * 60 + 40; // Fri 9:40 PM
+// Halloween Costume Contest week: Read The Room sign-ups are replaced by the
+// Halloween sign-up from Thu Oct 22 10:00 PM (when Oct 23's requests close)
+// until the contest night (Fri Oct 30) wraps at 9:40 PM. Seattle is on PDT
+// (-07:00) for this whole stretch.
+const HALLOWEEN_TAKEOVER_STARTS_AT = new Date('2026-10-22T22:00:00-07:00');
+const HALLOWEEN_TAKEOVER_ENDS_AT = new Date('2026-10-30T21:40:00-07:00');
 
 let signupWindowIsOpen = true;
 let signupSubmissionInFlight = false;
@@ -1977,10 +1983,31 @@ function minutesUntilSignupReopen(date = new Date()) {
   return daysUntilFriday * 1440 + (SIGNUP_REOPEN_MINUTES - minutesSinceMidnight);
 }
 
+function isHalloweenTakeoverActive(date = new Date()) {
+  return date >= HALLOWEEN_TAKEOVER_STARTS_AT && date < HALLOWEEN_TAKEOVER_ENDS_AT;
+}
+
+// During Halloween week the regular sign-up form is swapped for a notice with
+// a button into the Halloween contest sign-up.
+function applyHalloweenTakeover(now) {
+  const takeover = isHalloweenTakeoverActive(now);
+  const notice = document.getElementById('halloweenTakeoverCard');
+  const intro = document.getElementById('signupIntro');
+  if (notice) notice.hidden = !takeover;
+  if (intro) intro.hidden = takeover;
+  if (signupWindowStatus) signupWindowStatus.style.display = takeover ? 'none' : '';
+  if (signupCard) signupCard.hidden = takeover;
+  return takeover;
+}
+
 function updateSignupWindowStatus() {
   if (!signupWindowStatus || !signupWindowStatusText) return;
 
   const now = new Date();
+  if (applyHalloweenTakeover(now)) {
+    signupWindowIsOpen = false;
+    return;
+  }
   signupWindowIsOpen = isSignupRequestWindowOpen(now);
 
   signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--closed');
@@ -2316,6 +2343,15 @@ const HALLOWEEN_OPEN_BUTTON_TEXT = 'Submit & Verify Email';
 
 let halloweenSignupsOpen = false;
 let halloweenSubmissionInFlight = false;
+
+const halloweenTakeoverContinue = document.getElementById('halloweenTakeoverContinue');
+if (halloweenTakeoverContinue) {
+  halloweenTakeoverContinue.addEventListener('click', () => {
+    setActiveNav('halloween');
+    showHalloweenView();
+    refreshHalloweenSignupsOpen();
+  });
+}
 
 function showHalloweenFormMessage(message, isError = false) {
   halloweenFormMessage.textContent = message;
