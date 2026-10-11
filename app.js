@@ -2310,7 +2310,7 @@ signupForm.addEventListener('submit', async (event) => {
 // rejects any insert attempted anyway (belt-and-suspenders against someone
 // bypassing the disabled UI in devtools).
 const HALLOWEEN_CLOSED_BANNER_TEXT = 'Sign Ups Not Open Yet — Check Back Soon';
-const HALLOWEEN_OPEN_BANNER_TEXT = 'Sign Up Requests Open — Closes Monday, October 26 at 10:00 PM';
+const HALLOWEEN_OPEN_BANNER_TEXT = 'Sign Up Requests Open — Closes Thursday, October 29 at 12:00 PM';
 const HALLOWEEN_CLOSED_BUTTON_TEXT = 'Sign Ups Opening Soon';
 const HALLOWEEN_OPEN_BUTTON_TEXT = 'Submit & Verify Email';
 
