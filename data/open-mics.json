@@ -1812,5 +1812,35 @@
     },
     "latitude": 47.255383,
     "longitude": -122.471522
+  },
+  {
+    "id": "the-wine-spot-2121-meridian-ave-e-edgewood-wa-98371",
+    "name": "The Wine Spot / Spotlight Open Mic",
+    "location": "2121 Meridian Ave E, Edgewood, WA 98371",
+    "timeSignupStart": "6:30pm/7pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "Performer sign-ups by 6:30 PM.",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Spotlight Open Mic. Second Tuesday of the month. Show runs 7-9 PM. All talents welcome. Hosted by Nicola Linde.",
+    "host": "Nicola Linde",
+    "webSignup": "",
+    "showWhenInactive": true,
+    "recurrenceText": "Every 2nd Tuesday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Tuesday",
+      "nth": 2
+    },
+    "latitude": 47.237931,
+    "longitude": -122.293869
   }
 ]
