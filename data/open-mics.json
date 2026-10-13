@@ -1843,5 +1843,37 @@
     "latitude": 47.237931,
     "longitude": -122.293869,
     "contact": "https://www.facebook.com/WineSpotWA"
+  },
+  {
+    "id": "mr-b-s-mead-center-9444-delridge-way-sw-seattle-wa-98106",
+    "name": "Open Mic",
+    "venue": "Mr. B's Mead Center (White Center)",
+    "location": "9444 Delridge Way SW, Seattle, WA 98106",
+    "timeSignupStart": "/6pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person, first come first served.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Free to perform and free to watch, no minimum. A wireless mic is hooked up to the PA in the main building. A Musicians Seeking Musicians open jam runs at the same time in the side garage, where the other equipment is.",
+    "host": "Mr. B",
+    "contact": "",
+    "webSignup": "",
+    "recurrenceText": "Every 4th Wednesday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Wednesday",
+      "nth": 4
+    },
+    "showWhenInactive": true,
+    "latitude": 47.518518,
+    "longitude": -122.356106
   }
 ]
