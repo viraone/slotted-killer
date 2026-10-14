@@ -1875,5 +1875,35 @@
     "showWhenInactive": true,
     "latitude": 47.518518,
     "longitude": -122.356106
+  },
+  {
+    "id": "conor-byrne-pub-5140-ballard-ave-nw-seattle-wa-98107",
+    "name": "Open Mic Night",
+    "venue": "Conor Byrne Pub",
+    "location": "5140 Ballard Ave NW, Seattle, WA 98107",
+    "timeSignupStart": "7:30pm/8pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign ups at 7:30 PM. Don't be late!",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "Yes",
+    "priceForTime": "",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "",
+    "requirementsInfo": "A stage for everyone since 2006. A Song Share runs at 6 PM before the open mic.",
+    "host": "",
+    "contact": "https://www.instagram.com/conorbyrnepub/",
+    "webSignup": "",
+    "recurrenceText": "Every Sunday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Sunday"
+    },
+    "latitude": 47.665229,
+    "longitude": -122.381704
   }
 ]
