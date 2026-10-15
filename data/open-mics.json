@@ -1767,20 +1767,28 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Who said, Qué? comedy open mic presented by La Santa Productions. Sign up at 9:00 PM, show starts at 9:30 PM. Hosted by Ali Brenes. One night: Friday, October 9.",
+    "requirementsInfo": "Who said, Qué? comedy open mic presented by La Santa Productions. Sign up at 9:00 PM, show starts at 9:30 PM.",
     "host": "Ali Brenes",
     "contact": "https://www.instagram.com/lasantaproductions/",
     "webSignup": "",
-    "recurrenceText": "One Night · Fri, Oct 9",
+    "recurrenceText": "Fri, Oct 9 & Fri, Oct 23",
     "recurrence": {
       "type": "one-time",
       "weekday": "Friday",
       "additionalDates": [
-        "2026-10-09"
+        "2026-10-09",
+        "2026-10-23"
       ]
     },
     "latitude": 47.469339,
-    "longitude": -122.346359
+    "longitude": -122.346359,
+    "hostSchedule": {
+      "2026-10-09": "Ali Brenes",
+      "2026-10-23": "Hans Cisneros"
+    },
+    "featureSchedule": {
+      "2026-10-23": "Joe Gomez"
+    }
   },
   {
     "id": "the-porch-light-bar-grill-2708-6th-ave-tacoma-wa-98406",
