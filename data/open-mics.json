@@ -821,7 +821,11 @@
     "latitude": 47.55354,
     "longitude": -122.280464,
     "featureSchedule": {
-      "2026-10-07": "Robert Pidde"
+      "2026-10-07": "Robert Pidde",
+      "2026-10-21": "JR Berard"
+    },
+    "hostSchedule": {
+      "2026-10-21": "Allison Fine"
     }
   },
   {
