@@ -20,3 +20,5 @@ verify_jwt = false
 
 [functions.notify-selected]
 verify_jwt = false
+[functions.notify-hosts]
+verify_jwt = false
