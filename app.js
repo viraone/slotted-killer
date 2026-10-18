@@ -1993,7 +1993,8 @@ function applyHalloweenTakeover(now) {
   const takeover = isHalloweenTakeoverActive(now);
   const notice = document.getElementById('halloweenTakeoverCard');
   const intro = document.getElementById('signupIntro');
-  if (notice) notice.hidden = !takeover;
+  // The paused ?signup=1 link shows only the maintenance notice, never the Halloween card.
+  if (notice) notice.hidden = !takeover || signupRequested;
   if (intro) intro.hidden = takeover;
   if (signupWindowStatus) signupWindowStatus.style.display = takeover ? 'none' : '';
   if (signupCard) signupCard.hidden = takeover;
@@ -3950,8 +3951,13 @@ async function initializeApp() {
     await loadLineup();
     startLineupRefreshTimer();
   } else if (signupRequested) {
+    // Shared link stagetimepnw.com/?signup=1 is paused for maintenance: show a notice, not the form.
     setActiveNav('home');
     showHomeView();
+    signupCard.classList.add('hidden');
+    signupWindowStatus?.classList.add('hidden');
+    document.getElementById('signupIntro')?.classList.add('hidden');
+    document.getElementById('signupMaintenanceNotice')?.classList.remove('hidden');
   } else {
     // Default landing view: the PNW open mic list & map.
     setActiveNav('openmicmap');
