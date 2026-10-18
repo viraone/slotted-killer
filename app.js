@@ -260,6 +260,8 @@ function isLineupWindowActive() {
   return !signupRequested && getSeattleScheduleMode() === 'lineup';
 }
 
+const SIGNUP_PAGE_URL = 'https://stagetimepnw.tapandlaunch.com/signup';
+
 function updateSignupNavLabel() {
   const label = document.getElementById('signupNavLabel');
   if (label) label.textContent = isLineupWindowActive() ? "Tonight's Line Up" : 'Open Mic Sign-Up';
@@ -273,6 +275,11 @@ window.setInterval(updateSignupWindowStatus, 30 * 1000);
 document.querySelectorAll('.nav-button').forEach((btn) => {
   btn.addEventListener('click', () => {
     const view = btn.dataset.view;
+    // Outside the lineup window the sign-up tab hands off to the hosted sign-up page.
+    if (view === 'home' && !isLineupWindowActive()) {
+      window.location.assign(SIGNUP_PAGE_URL);
+      return;
+    }
     setActiveNav(view);
     updateSignupNavLabel();
     if (view === 'openmicmap') {
