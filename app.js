@@ -75,8 +75,11 @@ const verificationTabRequested =
 // claim_pending_halloween_signup and the success copy both depend on it.
 const verificationKind =
   new URLSearchParams(window.location.search).get('kind') === 'halloween' ? 'halloween' : 'friday';
+const SIGNUP_PAGE_URL = 'https://stagetimepnw.tapandlaunch.com/signup';
 const signupRequested =
   new URLSearchParams(window.location.search).get('signup') === '1';
+// The shared stagetimepnw.com/?signup=1 link now lives on the hosted sign-up page.
+if (signupRequested) window.location.replace(SIGNUP_PAGE_URL);
 const lineupRequested =
   new URLSearchParams(window.location.search).get('lineup') === '1';
 const addMicRequested =
@@ -259,8 +262,6 @@ function setActiveNav(view) {
 function isLineupWindowActive() {
   return !signupRequested && getSeattleScheduleMode() === 'lineup';
 }
-
-const SIGNUP_PAGE_URL = 'https://stagetimepnw.tapandlaunch.com/signup';
 
 function updateSignupNavLabel() {
   const label = document.getElementById('signupNavLabel');
