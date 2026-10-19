@@ -974,27 +974,6 @@
     "longitude": -122.319023
   },
   {
-    "id": "tarasco-1452-nw-70th-st-seattle-wa-98117",
-    "name": "Tarasco",
-    "location": "1452 NW 70th St, Seattle, WA 98117",
-    "timeSignupStart": "/7-10pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "Yes",
-    "priceForTime": "Free",
-    "openMicType": "Anything is allowed",
-    "ageRequirement": "",
-    "requirementsInfo": "Comedy, music, spoken word, etc.",
-    "host": "Coral",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSfGId1vxT4Hn88vufd15lpNs7biki4uoUpK8XsxBU7o6lcR0A/viewform",
-    "latitude": 47.679649,
-    "longitude": -122.374907
-  },
-  {
     "id": "sandwhich-starr-705-n-1st-st-tacoma-wa-98403",
     "name": "Sandwhich Starr",
     "location": "705 N 1st St, Tacoma, WA 98403",
