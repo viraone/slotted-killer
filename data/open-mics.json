@@ -1335,10 +1335,12 @@
     "requirementsInfo": "Free comedy show presented by Open Mic Collective PNW. Seating at 7:30 PM, show at 8:00 PM.",
     "hostSchedule": {
       "2026-09-12": "Lori Sibal Peck",
-      "2026-10-10": "Allison Fine"
+      "2026-10-10": "Allison Fine",
+      "2026-10-24": "J'Myle Koretz"
     },
     "featureSchedule": {
-      "2026-10-10": "Xin Wu"
+      "2026-10-10": "Xin Wu",
+      "2026-10-24": "Craig Stewart"
     },
     "contact": "https://www.facebook.com/lori.peck.9",
     "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSeUHNTMSYbHLL1XyPOKS-wZH-gE-ixeCCu5bRFWYTP15mrDPQ/viewform",
