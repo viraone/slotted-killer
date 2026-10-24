@@ -82,7 +82,7 @@
   },
   {
     "id": "saint-john-s-bar-and-eatery-719-e-pike-st-seattle-wa-98122",
-    "name": "TWATTIES",
+    "name": "Saint John's Bar & Eatery – TWATTIES",
     "venue": "Saint John's Bar & Eatery",
     "location": "719 E Pike St, Seattle, WA 98122",
     "timeSignupStart": "/8pm",
@@ -195,11 +195,8 @@
     "latitude": 47.255369,
     "longitude": -122.48735,
     "hostSchedule": {
-      "2026-10-01": "Heath Richardson Thor",
-      "2026-10-12": "Jes Anderson",
-      "2026-10-15": "Bruce Detore",
-      "2026-10-22": "Jes Anderson",
-      "2026-10-26": "Logan Cantrell",
+      "2026-10-22": "Heath Richardson",
+      "2026-10-26": "Robert Pinner",
       "2026-10-29": "David Knott"
     }
   },
@@ -261,7 +258,7 @@
   },
   {
     "id": "comedy-nest-2601-1st-ave-seattle-wa-98121",
-    "name": "The Comedy Nest",
+    "name": "Common Objects Art Studio – The Comedy Nest",
     "venue": "Common Objects Art Studio",
     "location": "2601 1st Ave, Seattle, WA 98121",
     "timeSignupStart": "online/7:30pm",
@@ -314,11 +311,7 @@
     "listUrl": "https://www.barkentertainment.com/copy-of-bricktown-may-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
     "hostSchedule": {
-      "2026-10-06": "Garrett Iverson",
-      "2026-10-07": "Peter Artman",
-      "2026-10-13": "Joe Crudo",
-      "2026-10-14": "Erica Tausch Allison",
-      "2026-10-27": "Ryan Padilla Corey Bennett"
+      "2026-10-27": "Brandon White"
     }
   },
   {
@@ -607,7 +600,7 @@
   },
   {
     "id": "kitchen-sink-open-mic-hostel-fish-2327-2nd-ave-seattle-wa-98121",
-    "name": "Kitchen Sink Open Mic",
+    "name": "Hostel Fish Seattle – Kitchen Sink Open Mic",
     "venue": "Hostel Fish Seattle",
     "location": "2327 2nd Ave, Seattle, WA 98121",
     "timeSignupStart": "online/8pm",
@@ -824,7 +817,14 @@
       ]
     },
     "latitude": 47.55354,
-    "longitude": -122.280464
+    "longitude": -122.280464,
+    "featureSchedule": {
+      "2026-10-07": "Robert Pidde",
+      "2026-10-21": "JR Berard"
+    },
+    "hostSchedule": {
+      "2026-10-21": "Allison Fine"
+    }
   },
   {
     "id": "camp-bar-1310-tacoma-ave-s-tacoma-wa-98402",
@@ -894,7 +894,7 @@
   },
   {
     "id": "a1-hop-shop-144th-14401-greenwood-ave-n-seattle-wa-98133",
-    "name": "A1 Since Day 1 Comedy Open Mic",
+    "name": "A1 Hop Shop Taproom 144th – A1 Since Day 1 Comedy Open Mic",
     "venue": "A1 Hop Shop Taproom 144th",
     "location": "14401 Greenwood Ave N, Seattle, WA 98133",
     "timeSignupStart": "9pm/9:30pm-11pm",
@@ -972,27 +972,6 @@
     "longitude": -122.319023
   },
   {
-    "id": "tarasco-1452-nw-70th-st-seattle-wa-98117",
-    "name": "Tarasco",
-    "location": "1452 NW 70th St, Seattle, WA 98117",
-    "timeSignupStart": "/7-10pm",
-    "monday": "no",
-    "tuesday": "no",
-    "wednesday": "no",
-    "thursday": "no",
-    "friday": "no",
-    "saturday": "no",
-    "sunday": "Yes",
-    "priceForTime": "Free",
-    "openMicType": "Anything is allowed",
-    "ageRequirement": "",
-    "requirementsInfo": "Comedy, music, spoken word, etc.",
-    "host": "Coral",
-    "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSfGId1vxT4Hn88vufd15lpNs7biki4uoUpK8XsxBU7o6lcR0A/viewform",
-    "latitude": 47.679649,
-    "longitude": -122.374907
-  },
-  {
     "id": "sandwhich-starr-705-n-1st-st-tacoma-wa-98403",
     "name": "Sandwhich Starr",
     "location": "705 N 1st St, Tacoma, WA 98403",
@@ -1036,7 +1015,7 @@
     "id": "naked-brunch-2322-2nd-ave-seattle-wa-98121",
     "name": "Naked Brunch",
     "location": "Chandelier Lounge, 416 Broadway E, Seattle, WA",
-    "timeSignupStart": "/7pm",
+    "timeSignupStart": "/5pm",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
@@ -1155,23 +1134,35 @@
   },
   {
     "id": "the-whit-s-end-6510-phinney-ave-n-seattle-wa-98103",
-    "name": "The Whit's End",
+    "name": "The Whit's End Neighborhood Bar",
     "location": "6510 Phinney Ave N, Seattle, WA 98103",
-    "timeSignupStart": "/8pm",
+    "timeSignupStart": "7:30pm/8pm-12am",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "no",
-    "thursday": "REQ. ->",
+    "thursday": "Yes",
     "friday": "no",
     "saturday": "no",
     "sunday": "no",
     "priceForTime": "Free",
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "",
-    "requirementsInfo": "2nd, 4th Thurs.",
+    "requirementsInfo": "Open mic 8 PM to midnight. All styles welcome, including spoken word. Play solo or with a band, or sing behind a backing track. Drums, keys and bass available to play. 15-minute sets.",
     "webSignup": "",
     "latitude": 47.676351,
-    "longitude": -122.354123
+    "longitude": -122.354123,
+    "signupType": "in-person",
+    "signupDetails": "Sign-up goes out at 7:30 PM, first come first served. Message the host to sign up for a later spot after 10 PM.",
+    "recurrenceText": "Every 2nd & 4th Thursday",
+    "recurrence": {
+      "type": "monthly-multiple-nth-weekdays",
+      "weekday": "Thursday",
+      "nth": [
+        2,
+        4
+      ]
+    },
+    "showWhenInactive": true
   },
   {
     "id": "swamp-cow-kava-lounge-159-denny-way-suite-105-seattle-wa-98109",
@@ -1202,8 +1193,8 @@
   },
   {
     "id": "the-rendezvous-2322-2nd-ave-seattle-wa-98121",
-    "name": "Mic'd Up Monday",
-    "venue": "The Rendezvous (Downstairs)",
+    "name": "The Rendezvous (Jewelbox Theater) – Mic'd Up Monday",
+    "venue": "The Rendezvous (Jewelbox Theater)",
     "location": "2322 2nd Ave, Seattle, WA 98121",
     "timeSignupStart": "7pm/7:30pm-9pm",
     "monday": "Yes",
@@ -1216,7 +1207,7 @@
     "priceForTime": "Free",
     "openMicType": "Comedy",
     "ageRequirement": "21+",
-    "requirementsInfo": "Show up go up. Downstairs (not inside the Jewelbox Theater).",
+    "requirementsInfo": "Show up go up. In the Jewelbox Theater.",
     "signupDetails": "Signups in person at 7:00 PM",
     "host": "Ahmed Guyo",
     "contact": "https://www.instagram.com/guyo_upnxt/",
@@ -1249,7 +1240,8 @@
     "contact": "https://www.instagram.com/rooneyswoodinville/",
     "webSignup": "",
     "latitude": 47.755732,
-    "longitude": -122.152678
+    "longitude": -122.152678,
+    "host": "Rotating hosts"
   },
   {
     "id": "ballard-mandarin-5500-8th-ave-nw-seattle-wa-98107",
@@ -1271,7 +1263,8 @@
     "contact": "https://www.instagram.com/mcnultydoesbits/",
     "webSignup": "",
     "latitude": 47.669044,
-    "longitude": -122.365986
+    "longitude": -122.365986,
+    "host": "Rotating hosts"
   },
   {
     "id": "cornercopia-comedy-club-289-nw-chehalis-ave-chehalis-wa-98532",
@@ -1323,7 +1316,7 @@
   },
   {
     "id": "halcyon-8564-greenwood-ave-n-seattle-wa-98103",
-    "name": "Comedy Night at Halcyon Brewing Co.",
+    "name": "Halcyon Brewing Company – Comedy Night",
     "venue": "Halcyon Brewing Company",
     "location": "8564 Greenwood Ave N, Seattle, WA 98103",
     "timeSignupStart": "7:30pm/8pm",
@@ -1341,7 +1334,11 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Free comedy show presented by Open Mic Collective PNW. Seating at 7:30 PM, show at 8:00 PM.",
     "hostSchedule": {
-      "2026-09-12": "Lori Sibal Peck"
+      "2026-09-12": "Lori Sibal Peck",
+      "2026-10-10": "Allison Fine"
+    },
+    "featureSchedule": {
+      "2026-10-10": "Xin Wu"
     },
     "contact": "https://www.facebook.com/lori.peck.9",
     "webSignup": "https://docs.google.com/forms/d/e/1FAIpQLSeUHNTMSYbHLL1XyPOKS-wZH-gE-ixeCCu5bRFWYTP15mrDPQ/viewform",
@@ -1537,7 +1534,7 @@
   },
   {
     "id": "1928-sunday-open-mic-14525-aurora-ave-n-shoreline-wa-98133",
-    "name": "Live Track Open Mic",
+    "name": "1928 Tap & Grill & Karaoke – Live Track Open Mic",
     "venue": "1928 Tap & Grill & Karaoke",
     "location": "14525 Aurora Ave N, Shoreline, WA 98133",
     "timeSignupStart": "6:30pm/7pm-9pm",
@@ -1554,7 +1551,7 @@
     "openMicType": "Mix Music Mic / Comedy",
     "ageRequirement": "",
     "requirementsInfo": "\"Shoreline Sunday\" community music night — all genres, comedy, poetry & spoken word welcome. Perform solo, sing with your own backing track, or form a band; live bass, drums, and keyboard provided by the host. Up to 3 songs per performer.",
-    "host": "Helen Burn",
+    "host": "Rotating hosts",
     "contact": "https://www.instagram.com/1928tapgrillkaraoke/",
     "webSignup": "",
     "recurrenceText": "Every Sunday",
@@ -1625,7 +1622,7 @@
   },
   {
     "id": "le-voyeur-404-4th-ave-e-olympia-wa-98501",
-    "name": "Vomity",
+    "name": "Le Voyeur – Vomity",
     "venue": "Le Voyeur",
     "location": "404 4th Ave E, Olympia, WA 98501",
     "timeSignupStart": "/8pm",
@@ -1657,7 +1654,7 @@
   },
   {
     "id": "rising-star-comedy-phoenix-pub-12510-pacific-ave-s-tacoma-wa-98444",
-    "name": "Rising Star Comedy",
+    "name": "The Phoenix Pub – Rising Star Comedy",
     "venue": "The Phoenix Pub",
     "location": "12510 Pacific Ave S, Tacoma, WA 98444",
     "timeSignupStart": "/7pm",
@@ -1685,16 +1682,22 @@
         2,
         4
       ]
+    },
+    "hostSchedule": {
+      "2026-10-13": "Allison Fine"
+    },
+    "featureSchedule": {
+      "2026-10-13": "Narin Vann"
     }
   },
   {
     "id": "the-fishbowl-323-2nd-ave-w-seattle-wa-98119",
     "name": "The Fishbowl Open Mic",
     "venue": "The Fishbowl",
-    "location": "323 2nd Ave W, Seattle, WA 98119",
-    "timeSignupStart": "6pm/6:30pm-8pm",
+    "location": "424 2nd Ave W, Suite #330, Seattle, WA 98119",
+    "timeSignupStart": "6:30pm/7pm",
     "signupType": "in-person",
-    "signupDetails": "In-person sign-up opens at 6:00 PM. Show up, sign up, go up. Event runs from 6:30 PM to 8:00 PM.",
+    "signupDetails": "In-person sign-up. Doors open at 6:30 PM, open mic starts at 7:00 PM.",
     "showWhenInactive": true,
     "monday": "no",
     "tuesday": "no",
@@ -1706,7 +1709,7 @@
     "priceForTime": "Suggested donation $1–15",
     "openMicType": "Variety / All Talents Welcome",
     "ageRequirement": "All ages",
-    "requirementsInfo": "Monthly variety open mic for performers, poets, storytellers, and musicians. All ages. Sign up in person at 6:00 PM, event starts at 6:30 PM. Suggested donation of $1–15. Co-presented with @isiszystridpoetry.",
+    "requirementsInfo": "Monthly variety open mic for performers, poets, storytellers, and musicians. All ages. Doors open at 6:30 PM, open mic starts at 7:00 PM. Suggested donation of $1–15. Co-presented with @isiszystridpoetry. Gallery will be open.",
     "contact": "https://www.instagram.com/thefishbowlseattle/",
     "webSignup": "",
     "recurrenceText": "Every 4th Thursday of the Month",
@@ -1715,7 +1718,183 @@
       "weekday": "Thursday",
       "nth": 4
     },
-    "latitude": 47.621282,
-    "longitude": -122.359468
+    "latitude": 47.622431,
+    "longitude": -122.359254,
+    "hostSchedule": {
+      "2026-10-22": "The Power Puff Poets (Heather & Eddie)"
+    },
+    "featureSchedule": {
+      "2026-10-22": "Donna Davis"
+    }
+  },
+  {
+    "id": "tequila-sal-y-limon-14912-ambaum-blvd-sw-burien-wa-98166",
+    "name": "Tequila Sal Y Limon – Who Said, Qué? Comedy Open Mic",
+    "venue": "Tequila Sal Y Limon",
+    "location": "14912 Ambaum Blvd SW, Burien, WA 98166",
+    "timeSignupStart": "9pm/9:30pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up at 9:00 PM, show starts at 9:30 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "Yes",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Comedy",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Who said, Qué? comedy open mic presented by La Santa Productions. Sign up at 9:00 PM, show starts at 9:30 PM.",
+    "host": "Ali Brenes",
+    "contact": "https://www.instagram.com/lasantaproductions/",
+    "webSignup": "",
+    "recurrenceText": "Fri, Oct 9 & Fri, Oct 23",
+    "recurrence": {
+      "type": "one-time",
+      "weekday": "Friday",
+      "additionalDates": [
+        "2026-10-09",
+        "2026-10-23"
+      ]
+    },
+    "latitude": 47.469339,
+    "longitude": -122.346359,
+    "hostSchedule": {
+      "2026-10-09": "Ali Brenes",
+      "2026-10-23": "Hans Cisneros"
+    },
+    "featureSchedule": {
+      "2026-10-23": "Joe Gomez"
+    }
+  },
+  {
+    "id": "the-porch-light-bar-grill-2708-6th-ave-tacoma-wa-98406",
+    "name": "The Porch Light Bar & Grill Open Mic",
+    "venue": "The Porch Light Bar & Grill",
+    "location": "2708 6th Ave, Tacoma, WA 98406",
+    "timeSignupStart": "/7pm-9pm",
+    "signupType": "",
+    "signupDetails": "",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "",
+    "requirementsInfo": "Open mic for any genre of music or talent: singers, comedians, beat makers, DJs, spoken word. Presented by The Porch Light and Reign One.",
+    "host": "",
+    "contact": "",
+    "webSignup": "",
+    "recurrenceText": "Every Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday"
+    },
+    "latitude": 47.255383,
+    "longitude": -122.471522
+  },
+  {
+    "id": "the-wine-spot-2121-meridian-ave-e-edgewood-wa-98371",
+    "name": "The Wine Spot / Spotlight Open Mic",
+    "location": "2121 Meridian Ave E, Edgewood, WA 98371",
+    "timeSignupStart": "6:30pm/7pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "Performer sign-ups by 6:30 PM.",
+    "monday": "no",
+    "tuesday": "Yes",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "21+",
+    "requirementsInfo": "Spotlight Open Mic. Second Tuesday of the month. Show runs 7-9 PM. All talents welcome. Hosted by Nicola Linde.",
+    "host": "Nicola Linde",
+    "webSignup": "",
+    "showWhenInactive": true,
+    "recurrenceText": "Every 2nd Tuesday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Tuesday",
+      "nth": 2
+    },
+    "latitude": 47.237931,
+    "longitude": -122.293869,
+    "contact": "https://www.facebook.com/WineSpotWA"
+  },
+  {
+    "id": "mr-b-s-mead-center-9444-delridge-way-sw-seattle-wa-98106",
+    "name": "Mr. B's Mead Center (White Center) Open Mic",
+    "venue": "Mr. B's Mead Center (White Center)",
+    "location": "9444 Delridge Way SW, Seattle, WA 98106",
+    "timeSignupStart": "/6pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person, first come first served.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "Yes",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Free to perform and free to watch, no minimum. A wireless mic is hooked up to the PA in the main building. A Musicians Seeking Musicians open jam runs at the same time in the side garage, where the other equipment is.",
+    "host": "Mr. B",
+    "contact": "https://www.facebook.com/groups/254872864606146/user/100063265808488/",
+    "webSignup": "",
+    "recurrenceText": "Every 4th Wednesday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Wednesday",
+      "nth": 4
+    },
+    "showWhenInactive": true,
+    "latitude": 47.518518,
+    "longitude": -122.356106
+  },
+  {
+    "id": "odd-otter-brewing-company-716-pacific-ave-tacoma-wa-98402",
+    "name": "Odd Sunday Open Mic at Odd Otter Brewing Company",
+    "venue": "Odd Otter Brewing Company",
+    "location": "716 Pacific Ave, Tacoma, WA 98402",
+    "timeSignupStart": "6pm/6:30pm-8:30pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up at 6 PM. Show runs 6:30 to 8:30 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "Yes",
+    "priceForTime": "Free",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Odd Sunday Open Mic. Family friendly, all talents welcome (PG-13). House guitar available. Every 1st, 3rd and 5th Sunday of the month. Hosted by Nicola Linde.",
+    "host": "Nicola Linde",
+    "contact": "",
+    "webSignup": "",
+    "recurrenceText": "Every 1st, 3rd & 5th Sunday",
+    "recurrence": {
+      "type": "monthly-multiple-nth-weekdays",
+      "weekday": "Sunday",
+      "nth": [
+        1,
+        3,
+        5
+      ]
+    },
+    "showWhenInactive": true,
+    "latitude": 47.256751,
+    "longitude": -122.439482
   }
 ]

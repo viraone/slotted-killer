@@ -95,7 +95,7 @@
           <img src="RICKSHAW_LOGO.jpeg" alt="Rickshaw Open Mic Logo"
             class="mx-auto mb-3 h-32 w-auto object-contain md:h-44">
           <p class="text-xs font-bold uppercase tracking-[0.3em] text-red-500">Fridays · 7–9 PM</p>
-          <p class="mx-auto mt-4 max-w-xl text-sm font-bold leading-6 text-zinc-200 sm:text-base">
+          <p id="signupIntro" class="mx-auto mt-4 max-w-xl text-sm font-bold leading-6 text-zinc-200 sm:text-base">
             Request a spot at Read The Room, then verify your email.
           </p>
           <div id="signupWindowStatus"
@@ -105,6 +105,26 @@
             <span id="signupWindowStatusText"></span>
           </div>
         </header>
+
+        <!-- Halloween week only: app.js shows this and hides the regular form (see HALLOWEEN_TAKEOVER_*). -->
+        <section id="halloweenTakeoverCard" hidden aria-labelledby="halloweenTakeoverTitle"
+          class="mb-10 rounded-2xl border border-orange-500/60 bg-zinc-900/50 p-5 text-center shadow-2xl shadow-black/20 sm:p-7">
+          <p class="text-xs font-bold uppercase tracking-[0.25em] text-orange-400"><span aria-hidden="true">🎃</span> This week only</p>
+          <h2 id="halloweenTakeoverTitle" class="mt-2 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">
+            This week is the Halloween Costume Contest</h2>
+          <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-zinc-300 sm:text-base">
+            Friday, October 30 · 10 comics, 5-minute sets in character, $250 to the winner.
+            Want to sign up? Hit continue. If not, the regular open mic is back next week.</p>
+          <button id="halloweenTakeoverContinue" type="button"
+            class="mt-5 inline-flex items-center justify-center rounded-full bg-orange-500 px-6 py-3 text-sm font-black text-zinc-950 transition hover:bg-orange-400 sm:text-base">
+            Continue to Halloween sign-up</button>
+        </section>
+
+        <section id="signupMaintenanceNotice" aria-label="Sign-ups paused" role="status"
+          class="hidden mb-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center shadow-2xl shadow-black/20 sm:p-8">
+          <p class="text-lg font-bold text-zinc-100">Sign-ups are down for maintenance</p>
+          <p class="mt-2 text-sm text-zinc-400">We're making some updates. Please check back soon.</p>
+        </section>
 
         <section id="signupCard" aria-label="Signup form"
           class="mb-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 shadow-2xl shadow-black/20 sm:p-7">
@@ -863,7 +883,7 @@
             <span aria-hidden="true">🎃</span> Bring your friends and family. Every person in the crowd is a vote!</p>
           <p class="mx-auto mt-4 text-2xl font-black tracking-tight text-orange-400 sm:text-3xl">
             Winner takes home <span class="inline-flex items-center gap-1.5 whitespace-nowrap text-emerald-400"><span
-                aria-hidden="true">💵</span>$200</span></p>
+                aria-hidden="true">💵</span>$250</span></p>
           <div id="halloweenWindowStatus"
             class="signup-window-status signup-window-status--pending mx-auto mt-4 inline-flex items-center gap-2.5 rounded-full border px-5 py-2.5 text-sm font-bold sm:text-base"
             role="status" aria-live="polite">

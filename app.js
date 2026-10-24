@@ -75,8 +75,11 @@ const verificationTabRequested =
 // claim_pending_halloween_signup and the success copy both depend on it.
 const verificationKind =
   new URLSearchParams(window.location.search).get('kind') === 'halloween' ? 'halloween' : 'friday';
+const SIGNUP_PAGE_URL = 'https://stagetimepnw.tapandlaunch.com/signup';
 const signupRequested =
   new URLSearchParams(window.location.search).get('signup') === '1';
+// The shared stagetimepnw.com/?signup=1 link now lives on the hosted sign-up page.
+if (signupRequested) window.location.replace(SIGNUP_PAGE_URL);
 const lineupRequested =
   new URLSearchParams(window.location.search).get('lineup') === '1';
 const addMicRequested =
@@ -99,6 +102,12 @@ let lineupRefreshTimer = null;
 const SIGNUP_WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const SIGNUP_CLOSE_MINUTES = 22 * 60; // Thu 10:00 PM
 const SIGNUP_REOPEN_MINUTES = 21 * 60 + 40; // Fri 9:40 PM
+// Halloween Costume Contest week: Read The Room sign-ups are replaced by the
+// Halloween sign-up from Thu Oct 22 10:00 PM (when Oct 23's requests close)
+// until the contest night (Fri Oct 30) wraps at 9:40 PM. Seattle is on PDT
+// (-07:00) for this whole stretch.
+const HALLOWEEN_TAKEOVER_STARTS_AT = new Date('2026-10-22T22:00:00-07:00');
+const HALLOWEEN_TAKEOVER_ENDS_AT = new Date('2026-10-30T21:40:00-07:00');
 
 let signupWindowIsOpen = true;
 let signupSubmissionInFlight = false;
@@ -267,6 +276,11 @@ window.setInterval(updateSignupWindowStatus, 30 * 1000);
 document.querySelectorAll('.nav-button').forEach((btn) => {
   btn.addEventListener('click', () => {
     const view = btn.dataset.view;
+    // Outside the lineup window the sign-up tab hands off to the hosted sign-up page.
+    if (view === 'home' && !isLineupWindowActive()) {
+      window.location.assign(SIGNUP_PAGE_URL);
+      return;
+    }
     setActiveNav(view);
     updateSignupNavLabel();
     if (view === 'openmicmap') {
@@ -471,6 +485,7 @@ function normalizeOpenMicRecord(record) {
       : null,
     host: String(record.host || '').trim(),
     hostSchedule: normalizeHostSchedule(record.hostSchedule),
+    featureSchedule: normalizeHostSchedule(record.featureSchedule),
     wheelchairAccessible: record.wheelchairAccessible === true,
     website: /^https?:\/\//i.test(website) ? website : '',
     contact: contact.href,
@@ -486,6 +501,7 @@ function normalizeOpenMicRecord(record) {
 
 
 // Per-date hosts (e.g. the MC scraped from the BARK monthly list), keyed YYYY-MM-DD.
+// Also used for featureSchedule (the featured comic named on a show's flyer).
 function normalizeHostSchedule(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
   return Object.fromEntries(
@@ -506,6 +522,12 @@ function getOpenMicHost(mic, date) {
     if (scheduled) return scheduled;
   }
   return mic.host;
+}
+
+// A feature only exists for the dates a flyer names; there is no default.
+function getOpenMicFeature(mic, date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+  return mic.featureSchedule?.[formatSeattleIsoDate(date)] || '';
 }
 
 // Mics approved in the admin panel live in Supabase rather than the JSON file, so
@@ -1714,13 +1736,31 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     name.textContent = cardHost;
     el.replaceChildren(icon, label, name);
   };
-  if (cardHost && !hostOnListButton) {
+  const cardFeature = getOpenMicFeature(mic, upcomingDate || selectedDateObj);
+  if ((cardHost && !hostOnListButton) || cardFeature) {
     const hostRow = document.createElement('div');
     hostRow.className = 'mt-3 flex flex-wrap items-center gap-2';
-    const hostBadge = document.createElement('span');
-    hostBadge.className = hostBadgeClass;
-    buildHostBadgeContent(hostBadge);
-    hostRow.append(hostBadge);
+    if (cardHost && !hostOnListButton) {
+      const hostBadge = document.createElement('span');
+      hostBadge.className = hostBadgeClass;
+      buildHostBadgeContent(hostBadge);
+      hostRow.append(hostBadge);
+    }
+    if (cardFeature) {
+      const featureBadge = document.createElement('span');
+      featureBadge.className = 'inline-flex items-center gap-1.5 rounded-md border border-fuchsia-400/70 bg-gradient-to-r from-fuchsia-500/20 to-fuchsia-400/10 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-fuchsia-200';
+      const icon = document.createElement('span');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = '⭐';
+      const label = document.createElement('span');
+      label.className = 'text-fuchsia-300/90 font-bold normal-case tracking-normal';
+      label.textContent = 'Featuring:';
+      const name = document.createElement('span');
+      name.className = 'normal-case tracking-normal text-white';
+      name.textContent = cardFeature;
+      featureBadge.replaceChildren(icon, label, name);
+      hostRow.append(featureBadge);
+    }
     card.append(hostRow);
   }
   if (mic.wheelchairAccessible) {
@@ -1951,10 +1991,32 @@ function minutesUntilSignupReopen(date = new Date()) {
   return daysUntilFriday * 1440 + (SIGNUP_REOPEN_MINUTES - minutesSinceMidnight);
 }
 
+function isHalloweenTakeoverActive(date = new Date()) {
+  return date >= HALLOWEEN_TAKEOVER_STARTS_AT && date < HALLOWEEN_TAKEOVER_ENDS_AT;
+}
+
+// During Halloween week the regular sign-up form is swapped for a notice with
+// a button into the Halloween contest sign-up.
+function applyHalloweenTakeover(now) {
+  const takeover = isHalloweenTakeoverActive(now);
+  const notice = document.getElementById('halloweenTakeoverCard');
+  const intro = document.getElementById('signupIntro');
+  // The paused ?signup=1 link shows only the maintenance notice, never the Halloween card.
+  if (notice) notice.hidden = !takeover || signupRequested;
+  if (intro) intro.hidden = takeover;
+  if (signupWindowStatus) signupWindowStatus.style.display = takeover ? 'none' : '';
+  if (signupCard) signupCard.hidden = takeover;
+  return takeover;
+}
+
 function updateSignupWindowStatus() {
   if (!signupWindowStatus || !signupWindowStatusText) return;
 
   const now = new Date();
+  if (applyHalloweenTakeover(now)) {
+    signupWindowIsOpen = false;
+    return;
+  }
   signupWindowIsOpen = isSignupRequestWindowOpen(now);
 
   signupWindowStatus.classList.remove('signup-window-status--open', 'signup-window-status--closed');
@@ -2269,12 +2331,21 @@ signupForm.addEventListener('submit', async (event) => {
 // rejects any insert attempted anyway (belt-and-suspenders against someone
 // bypassing the disabled UI in devtools).
 const HALLOWEEN_CLOSED_BANNER_TEXT = 'Sign Ups Not Open Yet — Check Back Soon';
-const HALLOWEEN_OPEN_BANNER_TEXT = 'Sign Up Requests Open — Closes Monday, October 26 at 10:00 PM';
+const HALLOWEEN_OPEN_BANNER_TEXT = 'Sign Up Requests Open — Closes Thursday, October 29 at 12:00 PM';
 const HALLOWEEN_CLOSED_BUTTON_TEXT = 'Sign Ups Opening Soon';
 const HALLOWEEN_OPEN_BUTTON_TEXT = 'Submit & Verify Email';
 
 let halloweenSignupsOpen = false;
 let halloweenSubmissionInFlight = false;
+
+const halloweenTakeoverContinue = document.getElementById('halloweenTakeoverContinue');
+if (halloweenTakeoverContinue) {
+  halloweenTakeoverContinue.addEventListener('click', () => {
+    setActiveNav('halloween');
+    showHalloweenView();
+    refreshHalloweenSignupsOpen();
+  });
+}
 
 function showHalloweenFormMessage(message, isError = false) {
   halloweenFormMessage.textContent = message;
@@ -3888,8 +3959,13 @@ async function initializeApp() {
     await loadLineup();
     startLineupRefreshTimer();
   } else if (signupRequested) {
+    // Shared link stagetimepnw.com/?signup=1 is paused for maintenance: show a notice, not the form.
     setActiveNav('home');
     showHomeView();
+    signupCard.classList.add('hidden');
+    signupWindowStatus?.classList.add('hidden');
+    document.getElementById('signupIntro')?.classList.add('hidden');
+    document.getElementById('signupMaintenanceNotice')?.classList.remove('hidden');
   } else {
     // Default landing view: the PNW open mic list & map.
     setActiveNav('openmicmap');
