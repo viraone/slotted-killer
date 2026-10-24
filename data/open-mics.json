@@ -1849,7 +1849,7 @@
     "priceForTime": "Free",
     "openMicType": "Variety Open Mic",
     "ageRequirement": "All Ages",
-    "requirementsInfo": "Free to perform and free to watch, no minimum. A wireless mic is hooked up to the PA in the main building. A Musicians Seeking Musicians open jam runs at the same time in the side garage, where the other equipment is.",
+    "requirementsInfo": "Free to perform and free to watch, no minimum. Every 4th Wednesday (also runs every 2nd Sunday). A wireless mic is hooked up to the PA in the main building. A Musicians Seeking Musicians open jam runs at the same time in the side garage, where the other equipment is.",
     "host": "Mr. B",
     "contact": "https://www.facebook.com/groups/254872864606146/user/100063265808488/",
     "webSignup": "",
@@ -1898,5 +1898,37 @@
     "showWhenInactive": true,
     "latitude": 47.256751,
     "longitude": -122.439482
+  },
+  {
+    "id": "mr-b-s-mead-center-2nd-sunday-9444-delridge-way-sw-seattle-wa-98106",
+    "name": "Mr. B's Mead Center (White Center) Open Mic – 2nd Sunday",
+    "venue": "Mr. B's Mead Center (White Center)",
+    "location": "9444 Delridge Way SW, Seattle, WA 98106",
+    "timeSignupStart": "/6pm-9pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person, first come first served.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "REQ. ->",
+    "priceForTime": "Free",
+    "openMicType": "Variety Open Mic",
+    "ageRequirement": "All Ages",
+    "requirementsInfo": "Free to perform and free to watch, no minimum. Every 2nd Sunday (also runs every 4th Wednesday). A wireless mic is hooked up to the PA in the main building. A Musicians Seeking Musicians open jam runs at the same time in the side garage, where the other equipment is.",
+    "host": "Mr. B",
+    "contact": "https://www.facebook.com/groups/254872864606146/user/100063265808488/",
+    "webSignup": "",
+    "recurrenceText": "Every 2nd Sunday",
+    "recurrence": {
+      "type": "monthly-nth-weekday",
+      "weekday": "Sunday",
+      "nth": 2
+    },
+    "showWhenInactive": true,
+    "latitude": 47.518518,
+    "longitude": -122.356106
   }
 ]
