@@ -1,6 +1,29 @@
 const SUPABASE_URL = 'https://ldodkbdzljfpbnzrpxpu.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_PgqsEOo17xzDQrVpTUPa1Q_LoZg6rhy';
 const LINEUP_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+// GitHub Pages also serves this site over plain http:// (a Messenger or
+// Instagram link typed without the scheme lands there). A verification
+// redirect built from an http:// origin isn't on Supabase's redirect allow
+// list, so Supabase silently swapped it for the bare Site URL: the comic
+// clicked the email link, landed on the home page with no ?verify=1, and
+// their sign-up was never marked verified. Always move to https:// first,
+// and always build the redirect as https:// (see buildVerifyRedirectUrl).
+const IS_LOCAL_DEV = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+if (window.location.protocol === 'http:' && !IS_LOCAL_DEV) {
+  window.location.replace(
+    'https://' + window.location.host + window.location.pathname + window.location.search + window.location.hash
+  );
+}
+
+// The URL a sign-up verification email sends the comic back to. `kind` picks
+// which pending sign-up the landing page claims (see verificationKind).
+function buildVerifyRedirectUrl(kind) {
+  const redirectUrl = new URL(window.location.origin + window.location.pathname);
+  if (!IS_LOCAL_DEV) redirectUrl.protocol = 'https:';
+  redirectUrl.searchParams.set('verify', '1');
+  if (kind === 'halloween') redirectUrl.searchParams.set('kind', 'halloween');
+  return redirectUrl.toString();
+}
 const homeSection = document.getElementById('home-section');
 const openMicMapSection = document.getElementById('openmicmap-section');
 const openMicMapDayLabel = document.getElementById('openMicMapDayLabel');
@@ -2296,12 +2319,9 @@ signupForm.addEventListener('submit', async (event) => {
     return;
   }
 
-  const redirectUrl = new URL(window.location.origin + window.location.pathname);
-  redirectUrl.searchParams.set('verify', '1');
-
   const { error: authError } = await supabaseClient.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: redirectUrl.toString() }
+    options: { emailRedirectTo: buildVerifyRedirectUrl('friday') }
   });
 
   if (authError) {
@@ -2464,13 +2484,9 @@ halloweenForm.addEventListener('submit', async (event) => {
     return;
   }
 
-  const redirectUrl = new URL(window.location.origin + window.location.pathname);
-  redirectUrl.searchParams.set('verify', '1');
-  redirectUrl.searchParams.set('kind', 'halloween');
-
   const { error: authError } = await supabaseClient.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: redirectUrl.toString() }
+    options: { emailRedirectTo: buildVerifyRedirectUrl('halloween') }
   });
 
   if (authError) {
@@ -3430,6 +3446,7 @@ function normalizeAdminId(value) {
 
 async function sendAdminMagicLink(email) {
   const redirectUrl = new URL(window.location.origin + window.location.pathname);
+  if (!IS_LOCAL_DEV) redirectUrl.protocol = 'https:';
   redirectUrl.searchParams.set('admin', '1');
   // shouldCreateUser:false — a typo'd address must never mint a new auth user.
   return supabaseClient.auth.signInWithOtp({
