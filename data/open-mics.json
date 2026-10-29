@@ -1930,5 +1930,38 @@
     "showWhenInactive": true,
     "latitude": 47.518518,
     "longitude": -122.356106
+  },
+  {
+    "id": "poverty-bay-cafe-1108-s-322nd-pl-federal-way-wa-98003",
+    "name": "Poverty Bay Café – On The Mic Comedy Open Mic Night",
+    "venue": "Poverty Bay Café",
+    "location": "1108 S 322nd Pl, Federal Way, WA 98003",
+    "timeSignupStart": "5:30pm/6pm",
+    "signupType": "in-person",
+    "signupDetails": "Doors at 5:00 PM, sign up at 5:30 PM, show starts at 6:00 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "Yes",
+    "sunday": "no",
+    "priceForTime": "",
+    "openMicType": "Variety (Music, Comedy, Poetry)",
+    "ageRequirement": "",
+    "requirementsInfo": "On The Mic Comedy presents Open Mic Night (music, comedy, poetry) at Poverty Bay Café, a community bistro owned by Fusion. Saturday, Nov 14. Doors at 5 PM, sign up at 5:30 PM, show at 6 PM. Hosted by Brandon White. All proceeds support Fusion family housing and career service training through TABLE.",
+    "host": "Brandon White",
+    "contact": "https://instagram.com/onthemiccomedy",
+    "webSignup": "",
+    "recurrenceText": "Sat, Nov 14",
+    "recurrence": {
+      "type": "one-time",
+      "weekday": "Saturday",
+      "additionalDates": [
+        "2026-11-14"
+      ]
+    },
+    "latitude": 47.312719,
+    "longitude": -122.318945
   }
 ]
