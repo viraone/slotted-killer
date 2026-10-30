@@ -184,7 +184,7 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Stand-up comedy open mic. Sign up in person or check monthly list online.",
     "webSignup": "https://www.barkentertainment.com/open-mic",
-    "listLabel": "6th & Proctor October List",
+    "listLabel": "6th & Proctor November List",
     "listUrl": "https://www.barkentertainment.com/copy-of-tcc2-june-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
     "recurrenceText": "Every Monday & Thursday",
@@ -195,7 +195,11 @@
     "latitude": 47.255369,
     "longitude": -122.48735,
     "hostSchedule": {
-      "2026-10-29": "David Knott"
+      "2026-10-29": "David Knott",
+      "2026-11-09": "Thor Aksdal",
+      "2026-11-16": "Andrake West",
+      "2026-11-23": "James Fitz",
+      "2026-11-30": "Thor Aksdal"
     }
   },
   {
@@ -305,10 +309,14 @@
     },
     "latitude": 47.253971,
     "longitude": -122.441551,
-    "listLabel": "Downtown October List",
+    "listLabel": "Downtown November List",
     "listUrl": "https://www.barkentertainment.com/copy-of-bricktown-may-list",
     "listSourceUrl": "https://www.barkentertainment.com/open-mic",
-    "hostSchedule": {}
+    "hostSchedule": {
+      "2026-11-03": "Tony Ynot",
+      "2026-11-04": "Jason Katz",
+      "2026-11-10": "Ryan Padilla"
+    }
   },
   {
     "id": "super-funny-comedy-8402-s-hosmer-st-annex-building-tacoma-wa-98444",
