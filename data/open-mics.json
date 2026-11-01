@@ -281,7 +281,13 @@
       "weekday": "Tuesday"
     },
     "latitude": 47.615234,
-    "longitude": -122.349976
+    "longitude": -122.349976,
+    "hostSchedule": {
+      "2026-11-03": "Alexa Hansen"
+    },
+    "featureSchedule": {
+      "2026-11-03": "Min Lin"
+    }
   },
   {
     "id": "tacoma-comedy-downtown-933-market-st-tacoma-wa-98402",
