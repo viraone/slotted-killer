@@ -166,6 +166,13 @@ function startLineupRefreshTimer() {
       stopLineupRefreshTimer();
       return;
     }
+    // Opened from the "Tonight's Line Up" tab (no ?lineup=1 in the URL): a
+    // reload would land back on the open mic list, so refresh the board in
+    // place while the Friday window lasts.
+    if (!lineupRequested && isLineupWindowActive()) {
+      loadLineup();
+      return;
+    }
     window.location.reload();
   }, LINEUP_REFRESH_INTERVAL_MS);
 }
@@ -279,33 +286,31 @@ function setActiveNav(view) {
   });
 }
 
-// During the Friday lineup window (6:00 AM - 9:40 PM Seattle time) the
-// second nav tab becomes "Tonight's Line Up" and opens the lineup instead
-// of the signup form. Outside the window it reverts to "Open Mic Sign-Up".
+// During the Friday lineup window (6:00 AM - 9:40 PM Seattle time) a
+// "Tonight's Line Up" tab appears in the nav and opens the Rickshaw lineup.
+// Outside the window the tab is hidden; the open mic list is always the
+// landing view.
 function isLineupWindowActive() {
   return !signupRequested && getSeattleScheduleMode() === 'lineup';
 }
 
-function updateSignupNavLabel() {
-  const label = document.getElementById('signupNavLabel');
-  if (label) label.textContent = isLineupWindowActive() ? "Tonight's Line Up" : 'Open Mic Sign-Up';
+function updateLineupNavTab() {
+  document.getElementById('lineupNavButton')?.classList.toggle('hidden', !isLineupWindowActive());
 }
-updateSignupNavLabel();
-window.setInterval(updateSignupNavLabel, 60 * 1000);
+updateLineupNavTab();
+window.setInterval(updateLineupNavTab, 60 * 1000);
 
 updateSignupWindowStatus();
 window.setInterval(updateSignupWindowStatus, 30 * 1000);
 
 document.querySelectorAll('.nav-button').forEach((btn) => {
   btn.addEventListener('click', () => {
-    const view = btn.dataset.view;
-    // Outside the lineup window the sign-up tab hands off to the hosted sign-up page.
-    if (view === 'home' && !isLineupWindowActive()) {
-      window.location.assign(SIGNUP_PAGE_URL);
-      return;
-    }
+    let view = btn.dataset.view;
+    // The lineup tab only exists during the Friday window; a tap on one left
+    // over from before the window closed falls back to the open mic list.
+    if (view === 'home' && !isLineupWindowActive()) view = 'openmicmap';
     setActiveNav(view);
-    updateSignupNavLabel();
+    updateLineupNavTab();
     if (view === 'openmicmap') {
       showOpenMicMapView();
       renderOpenMicMapView();
@@ -317,11 +322,9 @@ document.querySelectorAll('.nav-button').forEach((btn) => {
     } else if (view === 'admin') {
       showAdminView();
       loadAdminData();
-    } else if (isLineupWindowActive()) {
+    } else {
       loadLineup();
       startLineupRefreshTimer();
-    } else {
-      showHomeView();
     }
   });
 });
@@ -3959,7 +3962,6 @@ async function initializeApp() {
     }).catch((err) => console.error('Unable to check admin access:', err));
   }
 
-  const scheduledMode = getSeattleScheduleMode();
   const lineupModeRequested = lineupRequested && !signupRequested && !addMicRequested;
 
   if (addMicRequested) {
@@ -3971,7 +3973,9 @@ async function initializeApp() {
     setActiveNav('halloween');
     showHalloweenView();
     await refreshHalloweenSignupsOpen();
-  } else if (lineupModeRequested || (!signupRequested && scheduledMode === 'lineup')) {
+  } else if (lineupModeRequested) {
+    // Shared link: stagetimepnw.com/?lineup=1. On Fridays the lineup is also
+    // one tap away on the "Tonight's Line Up" tab, but it is never the landing view.
     setActiveNav('home');
     await loadLineup();
     startLineupRefreshTimer();
