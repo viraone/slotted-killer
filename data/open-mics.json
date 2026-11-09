@@ -1695,22 +1695,17 @@
       "nth": [
         2,
         4
-      ],
-      "additionalDates": [
-        "2026-11-18"
       ]
     },
     "hostSchedule": {
       "2026-10-13": "Allison Fine",
       "2026-10-27": "Kevin Shiuan",
-      "2026-11-10": "Allison Fine",
-      "2026-11-18": "Allison Fine"
+      "2026-11-10": "Allison Fine"
     },
     "featureSchedule": {
       "2026-10-13": "Narin Vann",
       "2026-10-27": "Cheri Hardman + Mike Harrison",
-      "2026-11-10": "Brandon White",
-      "2026-11-18": "Brandon White"
+      "2026-11-10": "Brandon White"
     }
   },
   {
