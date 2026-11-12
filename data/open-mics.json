@@ -190,8 +190,14 @@
     "recurrenceText": "Every Monday & Thursday",
     "recurrence": {
       "type": "weekly",
-      "weekday": "Monday"
+      "weekday": "Monday",
+      "skipDates": [
+        "2026-11-12",
+        "2026-11-19",
+        "2026-11-26"
+      ]
     },
+    "showWhenInactive": true,
     "latitude": 47.255369,
     "longitude": -122.48735,
     "hostSchedule": {

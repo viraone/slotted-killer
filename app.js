@@ -463,6 +463,16 @@ function normalizeOpenMicContact(value) {
   return { href: `tel:+1${national}`, label: text, isLink: false };
 }
 
+// Hosts mark the odd week off ("not on the November list") with a date string
+// on recurrence.skipDates. Keep only well-formed YYYY-MM-DD strings so a typo
+// in the data can never crash the list or hide a mic on every date.
+function normalizeSkipDates(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((date) => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date.trim()))
+    .map((date) => date.trim());
+}
+
 function normalizeOpenMicRecord(record) {
   if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
   const name = String(record.name || '').trim();
@@ -494,7 +504,7 @@ function normalizeOpenMicRecord(record) {
     startMinutes,
     days,
     recurrence: record.recurrence && typeof record.recurrence === 'object' && !Array.isArray(record.recurrence)
-      ? record.recurrence
+      ? { ...record.recurrence, skipDates: normalizeSkipDates(record.recurrence.skipDates) }
       : null,
     anchorDate: String(record.anchorDate || record.recurrence?.anchorDate || record.recurrence?.startDate || '').trim(),
     recurrenceText: String(record.recurrenceText || '').trim(),
@@ -712,9 +722,15 @@ function filterOpenMicsByType(mics, selectedType) {
 
 function openMicOccursOnSeattleDate(mic, seattleNow) {
   const recurrence = mic.recurrence;
+  const dateKey = `${seattleNow.year}-${String(seattleNow.month).padStart(2, '0')}-${String(seattleNow.dayOfMonth).padStart(2, '0')}`;
+
+  // A per-date skip beats every kind of recurrence, including a one-off date.
+  if (recurrence && Array.isArray(recurrence.skipDates) && recurrence.skipDates.includes(dateKey)) {
+    return false;
+  }
+
   if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
 
-  const dateKey = `${seattleNow.year}-${String(seattleNow.month).padStart(2, '0')}-${String(seattleNow.dayOfMonth).padStart(2, '0')}`;
   const startDate = String(recurrence.startDate || '').trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(startDate) && dateKey < startDate) return false;
 
@@ -767,6 +783,17 @@ function openMicOccursOnSeattleDate(mic, seattleNow) {
     default:
       return false;
   }
+}
+
+// A locked preview card is for a mic that normally runs on the selected day
+// but does not on this date. Older records only carry recurrence.weekday; the
+// day flags are the same ones openMicOccursOnSeattleDate reads.
+function openMicIsPreviewCandidateForDate(mic, seattleDate) {
+  if (!mic.showWhenInactive) return false;
+  const recurrenceWeekdayMatches = String(mic.recurrence?.weekday || '').toLowerCase()
+    === seattleDate.dayName.toLowerCase();
+  const matchesSelectedDay = recurrenceWeekdayMatches || Boolean(mic.days?.[seattleDate.dayName]);
+  return matchesSelectedDay && !openMicOccursOnSeattleDate(mic, seattleDate);
 }
 
 function getNextOpenMicOccurrenceDate(mic, afterDate) {
@@ -1535,6 +1562,18 @@ function setMicActionContent(button, label, { leading = '', trailing = '' } = {}
   button.replaceChildren(...parts);
 }
 
+// A skipped date says why the usual mic is missing: it is off that month's
+// list. Every other locked preview keeps the original tonight/this-day text.
+function getNotHappeningBadgeText(mic, seattleDate, isToday) {
+  const dateKey = `${seattleDate.year}-${String(seattleDate.month).padStart(2, '0')}-${String(seattleDate.dayOfMonth).padStart(2, '0')}`;
+  if (Array.isArray(mic.recurrence?.skipDates) && mic.recurrence.skipDates.includes(dateKey)) {
+    const monthName = new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' })
+      .format(new Date(Date.UTC(seattleDate.year, seattleDate.month - 1, 1)));
+    return `Not on the ${monthName} list`;
+  }
+  return isToday ? 'Not happening tonight' : `Not happening this ${seattleDate.dayName}`;
+}
+
 function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
   const isLockedPreview = Boolean(upcomingDate);
   const card = document.createElement('article');
@@ -1558,7 +1597,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     // Monthly mics have odd schedules, so the card just says whether the mic is
     // on for the selected day rather than quoting a date the reader has to check.
     badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
-    badge.textContent = isToday ? 'Not happening tonight' : `Not happening this ${getSeattleNow(selectedDateObj).dayName}`;
+    badge.textContent = getNotHappeningBadgeText(mic, getSeattleNow(selectedDateObj), isToday);
     badges.append(badge);
 
     const nextBadge = document.createElement('span');
@@ -1892,11 +1931,7 @@ async function renderOpenMicMapView() {
     activeOpenMicId = nextMic ? nextMic.id : null;
     const selectedSeattleDate = getSeattleNow(selectedDate.date);
     const upcomingPreviews = allMics
-      .filter((mic) => (
-        mic.showWhenInactive
-        && String(mic.recurrence?.weekday || '').toLowerCase() === dayName.toLowerCase()
-        && !openMicOccursOnSeattleDate(mic, selectedSeattleDate)
-      ))
+      .filter((mic) => openMicIsPreviewCandidateForDate(mic, selectedSeattleDate))
       .map((mic) => ({
         mic,
         date: getNextOpenMicOccurrenceDate(mic, selectedDate.date)
