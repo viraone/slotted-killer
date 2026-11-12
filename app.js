@@ -1606,7 +1606,7 @@ function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
     const isNext = nextMic && mic.id === nextMic.id;
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-[#00C805]';
+    button.className = `group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-[#00C805]${isNext ? ' open-mic-tonight-item--active' : ''}`;
     button.dataset.openMicTonightItem = mic.id;
 
     const time = document.createElement('span');
@@ -1640,6 +1640,7 @@ function renderOpenMicTonightPanel(mics, nextMic, lastMic) {
 function refreshOpenMicActiveHighlight() {
   document.querySelectorAll('[data-open-mic-tonight-item]').forEach((button) => {
     const isActive = button.dataset.openMicTonightItem === activeOpenMicId;
+    button.classList.toggle('open-mic-tonight-item--active', isActive);
     const time = button.querySelector('[data-time]');
     const name = button.querySelector('[data-name]');
     if (time) time.className = `w-16 shrink-0 text-xs font-black ${isActive ? 'text-[#00C805]' : 'text-zinc-500'}`;

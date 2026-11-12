@@ -453,6 +453,12 @@ details.addmic-card[open] .addmic-summary-chevron {
   }
 }
 
+.open-mic-tonight-item--active {
+  background: rgba(0, 200, 5, 0.1);
+  box-shadow: inset 0 0 0 1px #00C805;
+  border-radius: 0.75rem;
+}
+
 /* Email verification success card */
 .verify-card {
   position: relative;
