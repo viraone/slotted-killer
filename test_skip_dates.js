@@ -21,7 +21,7 @@ for (const name of [
   'openMicOccursOnSeattleDate',
   'openMicIsPreviewCandidateForDate',
   'getNextOpenMicOccurrenceDate',
-  'getNotHappeningBadgeText'
+  'formatUpcomingOpenMicDate'
 ]) {
   const start = source.indexOf(`function ${name}(`);
   assert.ok(start >= 0, `${name} exists in app.js`);
@@ -33,7 +33,6 @@ for (const name of [
 const seattleDate = (year, month, dayOfMonth, dayName) => ({ year, month, dayOfMonth, dayName });
 const occurs = (mic, ...args) => context.openMicOccursOnSeattleDate(mic, seattleDate(...args));
 const preview = (mic, ...args) => context.openMicIsPreviewCandidateForDate(mic, seattleDate(...args));
-const badgeText = (mic, isToday, ...args) => context.getNotHappeningBadgeText(mic, seattleDate(...args), isToday);
 
 // A weekly Monday/Thursday mic that is skipped on Thursday 2026-11-12.
 const skipMic = context.normalizeOpenMicRecord({
@@ -120,14 +119,10 @@ assert.equal(preview(skipMic, 2026, 11, 10, 'Tuesday'), false,
 assert.equal(preview({ ...skipMic, showWhenInactive: false }, 2026, 11, 12, 'Thursday'), false,
   'a mic without showWhenInactive is never a preview');
 
-// Badge text.
-assert.equal(badgeText(skipMic, false, 2026, 11, 12, 'Thursday'), 'Not on the November list',
-  'a skipped date names the month it is off');
-assert.equal(badgeText(skipMic, true, 2026, 11, 12, 'Thursday'), 'Not on the November list',
-  'the month wording holds for today too');
-assert.equal(badgeText(noSkipMic, false, 2026, 11, 5, 'Thursday'), 'Not happening this Thursday',
-  'the original day wording is unchanged');
-assert.equal(badgeText(noSkipMic, true, 2026, 11, 5, 'Thursday'), 'Not happening tonight',
-  'the original tonight wording is unchanged');
+// "Next one" names the weekday, so Nov 16 reads as a Monday after a skipped Thursday.
+assert.equal(context.formatUpcomingOpenMicDate(new Date('2026-11-16T20:00:00Z')), 'Monday, Nov 16 2026',
+  'the upcoming date names its weekday');
+assert.equal(context.formatUpcomingOpenMicDate(new Date('2026-11-26T20:00:00Z')), 'Thursday, Nov 26 2026',
+  'a Thursday date reads as a Thursday');
 
-console.log('PASS: skip dates are normalized, override recurrence, drive preview cards and badge text');
+console.log('PASS: skip dates are normalized, override recurrence, drive preview cards and the next-date label');

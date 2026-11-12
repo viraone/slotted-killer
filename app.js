@@ -811,9 +811,9 @@ function getNextOpenMicOccurrenceDate(mic, afterDate) {
 }
 
 function formatUpcomingOpenMicDate(date) {
-  const { year, month, dayOfMonth } = getSeattleNow(date);
+  const { year, month, dayOfMonth, dayName } = getSeattleNow(date);
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  return `${months[month - 1]} ${dayOfMonth} ${year}`;
+  return `${dayName}, ${months[month - 1]} ${dayOfMonth} ${year}`;
 }
 
 function selectOpenMicsForSeattleDate(allMics, date, compareCurrentTime) {
@@ -1562,18 +1562,6 @@ function setMicActionContent(button, label, { leading = '', trailing = '' } = {}
   button.replaceChildren(...parts);
 }
 
-// A skipped date says why the usual mic is missing: it is off that month's
-// list. Every other locked preview keeps the original tonight/this-day text.
-function getNotHappeningBadgeText(mic, seattleDate, isToday) {
-  const dateKey = `${seattleDate.year}-${String(seattleDate.month).padStart(2, '0')}-${String(seattleDate.dayOfMonth).padStart(2, '0')}`;
-  if (Array.isArray(mic.recurrence?.skipDates) && mic.recurrence.skipDates.includes(dateKey)) {
-    const monthName = new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' })
-      .format(new Date(Date.UTC(seattleDate.year, seattleDate.month - 1, 1)));
-    return `Not on the ${monthName} list`;
-  }
-  return isToday ? 'Not happening tonight' : `Not happening this ${seattleDate.dayName}`;
-}
-
 function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
   const isLockedPreview = Boolean(upcomingDate);
   const card = document.createElement('article');
@@ -1597,7 +1585,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     // Monthly mics have odd schedules, so the card just says whether the mic is
     // on for the selected day rather than quoting a date the reader has to check.
     badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
-    badge.textContent = getNotHappeningBadgeText(mic, getSeattleNow(selectedDateObj), isToday);
+    badge.textContent = isToday ? 'Not happening tonight' : `Not happening this ${getSeattleNow(selectedDateObj).dayName}`;
     badges.append(badge);
 
     const nextBadge = document.createElement('span');
