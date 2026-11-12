@@ -45,6 +45,12 @@ body.report-mode>main>div {
   resize: vertical;
 }
 
+/* Sidebar labels are always white, like the page heading. The icon keeps the
+   grey / red colour, so the current page is still marked by its icon. */
+.nav-button > span {
+  color: #fff;
+}
+
 /* Admin nav tab: looks like a greyed-out, disabled item until an admin session is confirmed. */
 /* The review tab is hidden outright for non-admins rather than dimmed. A
    greyed-but-legible "Review Mics" still told every visitor the panel exists. */
