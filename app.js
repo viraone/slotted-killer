@@ -511,6 +511,15 @@ function normalizeSkipDates(value) {
     .map((date) => date.trim());
 }
 
+// The venue-calendar bot writes confirmedThrough and checkedAt as YYYY-MM-DD
+// strings. Anything else becomes null so a typo cannot hide a mic or print a
+// broken "checked on" note.
+function normalizeDateKey(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value.trim())
+    ? value.trim()
+    : null;
+}
+
 function normalizeOpenMicRecord(record) {
   if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
   const name = String(record.name || '').trim();
@@ -542,7 +551,20 @@ function normalizeOpenMicRecord(record) {
     startMinutes,
     days,
     recurrence: record.recurrence && typeof record.recurrence === 'object' && !Array.isArray(record.recurrence)
-      ? { ...record.recurrence, skipDates: normalizeSkipDates(record.recurrence.skipDates) }
+      ? {
+        ...record.recurrence,
+        skipDates: normalizeSkipDates(record.recurrence.skipDates),
+        // Checked inline because the vm-based tests load this function on its
+        // own, without the normalizeDateKey helper.
+        confirmedThrough: typeof record.recurrence.confirmedThrough === 'string'
+          && /^\d{4}-\d{2}-\d{2}$/.test(record.recurrence.confirmedThrough.trim())
+          ? record.recurrence.confirmedThrough.trim()
+          : null,
+        checkedAt: typeof record.recurrence.checkedAt === 'string'
+          && /^\d{4}-\d{2}-\d{2}$/.test(record.recurrence.checkedAt.trim())
+          ? record.recurrence.checkedAt.trim()
+          : null
+      }
       : null,
     anchorDate: String(record.anchorDate || record.recurrence?.anchorDate || record.recurrence?.startDate || '').trim(),
     recurrenceText: String(record.recurrenceText || '').trim(),
@@ -856,6 +878,15 @@ function openMicOccursOnSeattleDate(mic, seattleNow) {
     return false;
   }
 
+  // Past confirmedThrough the venue has not posted its calendar, so those
+  // dates are not confirmed and the mic is not treated as occurring. Checked
+  // inline because the vm-based tests load this function on its own.
+  const confirmedThrough = recurrence && typeof recurrence.confirmedThrough === 'string'
+    && /^\d{4}-\d{2}-\d{2}$/.test(recurrence.confirmedThrough.trim())
+    ? recurrence.confirmedThrough.trim()
+    : null;
+  if (confirmedThrough && dateKey > confirmedThrough) return false;
+
   if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
 
   const startDate = String(recurrence.startDate || '').trim();
@@ -923,6 +954,17 @@ function openMicIsPreviewCandidateForDate(mic, seattleDate) {
   return matchesSelectedDay && !openMicOccursOnSeattleDate(mic, seattleDate);
 }
 
+// A preview is unconfirmed when the mic normally runs that day but the venue
+// has only posted its calendar through confirmedThrough. It is not a
+// cancellation - there is simply no schedule to check yet.
+function openMicIsUnconfirmedForDate(mic, seattleDate) {
+  if (!openMicIsPreviewCandidateForDate(mic, seattleDate)) return false;
+  const confirmedThrough = normalizeDateKey(mic.recurrence?.confirmedThrough);
+  if (!confirmedThrough) return false;
+  const dateKey = `${seattleDate.year}-${String(seattleDate.month).padStart(2, '0')}-${String(seattleDate.dayOfMonth).padStart(2, '0')}`;
+  return dateKey > confirmedThrough;
+}
+
 function getNextOpenMicOccurrenceDate(mic, afterDate) {
   const start = getSeattleNow(afterDate);
   for (let daysAhead = 1; daysAhead <= 370; daysAhead += 1) {
@@ -941,6 +983,18 @@ function formatUpcomingOpenMicDate(date) {
   const { year, month, dayOfMonth, dayName } = getSeattleNow(date);
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   return `${dayName}, ${months[month - 1]} ${dayOfMonth} ${year}`;
+}
+
+// Format a stored YYYY-MM-DD key without building a Date, so the day cannot
+// shift across time zones.
+function formatCheckedAtDate(dateKey) {
+  const parts = String(dateKey || '').split('-');
+  if (parts.length !== 3) return '';
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+  if (!Number.isInteger(month) || month < 1 || month > 12 || !Number.isInteger(day)) return '';
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  return `${months[month - 1]} ${day}`;
 }
 
 function selectOpenMicsForSeattleDate(allMics, date, compareCurrentTime) {
@@ -1690,8 +1744,8 @@ function setMicActionContent(button, label, { leading = '', trailing = '' } = {}
   button.replaceChildren(...parts);
 }
 
-function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null) {
-  const isLockedPreview = Boolean(upcomingDate);
+function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null, isUnconfirmed = false) {
+  const isLockedPreview = Boolean(upcomingDate) || isUnconfirmed;
   const card = document.createElement('article');
   card.id = `open-mic-card-${mic.id}`;
   card.tabIndex = -1;
@@ -1709,17 +1763,26 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
 
   if (isLockedPreview) {
-    const badge = document.createElement('span');
-    // Monthly mics have odd schedules, so the card just says whether the mic is
-    // on for the selected day rather than quoting a date the reader has to check.
-    badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
-    badge.textContent = isToday ? 'Not happening tonight' : `Not happening this ${getSeattleNow(selectedDateObj).dayName}`;
-    badges.append(badge);
+    if (isUnconfirmed) {
+      // Beyond the venue's posted calendar this is not a cancellation, so one
+      // amber note replaces the red "not happening" and "next one" badges.
+      const badge = document.createElement('span');
+      badge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
+      badge.textContent = 'Schedule not posted yet - check the venue';
+      badges.append(badge);
+    } else {
+      const badge = document.createElement('span');
+      // Monthly mics have odd schedules, so the card just says whether the mic is
+      // on for the selected day rather than quoting a date the reader has to check.
+      badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
+      badge.textContent = isToday ? 'Not happening tonight' : `Not happening this ${getSeattleNow(selectedDateObj).dayName}`;
+      badges.append(badge);
 
-    const nextBadge = document.createElement('span');
-    nextBadge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
-    nextBadge.textContent = `Next one: ${formatUpcomingOpenMicDate(upcomingDate)}`;
-    badges.append(nextBadge);
+      const nextBadge = document.createElement('span');
+      nextBadge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
+      nextBadge.textContent = `Next one: ${formatUpcomingOpenMicDate(upcomingDate)}`;
+      badges.append(nextBadge);
+    }
 
   } else if (isNext) {
     const badge = document.createElement('span');
@@ -2037,6 +2100,14 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   });
   actions.append(reportButton);
 
+  const checkedAt = normalizeDateKey(mic.recurrence?.checkedAt);
+  if (checkedAt) {
+    const checkedNote = document.createElement('p');
+    checkedNote.className = 'mt-2 text-xs text-zinc-500';
+    checkedNote.textContent = `Checked against the venue calendar on ${formatCheckedAtDate(checkedAt)}`;
+    card.append(checkedNote);
+  }
+
   return card;
 }
 
@@ -2072,10 +2143,17 @@ async function renderOpenMicMapView() {
       .filter((mic) => openMicIsPreviewCandidateForDate(mic, selectedSeattleDate))
       .map((mic) => ({
         mic,
-        date: getNextOpenMicOccurrenceDate(mic, selectedDate.date)
+        date: getNextOpenMicOccurrenceDate(mic, selectedDate.date),
+        isUnconfirmed: openMicIsUnconfirmedForDate(mic, selectedSeattleDate)
       }))
-      .filter(({ date }) => Boolean(date))
-      .sort((a, b) => a.date - b.date);
+      // An unconfirmed preview still earns a card when there is no next date,
+      // because the venue simply has not posted that far ahead.
+      .filter(({ date, isUnconfirmed }) => Boolean(date) || isUnconfirmed)
+      .sort((a, b) => {
+        const timeA = a.date ? a.date.getTime() : Number.POSITIVE_INFINITY;
+        const timeB = b.date ? b.date.getTime() : Number.POSITIVE_INFINITY;
+        return timeA - timeB;
+      });
     openMicMapDayLabel.textContent = dayName;
 
     // Render sidebar with chronologically sorted order
@@ -2097,8 +2175,8 @@ async function renderOpenMicMapView() {
     }
 
     const cardsToRender = [
-      ...todays.map((mic) => ({ mic, upcomingDate: null })),
-      ...upcomingPreviews.map(({ mic, date }) => ({ mic, upcomingDate: date }))
+      ...todays.map((mic) => ({ mic, upcomingDate: null, isUnconfirmed: false })),
+      ...upcomingPreviews.map(({ mic, date, isUnconfirmed }) => ({ mic, upcomingDate: date, isUnconfirmed }))
     ].sort((a, b) => {
       const timeA = a.mic.startMinutes ?? a.mic.signupMinutes ?? 9999;
       const timeB = b.mic.startMinutes ?? b.mic.signupMinutes ?? 9999;
@@ -2107,7 +2185,7 @@ async function renderOpenMicMapView() {
     });
 
     // Keep every card in chronological order, including locked monthly previews.
-    cardsToRender.forEach(({ mic, upcomingDate }) => {
+    cardsToRender.forEach(({ mic, upcomingDate, isUnconfirmed }) => {
       const isNext = nextMic && mic.id === nextMic.id;
       openMicMapList.append(renderOpenMicCard(
         mic,
@@ -2115,7 +2193,8 @@ async function renderOpenMicMapView() {
         selectedDate.isToday,
         selectedDate.isToday ? getSeattleNow(now).minutesSinceMidnight : null,
         upcomingDate,
-        selectedDate.date
+        selectedDate.date,
+        isUnconfirmed
       ));
     });
   } catch (err) {

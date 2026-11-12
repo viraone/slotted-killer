@@ -422,13 +422,23 @@
     "ageRequirement": "21+",
     "requirementsInfo": "Please confirm the event schedule on the venue’s website before attending. Doors open at 6:00 PM, and the show starts at 7:00 PM.",
     "webSignup": "https://docs.google.com/forms/d/1ivGP4Ombxk9TOA3ZmFIOnx3OWZXimJpaS07WBUAPl84/viewform?edit_requested=true",
-    "recurrenceText": "Every Tuesday",
+    "recurrenceText": "Select Tuesdays, posted monthly",
     "recurrence": {
       "type": "weekly",
-      "weekday": "Tuesday"
+      "weekday": "Tuesday",
+      "skipDates": [
+        "2026-11-17",
+        "2026-11-24",
+        "2026-12-08",
+        "2026-12-15"
+      ],
+      "additionalDates": [],
+      "confirmedThrough": "2026-12-31",
+      "checkedAt": "2026-11-12"
     },
     "latitude": 47.62026,
-    "longitude": -122.320449
+    "longitude": -122.320449,
+    "showWhenInactive": true
   },
   {
     "id": "mountain-room-bar-3100-airport-way-s-seattle-wa-98134",

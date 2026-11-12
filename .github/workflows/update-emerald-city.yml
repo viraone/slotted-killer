@@ -1,0 +1,50 @@
+name: Update Emerald City open mic dates
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: open-mics-data
+  cancel-in-progress: false
+
+jobs:
+  update-schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check the Emerald City calendar for open mic dates
+        run: node scripts/update-emerald-city.mjs
+
+      - name: Commit changed open mic dates
+        if: always()
+        run: |
+          if git diff --quiet -- data/open-mics.json; then
+            echo "Emerald City open mic dates are unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/open-mics.json
+          git commit -m "Update Emerald City Comedy Club open mic dates from the venue calendar"
+          # The BARK bot also pushes data/open-mics.json, so retry the rebase and push.
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then
+              exit 0
+            fi
+            git rebase --abort || true
+            sleep 5
+          done
+          echo "Could not push the updated open mic dates after 3 attempts." >&2
+          exit 1
