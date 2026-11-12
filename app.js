@@ -63,6 +63,7 @@ const lineupSection = document.getElementById('lineup-section');
 const lineupRows = document.getElementById('lineupRows');
 const lineupStatus = document.getElementById('lineupStatus');
 const addMicSection = document.getElementById('addmic-section');
+const reportSection = document.getElementById('report-section');
 const adminSection = document.getElementById('admin-section');
 const signupCard = document.getElementById('signupCard');
 const signupForm = document.getElementById('signupForm');
@@ -107,6 +108,8 @@ const lineupRequested =
   new URLSearchParams(window.location.search).get('lineup') === '1';
 const addMicRequested =
   new URLSearchParams(window.location.search).get('addmic') === '1';
+const reportRequested =
+  new URLSearchParams(window.location.search).get('report') === '1';
 const halloweenRequested =
   new URLSearchParams(window.location.search).get('halloween') === '1';
 // Unlisted entry point for the review panel.
@@ -141,10 +144,12 @@ function enterStandaloneVerificationMode() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = true;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = true;
   verificationSection.hidden = false;
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
   stopLineupRefreshTimer();
 }
@@ -184,12 +189,14 @@ function showHomeView() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = true;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
 }
 
@@ -200,11 +207,13 @@ function showOpenMicMapView() {
   openMicMapSection.hidden = false;
   lineupSection.hidden = true;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
   document.body.classList.add('openmicmap-mode');
 }
@@ -216,14 +225,35 @@ function showAddMicView() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = true;
   addMicSection.hidden = false;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
   document.body.classList.add('addmic-mode');
   scheduleAddMicPreview();
+}
+
+function showReportView() {
+  if (verificationTabRequested) return;
+  stopLineupRefreshTimer();
+  homeSection.hidden = true;
+  openMicMapSection.hidden = true;
+  lineupSection.hidden = true;
+  addMicSection.hidden = true;
+  reportSection.hidden = false;
+  adminSection.hidden = true;
+  halloweenSection.hidden = true;
+  verificationSection.hidden = true;
+  document.body.classList.remove('lineup-mode');
+  document.body.classList.remove('openmicmap-mode');
+  document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('admin-mode');
+  document.body.classList.add('report-mode');
+  loadReportMicOptions();
 }
 
 function showAdminView() {
@@ -233,12 +263,14 @@ function showAdminView() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = true;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = false;
   halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.add('admin-mode');
 }
 
@@ -248,12 +280,14 @@ function showLineupView() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = false;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = true;
   verificationSection.hidden = true;
   document.body.classList.add('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
 }
 
@@ -264,12 +298,14 @@ function showHalloweenView() {
   openMicMapSection.hidden = true;
   lineupSection.hidden = true;
   addMicSection.hidden = true;
+  reportSection.hidden = true;
   adminSection.hidden = true;
   halloweenSection.hidden = false;
   verificationSection.hidden = true;
   document.body.classList.remove('lineup-mode');
   document.body.classList.remove('openmicmap-mode');
   document.body.classList.remove('addmic-mode');
+  document.body.classList.remove('report-mode');
   document.body.classList.remove('admin-mode');
 }
 
@@ -316,6 +352,8 @@ document.querySelectorAll('.nav-button').forEach((btn) => {
       renderOpenMicMapView();
     } else if (view === 'addmic') {
       showAddMicView();
+    } else if (view === 'report') {
+      showReportView();
     } else if (view === 'halloween') {
       showHalloweenView();
       refreshHalloweenSignupsOpen();
@@ -672,6 +710,95 @@ function formatSeattleCalendarDate(date) {
     month: 'long',
     day: 'numeric',
     year: 'numeric'
+  }).format(date);
+}
+
+function getChangeReportTypeLabel(type) {
+  switch (String(type || '').trim()) {
+    case 'not_this_date':
+      return 'Not happening on a certain date';
+    case 'closed_for_good':
+      return 'No longer happening';
+    case 'time_change':
+      return 'Time change';
+    case 'venue_change':
+      return 'Venue or address change';
+    case 'other':
+      return 'Something else';
+    default:
+      return 'Something else';
+  }
+}
+
+// Validates the report form fields and builds the edge function body. Pure and
+// DOM-free so test_report_change.js can load it with vm.
+function buildChangeReportPayload(fields = {}) {
+  const micId = String(fields.micId ?? '').trim();
+  const micName = String(fields.micName ?? '').trim();
+  const changeType = String(fields.changeType ?? '').trim();
+  const showDate = String(fields.showDate ?? '').trim();
+  const comment = String(fields.comment ?? '').trim();
+  const email = String(fields.email ?? '').trim().toLowerCase();
+  const pageUrl = String(fields.pageUrl ?? '').trim();
+
+  if (!micName) return { ok: false, error: 'Pick the open mic.' };
+  if (!['not_this_date', 'closed_for_good', 'time_change', 'venue_change', 'other'].includes(changeType)) {
+    return { ok: false, error: 'Pick what changed.' };
+  }
+  if (showDate) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(showDate);
+    const year = match ? Number(match[1]) : NaN;
+    const month = match ? Number(match[2]) : NaN;
+    const dayOfMonth = match ? Number(match[3]) : NaN;
+    const date = match ? new Date(Date.UTC(year, month - 1, dayOfMonth)) : null;
+    const isRealDate = Boolean(match)
+      && date.getUTCFullYear() === year
+      && date.getUTCMonth() === month - 1
+      && date.getUTCDate() === dayOfMonth;
+    if (!isRealDate) return { ok: false, error: 'Pick the date that is not happening.' };
+  }
+  if (changeType === 'not_this_date' && !showDate) {
+    return { ok: false, error: 'Pick the date that is not happening.' };
+  }
+  if (!comment) return { ok: false, error: 'Tell us what changed.' };
+  if (comment.length > 2000) return { ok: false, error: 'Keep the comment under 2000 characters.' };
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: 'That email address does not look valid.' };
+  }
+
+  return {
+    ok: true,
+    payload: {
+      mic_id: micId || null,
+      mic_name: micName,
+      show_date: showDate || null,
+      change_type: changeType,
+      comment,
+      reporter_email: email || null,
+      page_url: pageUrl || null,
+      company: ''
+    }
+  };
+}
+
+// UTC keeps the weekday from shifting when the page's timezone changes.
+function formatChangeReportDate(isoDate) {
+  const text = String(isoDate || '').trim();
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (!match) return '';
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const dayOfMonth = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, dayOfMonth));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== dayOfMonth) {
+    return '';
+  }
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC'
   }).format(date);
 }
 
@@ -1823,8 +1950,9 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     card.append(details);
   }
 
+  let actions = null;
   if (mic.address || mic.website || mic.signupDetails || mic.contact || mic.listUrl || (travelEstimate && isToday)) {
-    const actions = document.createElement('div');
+    actions = document.createElement('div');
     actions.className = 'mt-3 flex flex-wrap gap-2 border-t border-zinc-800/80 pt-3';
 
     if (mic.website) {
@@ -1886,6 +2014,27 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
 
     card.append(actions);
   }
+
+  // Every card, including a locked preview, offers a quiet way to report a
+  // correction. The date defaults to the day currently selected on the picker.
+  if (!actions) {
+    actions = document.createElement('div');
+    actions.className = 'mt-3 flex flex-wrap gap-2 border-t border-zinc-800/80 pt-3';
+    card.append(actions);
+  }
+  const reportDateValue = selectedDateObj instanceof Date && !Number.isNaN(selectedDateObj.getTime())
+    ? formatSeattleIsoDate(selectedDateObj)
+    : formatSeattleIsoDate(new Date());
+  const reportButton = document.createElement('button');
+  reportButton.type = 'button';
+  reportButton.className = 'ml-auto shrink-0 text-xs font-semibold text-zinc-500 underline decoration-zinc-700 underline-offset-2 transition hover:text-zinc-300';
+  reportButton.textContent = 'Report a change';
+  reportButton.setAttribute('aria-label', `Report a change to ${mic.name}`);
+  reportButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    openReportForMic(mic, reportDateValue);
+  });
+  actions.append(reportButton);
 
   return card;
 }
@@ -3279,6 +3428,242 @@ if (addMicForm) {
   scheduleAddMicPreview();
 }
 
+// --- Report a change (the "report" view) ---
+// Same submission shape as the Add Your Mic form: the edge function owns the
+// write, so the browser only invokes it and shows the returned error.
+const REPORT_OTHER_MIC = '__other__';
+
+const reportFormWrap = document.getElementById('reportFormWrap');
+const reportChangeForm = document.getElementById('reportChangeForm');
+const reportMicSelect = document.getElementById('reportMicSelect');
+const reportMicNameWrap = document.getElementById('reportMicNameWrap');
+const reportMicName = document.getElementById('reportMicName');
+const reportChangeType = document.getElementById('reportChangeType');
+const reportDateWrap = document.getElementById('reportDateWrap');
+const reportShowDate = document.getElementById('reportShowDate');
+const reportComment = document.getElementById('reportComment');
+const reportEmail = document.getElementById('reportEmail');
+const reportSubmitButton = document.getElementById('reportSubmitButton');
+const reportFormMessage = document.getElementById('reportFormMessage');
+const reportSuccessCard = document.getElementById('reportSuccessCard');
+const reportSuccessTitle = document.getElementById('reportSuccessTitle');
+const reportAnotherButton = document.getElementById('reportAnotherButton');
+
+let reportSubmissionInFlight = false;
+let reportMicOptionsLoaded = false;
+let reportMicOptionsPromise = null;
+let reportPresetMicId = null;
+let reportPresetMicName = '';
+
+function reportFormValue(name) {
+  const field = reportChangeForm.elements[name];
+  if (!field || field instanceof RadioNodeList) return '';
+  return String(field.value ?? '').trim();
+}
+
+function showReportMessage(message, isError = false) {
+  reportFormMessage.textContent = message;
+  reportFormMessage.className = `text-center text-sm font-semibold ${isError ? 'text-red-400' : 'text-[#00C805]'}`;
+  reportFormMessage.classList.remove('hidden');
+}
+
+function hideReportMessage() {
+  reportFormMessage.textContent = '';
+  reportFormMessage.classList.add('hidden');
+}
+
+function setReportSubmitting(isSubmitting, label = 'Send report') {
+  reportSubmissionInFlight = isSubmitting;
+  reportSubmitButton.disabled = isSubmitting;
+  reportSubmitButton.textContent = label;
+}
+
+function syncReportConditionalFields() {
+  const isOther = reportMicSelect.value === REPORT_OTHER_MIC;
+  reportMicNameWrap.hidden = !isOther;
+  if (!isOther) reportMicName.value = '';
+
+  const isNotThisDate = reportChangeType.value === 'not_this_date';
+  reportDateWrap.hidden = !isNotThisDate;
+  reportShowDate.required = isNotThisDate;
+  if (!isNotThisDate) reportShowDate.value = '';
+}
+
+// Applies a mic chosen on a card once the <select> has its real options.
+function applyPendingReportSelection() {
+  if (reportPresetMicId === null) return;
+  const requestedId = reportPresetMicId;
+  const requestedName = reportPresetMicName;
+  reportPresetMicId = null;
+  reportPresetMicName = '';
+
+  const match = [...reportMicSelect.options].find((option) => option.value === requestedId);
+  if (requestedId && match) {
+    reportMicSelect.value = requestedId;
+    reportMicName.value = '';
+  } else {
+    reportMicSelect.value = REPORT_OTHER_MIC;
+    reportMicName.value = requestedName;
+  }
+  syncReportConditionalFields();
+}
+
+async function loadReportMicOptions() {
+  if (reportMicOptionsLoaded) {
+    applyPendingReportSelection();
+    return;
+  }
+
+  if (!reportMicOptionsPromise) {
+    reportMicOptionsPromise = loadOpenMicData()
+      .then((mics) => {
+        const options = document.createDocumentFragment();
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Choose an open mic…';
+        options.append(placeholder);
+
+        [...mics]
+          .filter((mic) => mic.id && mic.name)
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .forEach((mic) => {
+            const option = document.createElement('option');
+            option.value = mic.id;
+            option.textContent = mic.name;
+            options.append(option);
+          });
+
+        const other = document.createElement('option');
+        other.value = REPORT_OTHER_MIC;
+        other.textContent = 'Other / not listed';
+        options.append(other);
+
+        reportMicSelect.replaceChildren(options);
+        reportMicOptionsLoaded = true;
+      })
+      .catch((err) => {
+        reportMicOptionsPromise = null;
+        console.error('Unable to load open mic choices for the report form:', err);
+        showReportMessage('Could not load the open mic list. You can still choose “Other / not listed”.', true);
+      });
+  }
+
+  await reportMicOptionsPromise;
+  applyPendingReportSelection();
+}
+
+function resetReportForm() {
+  reportChangeForm.reset();
+  reportPresetMicId = null;
+  reportPresetMicName = '';
+  reportSubmissionInFlight = false;
+  setReportSubmitting(false);
+  hideReportMessage();
+  reportFormWrap.hidden = false;
+  reportSuccessCard.classList.add('hidden');
+  syncReportConditionalFields();
+}
+
+function showReportSuccess() {
+  reportFormWrap.hidden = true;
+  reportSuccessCard.classList.remove('hidden');
+  reportSuccessCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  reportSuccessTitle.focus({ preventScroll: true });
+}
+
+function openReportForMic(mic, dateValue) {
+  resetReportForm();
+  reportPresetMicId = String(mic?.id || '').trim();
+  reportPresetMicName = String(mic?.name || '').trim();
+  // A card is tied to the day the reader is looking at, so default the report
+  // to "not happening on this date". They can change it.
+  reportChangeType.value = 'not_this_date';
+  reportShowDate.value = String(dateValue || '').trim() || formatSeattleIsoDate(new Date());
+  syncReportConditionalFields();
+  setActiveNav('report');
+  showReportView();
+  reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+reportChangeForm.addEventListener('input', hideReportMessage);
+reportMicSelect.addEventListener('change', () => {
+  hideReportMessage();
+  syncReportConditionalFields();
+});
+reportChangeType.addEventListener('change', () => {
+  hideReportMessage();
+  syncReportConditionalFields();
+});
+reportAnotherButton.addEventListener('click', () => {
+  resetReportForm();
+  reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  reportMicSelect.focus({ preventScroll: true });
+});
+
+reportChangeForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (reportSubmissionInFlight) return;
+  syncReportConditionalFields();
+
+  const isOther = reportMicSelect.value === REPORT_OTHER_MIC;
+  const selectedMicName = reportMicSelect.value
+    ? reportMicSelect.selectedOptions[0]?.textContent || ''
+    : '';
+  const result = buildChangeReportPayload({
+    micId: isOther ? '' : reportMicSelect.value,
+    micName: isOther ? reportMicName.value : selectedMicName,
+    changeType: reportChangeType.value,
+    showDate: reportDateWrap.hidden ? '' : reportShowDate.value,
+    comment: reportComment.value,
+    email: reportEmail.value,
+    pageUrl: window.location.href
+  });
+
+  if (!result.ok) {
+    showReportMessage(result.error, true);
+    return;
+  }
+
+  // Honeypot: bots fill the hidden "company" field. Pretend it worked.
+  if (reportFormValue('company')) {
+    showReportSuccess();
+    return;
+  }
+
+  if (!supabaseClient) {
+    showReportMessage('Reports are temporarily unavailable. Please try again in a few minutes.', true);
+    return;
+  }
+
+  hideReportMessage();
+  setReportSubmitting(true, 'Sending…');
+
+  let response;
+  try {
+    response = await supabaseClient.functions.invoke('report-open-mic-change', { body: result.payload });
+  } catch (err) {
+    // invoke normally reports failures in `error`, but a dropped connection
+    // can reject instead. Never leave the button spinning.
+    console.error('Unable to reach the change report function:', err);
+    showReportMessage('Could not send your report. Check your connection and try again.', true);
+    setReportSubmitting(false);
+    return;
+  }
+
+  const { data, error } = response || {};
+  if (error || !data?.ok) {
+    console.error('Unable to send the change report:', error || data);
+    showReportMessage(`Could not send your report: ${await describeAddMicError(error, data)}`, true);
+    setReportSubmitting(false);
+    return;
+  }
+
+  setReportSubmitting(false);
+  showReportSuccess();
+});
+
+syncReportConditionalFields();
+
 // --- Admin review panel (internally: the "admin" view) ---
 // Approving a submission copies its record into public.published_open_mics via
 // approve_open_mic_submission(); loadOpenMicData() merges that table on top of
@@ -3290,6 +3675,11 @@ const ADMIN_STATUS_LABELS = {
   added: 'Published',
   rejected: 'Rejected',
   duplicate: 'Duplicate'
+};
+const ADMIN_CHANGE_REPORT_STATUS_LABELS = {
+  new: 'New',
+  accepted: 'Accepted',
+  dismissed: 'Dismissed'
 };
 // The same sanity box scripts/geocode-open-mics.mjs uses.
 const ADMIN_WASHINGTON_BOUNDS = {
@@ -3323,6 +3713,9 @@ const adminSignOutButton = document.getElementById('adminSignOutButton');
 const adminWhoami = document.getElementById('adminWhoami');
 const adminQueue = document.getElementById('adminQueue');
 const adminQueueStatus = document.getElementById('adminQueueStatus');
+const adminReportsQueue = document.getElementById('adminReportsQueue');
+const adminReportsStatus = document.getElementById('adminReportsStatus');
+const adminReportsCount = document.getElementById('adminReportsCount');
 
 
 const ADMIN_PRIMARY_BUTTON =
@@ -3578,6 +3971,10 @@ function setAdminQueueNotice(text, tone = 'text-zinc-400') {
 
 async function loadAdminSubmissions() {
   if (!adminIsAuthorized) return;
+  await Promise.all([loadAdminSubmissionList(), loadAdminChangeReports()]);
+}
+
+async function loadAdminSubmissionList() {
   setAdminQueueNotice('Loading submissions…');
   adminQueue.replaceChildren();
 
@@ -3603,7 +4000,130 @@ async function loadAdminSubmissions() {
   data.forEach((row) => adminQueue.append(renderAdminSubmissionCard(row)));
 }
 
+async function loadAdminChangeReports() {
+  if (!adminIsAuthorized) return false;
+  adminReportsStatus.hidden = false;
+  adminReportsStatus.className = 'text-sm text-zinc-400';
+  adminReportsStatus.textContent = 'Loading change reports…';
+  adminReportsQueue.replaceChildren();
+  adminReportsCount.hidden = true;
 
+  const { data, error } = await supabaseClient
+    .from('open_mic_change_reports')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error('Unable to load change reports:', error);
+    adminReportsStatus.className = 'text-sm text-red-400';
+    adminReportsStatus.textContent = `Could not load change reports: ${error.message}`;
+    return false;
+  }
+
+  const rows = Array.isArray(data) ? data : [];
+  const newCount = rows.filter((row) => row.status === 'new').length;
+  adminReportsCount.hidden = false;
+  adminReportsCount.textContent = `${newCount} new`;
+
+  if (!rows.length) {
+    adminReportsStatus.textContent = 'No change reports yet.';
+    return true;
+  }
+
+  adminReportsStatus.hidden = true;
+  rows.forEach((row) => adminReportsQueue.append(renderAdminChangeReportCard(row)));
+  return true;
+}
+
+async function reviewAdminChangeReport(row, status, label, button) {
+  button.disabled = true;
+  const { error } = await supabaseClient.rpc('review_open_mic_change_report', {
+    p_report_id: row.id,
+    p_status: status,
+    p_notes: null
+  });
+
+  if (error) {
+    console.error(`Unable to mark change report #${row.id} ${status}:`, error);
+    adminReportsStatus.hidden = false;
+    adminReportsStatus.className = 'text-sm text-red-400';
+    adminReportsStatus.textContent = `Could not update the report: ${error.message}`;
+    button.disabled = false;
+    return;
+  }
+
+  if (!await loadAdminChangeReports()) return;
+  adminReportsStatus.hidden = false;
+  adminReportsStatus.className = 'text-sm text-emerald-400';
+  adminReportsStatus.textContent = `Report #${row.id} is now ${label}.`;
+}
+
+function renderAdminChangeReportCard(row) {
+  const card = adminEl('article', 'addmic-card');
+
+  const header = adminEl('div', 'mb-3 flex flex-wrap items-start justify-between gap-3');
+  const heading = adminEl('div', 'min-w-0');
+  heading.append(adminEl('h3', 'text-lg font-black text-zinc-50', String(row.mic_name || 'Open mic report')));
+  heading.append(adminEl('p', 'text-sm text-zinc-400', getChangeReportTypeLabel(row.change_type)));
+  header.append(heading);
+
+  const status = String(row.status || '').trim();
+  const badgeClass = `admin-badge${status === 'new' ? ' admin-badge--new' : status === 'dismissed' ? ' admin-badge--warn' : ''}`;
+  header.append(adminEl('span', badgeClass, ADMIN_CHANGE_REPORT_STATUS_LABELS[status] || status || 'Unknown'));
+  card.append(header);
+
+  const facts = adminEl('dl', 'grid gap-x-6 gap-y-1 text-sm text-zinc-300 sm:grid-cols-2');
+  const fact = (label, value) => {
+    if (!value) return;
+    const wrap = adminEl('div', 'flex min-w-0 gap-2');
+    wrap.append(adminEl('dt', 'shrink-0 font-semibold text-zinc-500', `${label}:`));
+    wrap.append(adminEl('dd', 'min-w-0 break-words', value));
+    facts.append(wrap);
+  };
+  fact('Date', formatChangeReportDate(row.show_date));
+  fact('Received', formatAdminTimestamp(row.created_at));
+  if (facts.childElementCount) card.append(facts);
+
+  if (row.comment) {
+    card.append(adminEl('p', 'mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-zinc-200', String(row.comment)));
+  }
+
+  const reporterEmail = String(row.reporter_email || '').trim();
+  if (reporterEmail) {
+    const line = adminEl('p', 'mt-2 text-sm text-zinc-400');
+    line.append('Reporter: ');
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reporterEmail)) {
+      const link = adminEl('a', 'font-semibold text-[#00C805] underline', reporterEmail);
+      link.setAttribute('href', `mailto:${reporterEmail}`);
+      line.append(link);
+    } else {
+      line.append(adminEl('span', 'break-words', reporterEmail));
+    }
+    card.append(line);
+  }
+
+  const buttons = adminEl('div', 'mt-4 flex flex-wrap gap-2');
+  if (status === 'new') {
+    const acceptButton = adminEl('button', ADMIN_PRIMARY_BUTTON, 'Accept');
+    acceptButton.type = 'button';
+    acceptButton.addEventListener('click', () => reviewAdminChangeReport(row, 'accepted', 'accepted', acceptButton));
+
+    const dismissButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Dismiss');
+    dismissButton.type = 'button';
+    dismissButton.addEventListener('click', () => reviewAdminChangeReport(row, 'dismissed', 'dismissed', dismissButton));
+
+    buttons.append(acceptButton, dismissButton);
+  } else {
+    const reopenButton = adminEl('button', ADMIN_SECONDARY_BUTTON, 'Reopen');
+    reopenButton.type = 'button';
+    reopenButton.addEventListener('click', () => reviewAdminChangeReport(row, 'new', 'new', reopenButton));
+    buttons.append(reopenButton);
+  }
+  card.append(buttons);
+
+  return card;
+}
 
 function renderAdminSubmissionCard(row) {
   const card = adminEl('article', 'addmic-card');
@@ -3987,7 +4507,10 @@ async function initializeApp() {
 
   const lineupModeRequested = lineupRequested && !signupRequested && !addMicRequested;
 
-  if (addMicRequested) {
+  if (reportRequested) {
+    setActiveNav('report');
+    showReportView();
+  } else if (addMicRequested) {
     // Shared link for hosts: stagetimepnw.com/add-mic
     setActiveNav('addmic');
     showAddMicView();
