@@ -1175,7 +1175,7 @@
     "latitude": 47.676351,
     "longitude": -122.354123,
     "signupType": "in-person",
-    "signupDetails": "Sign-up goes out at 7:30 PM, first come first served. Message the host to sign up for a later spot after 10 PM.",
+    "signupDetails": "Sign-up goes out at 7:30 PM, first come first served. Message the host to sign up for a later spot after 10:30 PM.",
     "recurrenceText": "Every 2nd & 4th Thursday",
     "recurrence": {
       "type": "monthly-multiple-nth-weekdays",
@@ -1183,9 +1183,14 @@
       "nth": [
         2,
         4
+      ],
+      "skipDates": [
+        "2026-11-26",
+        "2026-12-24"
       ]
     },
-    "showWhenInactive": true
+    "showWhenInactive": true,
+    "host": "Helen Burn"
   },
   {
     "id": "swamp-cow-kava-lounge-159-denny-way-suite-105-seattle-wa-98109",
