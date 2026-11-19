@@ -1967,5 +1967,37 @@
     "showWhenInactive": true,
     "latitude": 47.518518,
     "longitude": -122.356106
+  },
+  {
+    "id": "dreadnought-brewing-17626-146th-st-se-153-monroe-wa-98272",
+    "name": "Dreadnought Brewing Open Mic Night",
+    "venue": "Dreadnought Brewing",
+    "location": "17626 146th St SE #153, Monroe, WA 98272",
+    "timeSignupStart": "/8pm-10pm",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "Yes",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety (Music, Comedy, Entertainment)",
+    "ageRequirement": "",
+    "requirementsInfo": "Open mic night, live music, comedy & entertainment. Every Friday 8-10 PM. Performers receive a free appetizer and $4 beers. Late night happy hour: $6 beers, specialty cocktails, food. Hosted by Joel. Closed Nov 27 for the holiday.",
+    "host": "Joel",
+    "contact": "https://instagram.com/dreadnoughtbrewing",
+    "phone": "360-863-2479",
+    "webSignup": "",
+    "recurrenceText": "Every Friday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Friday",
+      "skipDates": [
+        "2026-11-27"
+      ]
+    },
+    "latitude": 47.864677,
+    "longitude": -122.006238
   }
 ]
