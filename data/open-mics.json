@@ -2002,5 +2002,37 @@
     "latitude": 47.864677,
     "longitude": -122.006238,
     "website": "https://www.dreadnoughtbrewing.com"
+  },
+  {
+    "id": "vera-project-305-harrison-st-seattle-wa-98109",
+    "name": "Veracity Open Mic Night",
+    "venue": "The Vera Project",
+    "location": "305 Harrison St, Seattle, WA 98109",
+    "timeSignupStart": "6:30pm/7pm",
+    "signupType": "in-person",
+    "signupDetails": "Sign up in person at 6:30 PM, show starts at 7:00 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "Yes",
+    "priceForTime": "Free",
+    "openMicType": "Mix Mic / Comedy allowed",
+    "ageRequirement": "All ages",
+    "requirementsInfo": "Veracity Open Mic Night (fall edition) at the Vera Project. All acts welcome: music, poetry, comedy, magic, whatever your heart desires. Free and all ages. Sign-ups at 6:30 PM, show at 7:00 PM.",
+    "contact": "https://www.instagram.com/veracitybooking/",
+    "webSignup": "",
+    "recurrenceText": "Sun, Nov 22",
+    "recurrence": {
+      "type": "one-time",
+      "weekday": "Sunday",
+      "additionalDates": [
+        "2026-11-22"
+      ]
+    },
+    "latitude": 47.622033,
+    "longitude": -122.350496
   }
 ]
