@@ -2034,5 +2034,40 @@
     },
     "latitude": 47.622033,
     "longitude": -122.350496
+  },
+  {
+    "id": "vermillion-1508-11th-ave-seattle-wa-98122",
+    "name": "See You Sunday – Queer Open Mic",
+    "venue": "Vermillion",
+    "location": "1508 11th Ave, Seattle, WA 98122",
+    "timeSignupStart": "DM/8pm",
+    "signupType": "online",
+    "signupDetails": "Sign up via DM @seeusundaysyall on Instagram. Doors 7:00 PM, show 8:00 PM.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "no",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "Yes",
+    "priceForTime": "$5 suggested donation",
+    "openMicType": "Mix Mic / Comedy allowed",
+    "ageRequirement": "",
+    "requirementsInfo": "See You Sunday, a queer open mic at Vermillion. Special Xmas show Dec 20 featuring Bailey Pope. $5 suggested donation. Doors 7:00 PM, show 8:00 PM. Sign up via DM @seeusundaysyall on Instagram.",
+    "contact": "https://www.instagram.com/seeusundaysyall/",
+    "webSignup": "",
+    "recurrenceText": "Sun, Dec 20",
+    "recurrence": {
+      "type": "one-time",
+      "weekday": "Sunday",
+      "additionalDates": [
+        "2026-12-20"
+      ]
+    },
+    "latitude": 47.614236,
+    "longitude": -122.31806,
+    "featureSchedule": {
+      "2026-12-20": "Bailey Pope"
+    }
   }
 ]
