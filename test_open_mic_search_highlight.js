@@ -13,6 +13,7 @@ vm.runInContext(source.slice(start, end === -1 ? undefined : end), context);
 
 const pick = context.pickOpenMicSearchHighlightId;
 const D = new Date(2026, 10, 23);
+const D2 = new Date(2026, 10, 24);
 
 // 1. Empty entries -> null
 assert.equal(pick([], 600), null);
@@ -20,7 +21,7 @@ assert.equal(pick([], 600), null);
 // 2. Single entry not today with no date -> null
 assert.equal(pick([{ mic: { id: 'x', startMinutes: 1200 }, isToday: false, date: null }], 600), null);
 
-// 3. No entry today: first with a date wins
+// 3. No entry today: the earliest start on the soonest date wins
 assert.equal(
   pick(
     [
@@ -29,7 +30,7 @@ assert.equal(
     ],
     600
   ),
-  'a'
+  'b'
 );
 
 // 4. Today, none started yet: earliest today wins
@@ -90,6 +91,43 @@ assert.equal(
       { mic: { id: 'z', startMinutes: 540 }, isToday: false, date: D }
     ],
     700
+  ),
+  'a'
+);
+
+// 9. Today, none started, list not in time order: the earliest start wins
+assert.equal(
+  pick(
+    [
+      { mic: { id: 'a', startMinutes: 1200 }, isToday: true, date: D },
+      { mic: { id: 'b', startMinutes: 1080 }, isToday: true, date: D }
+    ],
+    600
+  ),
+  'b'
+);
+
+// 10. Today, some started, list not in time order: the most recently started wins
+assert.equal(
+  pick(
+    [
+      { mic: { id: 'c', startMinutes: 1320 }, isToday: true, date: D },
+      { mic: { id: 'a', startMinutes: 1080 }, isToday: true, date: D },
+      { mic: { id: 'b', startMinutes: 1200 }, isToday: true, date: D }
+    ],
+    1210
+  ),
+  'b'
+);
+
+// 11. No entry today, two dates: only the soonest date is considered
+assert.equal(
+  pick(
+    [
+      { mic: { id: 'a', startMinutes: 1260 }, isToday: false, date: D },
+      { mic: { id: 'b', startMinutes: 1080 }, isToday: false, date: D2 }
+    ],
+    600
   ),
   'a'
 );

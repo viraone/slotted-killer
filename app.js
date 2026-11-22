@@ -1120,47 +1120,71 @@ function setOpenMicSearchQuery(value) {
 
 function pickOpenMicSearchHighlightId(entries, minutesSinceMidnight) {
   const effectiveMinutes = (entry) => entry.mic.startMinutes ?? entry.mic.signupMinutes ?? 9999;
+  const earliest = (list) => list.reduce((best, entry) => (effectiveMinutes(entry) < effectiveMinutes(best) ? entry : best), list[0]);
   const todays = entries.filter((entry) => entry.isToday);
   const started = todays.filter((entry) => effectiveMinutes(entry) <= minutesSinceMidnight);
   if (started.length > 0) {
-    const currentTier = effectiveMinutes(started[started.length - 1]);
+    const currentTier = Math.max(...started.map(effectiveMinutes));
     return started.find((entry) => effectiveMinutes(entry) === currentTier).mic.id;
   }
-  const first = todays[0] || entries.find((entry) => entry.date);
-  return first ? first.mic.id : null;
+  if (todays.length > 0) return earliest(todays).mic.id;
+  const firstDated = entries.find((entry) => entry.date);
+  if (!firstDated) return null;
+  const sameDate = entries.filter((entry) => entry.date && entry.date.getTime() === firstDated.date.getTime());
+  return earliest(sameDate).mic.id;
 }
 
 function renderOpenMicSearchResults(allMics, now) {
-  const query = openMicSearchQuery.trim();
-  const matches = filterOpenMicsBySearch(allMics, query);
+  const rawQuery = openMicSearchQuery.trim();
   const seattleNow = getSeattleNow(now);
   const today = getNextSeattleWeekdayDate(seattleNow.dayName, now).date;
   const { nextMic } = selectOpenMicsForSeattleDate(allMics, now, true);
   lastRenderedOpenMicNextId = nextMic ? nextMic.id : null;
   activeOpenMicId = null;
 
-  const entries = matches
+  const buildEntries = (mics) => mics
     .map((mic) => {
       const isToday = openMicOccursOnSeattleDate(mic, seattleNow);
-      return { mic, isToday, date: isToday ? today : getNextOpenMicOccurrenceDate(mic, now) };
+      const date = isToday ? today : getNextOpenMicOccurrenceDate(mic, now);
+      return {
+        mic,
+        isToday,
+        date,
+        dayName: date ? getSeattleNow(date).dayName : '',
+        dateLabel: date ? formatUpcomingOpenMicDate(date) : ''
+      };
     })
     .sort((a, b) => {
       const timeA = a.date ? a.date.getTime() : Number.POSITIVE_INFINITY;
       const timeB = b.date ? b.date.getTime() : Number.POSITIVE_INFINITY;
       if (timeA !== timeB) return timeA - timeB;
+      if (userOpenMicLocation) {
+        const distA = getOpenMicTravelEstimate(a.mic)?.distanceMiles ?? Infinity;
+        const distB = getOpenMicTravelEstimate(b.mic)?.distanceMiles ?? Infinity;
+        if (distA !== distB) return distA - distB;
+      }
       const startA = a.mic.startMinutes ?? a.mic.signupMinutes ?? 9999;
       const startB = b.mic.startMinutes ?? b.mic.signupMinutes ?? 9999;
       if (startA !== startB) return startA - startB;
       return a.mic.name.localeCompare(b.mic.name);
     });
 
+  const tomorrowName = OPEN_MIC_CALENDAR_DAYS[(OPEN_MIC_CALENDAR_DAYS.indexOf(seattleNow.dayName) + 1) % 7];
+  const tomorrowLabel = formatUpcomingOpenMicDate(getNextSeattleWeekdayDate(tomorrowName, now).date);
+  const plan = planOpenMicSearch(allMics, rawQuery, buildEntries, tomorrowLabel);
+  const query = plan.query;
+  const entries = plan.entries;
+  const matches = entries.map(({ mic }) => mic);
+  const dayLabel = plan.day === 'today' ? 'Today' : plan.day === 'tomorrow' ? 'Tomorrow' : plan.day;
   const highlightId = pickOpenMicSearchHighlightId(entries, seattleNow.minutesSinceMidnight);
   activeOpenMicId = highlightId;
 
-  const title = getOpenMicSearchTitle(matches, query);
+  const cityTitle = getOpenMicSearchTitle(matches, query);
+  const title = dayLabel && cityTitle === 'Search results' && !compactOpenMicSearchText(query) ? dayLabel : cityTitle;
   const countText = `${matches.length} ${matches.length === 1 ? 'open mic' : 'open mics'}`;
   openMicMapDayLabel.textContent = title;
-  openMicMapDateLabel.textContent = title === 'Search results' ? `${countText} for “${query}”` : countText;
+  const countLabel = title === 'Search results' ? `${countText} for “${query}”` : countText;
+  openMicMapDateLabel.textContent = dayLabel && title !== dayLabel ? `${countLabel} · ${dayLabel}` : countLabel;
   openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
   if (openMicMapEyebrow) openMicMapEyebrow.textContent = 'Open Mic Search';
   if (openMicTonightEyebrow) openMicTonightEyebrow.textContent = 'Search';
