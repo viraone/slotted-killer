@@ -1078,8 +1078,8 @@ function renderOpenMicSearchResults(allMics, now) {
   openMicMapDayLabel.textContent = title;
   openMicMapDateLabel.textContent = title === 'Search results' ? `${countText} for “${query}”` : countText;
   openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
-  openMicMapEyebrow.textContent = 'Open Mic Search';
-  openMicTonightEyebrow.textContent = 'Search';
+  if (openMicMapEyebrow) openMicMapEyebrow.textContent = 'Open Mic Search';
+  if (openMicTonightEyebrow) openMicTonightEyebrow.textContent = 'Search';
   updateOpenMicDaySelector('');
   renderOpenMicTonightPanel(entries.map(({ mic }) => mic), null, null);
   refreshOpenMicActiveHighlight();
@@ -2393,8 +2393,8 @@ async function renderOpenMicMapView() {
   openMicMapDayLabel.textContent = selectedDateParts.dayName;
   openMicMapDateLabel.textContent = formatSeattleCalendarDate(selectedDate.date);
   openMicTonightTitle.textContent = `${selectedDateParts.dayName}'s Mics`;
-  openMicMapEyebrow.textContent = 'Open Mics Today';
-  openMicTonightEyebrow.textContent = 'Selected day';
+  if (openMicMapEyebrow) openMicMapEyebrow.textContent = 'Open Mics Today';
+  if (openMicTonightEyebrow) openMicTonightEyebrow.textContent = 'Selected day';
   updateOpenMicDaySelector(selectedDateParts.dayName);
   updateOpenMicTypeFilter(selectedOpenMicType);
 
