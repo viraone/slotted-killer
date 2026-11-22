@@ -439,6 +439,8 @@ let openMicSearchQuery = '';
 let openMicSearchMics = [];
 let openMicSearchSuggestionIndex = -1;
 let activeOpenMicId = null;
+let openMicSearchMissTimer = null;
+const loggedOpenMicSearchMisses = new Set();
 const openMicReachabilityRequests = new Set();
 
 openMicDayButtons.forEach((button) => {
@@ -1028,7 +1030,7 @@ function planOpenMicSearch(allMics, rawQuery, buildEntries, tomorrowLabel) {
   const namesCity = allMics.some((mic) => compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactRaw));
   if (parsed.day && !namesCity) {
     const dayMics = compactOpenMicSearchText(parsed.text) ? filterOpenMicsBySearch(allMics, parsed.text) : allMics;
-    const dayEntries = filterOpenMicSearchEntriesByDay(buildEntries(dayMics), parsed.day, tomorrowLabel);
+    const dayEntries = filterOpenMicSearchEntriesByDay(buildEntries(dayMics, parsed.day), parsed.day, tomorrowLabel);
     if (dayEntries.length > 0) return { query: parsed.text, day: parsed.day, entries: dayEntries };
   }
   return { query: rawQuery, day: '', entries: buildEntries(filterOpenMicsBySearch(allMics, rawQuery)) };
@@ -1134,18 +1136,69 @@ function pickOpenMicSearchHighlightId(entries, minutesSinceMidnight) {
   return earliest(sameDate).mic.id;
 }
 
+function scheduleOpenMicSearchMissLog(query) {
+  clearTimeout(openMicSearchMissTimer);
+  const text = String(query || '').trim().toLowerCase();
+  if (text.length < 3 || loggedOpenMicSearchMisses.has(text)) return;
+  if (!supabaseClient || !/(^|\.)stagetimepnw\.com$/.test(window.location.hostname)) return;
+  openMicSearchMissTimer = setTimeout(() => {
+    loggedOpenMicSearchMisses.add(text);
+    supabaseClient.rpc('log_open_mic_search_miss', { p_query: text }).then(({ error }) => {
+      if (error) console.error('Unable to log the search with no results:', error);
+    });
+  }, 2500);
+}
+
+function renderOpenMicSearchShareButton(title) {
+  const label = 'Share this search';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900/45 px-4 py-2.5 text-sm font-bold text-zinc-200 transition hover:border-[#00C805] hover:text-white';
+  button.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span></span>';
+  const text = button.querySelector('span');
+  text.textContent = label;
+  button.addEventListener('click', async () => {
+    const url = window.location.href;
+    const shareTitle = title === 'Search results' ? 'Open mics on StageTime PNW' : `${title} open mics on StageTime PNW`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareTitle, url });
+      } catch (err) {
+        if (err.name !== 'AbortError') console.error('Unable to share the search:', err);
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      text.textContent = 'Link copied';
+    } catch (err) {
+      console.error('Unable to copy the search link:', err);
+      text.textContent = 'Could not copy the link';
+    }
+    setTimeout(() => {
+      text.textContent = label;
+    }, 2000);
+  });
+  return button;
+}
+
 function renderOpenMicSearchResults(allMics, now) {
   const rawQuery = openMicSearchQuery.trim();
+  clearTimeout(openMicSearchMissTimer);
   const seattleNow = getSeattleNow(now);
   const today = getNextSeattleWeekdayDate(seattleNow.dayName, now).date;
   const { nextMic } = selectOpenMicsForSeattleDate(allMics, now, true);
   lastRenderedOpenMicNextId = nextMic ? nextMic.id : null;
   activeOpenMicId = null;
 
-  const buildEntries = (mics) => mics
+  const buildEntries = (mics, weekday = '') => mics
     .map((mic) => {
-      const isToday = openMicOccursOnSeattleDate(mic, seattleNow);
-      const date = isToday ? today : getNextOpenMicOccurrenceDate(mic, now);
+      const occursToday = openMicOccursOnSeattleDate(mic, seattleNow);
+      const nextDate = occursToday ? today : getNextOpenMicOccurrenceDate(mic, now);
+      const moveToWeekday = Boolean(weekday && weekday !== seattleNow.dayName && mic.days && mic.days[weekday]
+        && nextDate && getSeattleNow(nextDate).dayName !== weekday);
+      const isToday = occursToday && !moveToWeekday;
+      const date = moveToWeekday ? getNextSeattleWeekdayDate(weekday, now).date : nextDate;
       return {
         mic,
         isToday,
@@ -1200,6 +1253,7 @@ function renderOpenMicSearchResults(allMics, now) {
   });
 
   if (entries.length === 0) {
+    scheduleOpenMicSearchMissLog(rawQuery);
     const help = document.createElement('div');
     help.className = 'rounded-xl border border-zinc-800 bg-zinc-900/45 p-4';
     const message = document.createElement('p');
@@ -1214,6 +1268,8 @@ function renderOpenMicSearchResults(allMics, now) {
     openMicMapList.append(help);
     return;
   }
+
+  openMicMapList.append(renderOpenMicSearchShareButton(title));
 
   let lastHeadingKey = null;
   entries.forEach(({ mic, isToday, date }) => {
