@@ -13,7 +13,9 @@ for (const name of [
   'openMicMatchesSearch',
   'filterOpenMicsBySearch',
   'getOpenMicCityCounts',
-  'getOpenMicSearchTitle'
+  'getOpenMicSearchTitle',
+  'getOpenMicCitySuggestions',
+  'getOpenMicSuggestionSplit'
 ]) {
   const start = source.indexOf(`function ${name}(`);
   assert.ok(start >= 0, `${name} exists in app.js`);
@@ -80,6 +82,20 @@ assert.equal(title('bell'), 'Bellingham');
 assert.equal(title('sea'), 'Search results');
 assert.equal(title('rickshaw'), 'Search results');
 assert.equal(title('portland'), 'Search results');
+
+// Suggestions while typing: cities that start with the typed text; none when empty or already complete.
+const counts = context.getOpenMicCityCounts(mics);
+const suggest = (query) => context.getOpenMicCitySuggestions(counts, query).map((entry) => entry.city).join(',');
+assert.equal(suggest(''), '');
+assert.equal(suggest('s'), 'Seattle,SeaTac');
+assert.equal(suggest('re'), 'Redmond,Renton');
+assert.equal(suggest('bell'), 'Bellingham');
+assert.equal(suggest('bellingham'), '');
+assert.equal(suggest('Sea Tac'), '');
+assert.equal(suggest('x'), '');
+assert.equal(context.getOpenMicSuggestionSplit('Bellingham', 'bell'), 4);
+assert.equal(context.getOpenMicSuggestionSplit('SeaTac', 'sea t'), 4);
+assert.equal(context.getOpenMicSuggestionSplit('Seattle', ''), 0);
 
 // Every mic on the live list must have a city the search can read.
 const records = JSON.parse(fs.readFileSync('data/open-mics.json', 'utf8'));

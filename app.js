@@ -38,6 +38,7 @@ const openMicTonightTitle = document.getElementById('openMicTonightTitle');
 const openMicTonightCount = document.getElementById('openMicTonightCount');
 const openMicSearchInput = document.getElementById('openMicSearchInput');
 const openMicSearchClear = document.getElementById('openMicSearchClear');
+const openMicSearchSuggestions = document.getElementById('openMicSearchSuggestions');
 const openMicTonightNext = document.getElementById('openMicTonightNext');
 const openMicTonightLast = document.getElementById('openMicTonightLast');
 const openMicTonightList = document.getElementById('openMicTonightList');
@@ -434,6 +435,7 @@ let selectedOpenMicType = 'all';
 let userOpenMicLocation = null;
 let openMicSearchQuery = '';
 let openMicSearchCityCounts = [];
+let openMicSearchSuggestionIndex = -1;
 let activeOpenMicId = null;
 const openMicReachabilityRequests = new Set();
 
@@ -460,14 +462,33 @@ openMicTypeButtons.forEach((button) => {
   });
 });
 
-if (openMicSearchInput && openMicSearchClear) {
+if (openMicSearchInput && openMicSearchClear && openMicSearchSuggestions) {
   openMicSearchQuery = (new URLSearchParams(window.location.search).get('city') || '').slice(0, 60);
   openMicSearchInput.value = openMicSearchQuery;
   openMicSearchClear.hidden = openMicSearchQuery === '';
   openMicMapDateLabel.setAttribute('aria-live', 'polite');
+  openMicSearchInput.setAttribute('role', 'combobox');
+  openMicSearchInput.setAttribute('aria-autocomplete', 'list');
+  openMicSearchInput.setAttribute('aria-controls', 'openMicSearchSuggestions');
+  openMicSearchInput.setAttribute('aria-expanded', 'false');
+  openMicSearchInput.addEventListener('focus', renderOpenMicSearchSuggestions);
+  openMicSearchInput.addEventListener('blur', renderOpenMicSearchSuggestions);
+  openMicSearchSuggestions.addEventListener('mousedown', (event) => event.preventDefault());
   openMicSearchInput.addEventListener('input', () => setOpenMicSearchQuery(openMicSearchInput.value));
   openMicSearchInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') openMicSearchInput.blur();
+    const suggestions = getOpenMicCitySuggestions(openMicSearchCityCounts, openMicSearchQuery);
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && suggestions.length > 0) {
+      event.preventDefault();
+      const next = openMicSearchSuggestionIndex + (event.key === 'ArrowDown' ? 1 : -1);
+      openMicSearchSuggestionIndex = next >= suggestions.length ? -1 : next < -1 ? suggestions.length - 1 : next;
+      renderOpenMicSearchSuggestions();
+      return;
+    }
+    if (event.key === 'Enter') {
+      const picked = suggestions[openMicSearchSuggestionIndex];
+      openMicSearchInput.blur();
+      if (picked) setOpenMicSearchQuery(picked.city);
+    }
     if (event.key === 'Escape') {
       setOpenMicSearchQuery('');
       openMicSearchInput.blur();
@@ -939,6 +960,24 @@ function getOpenMicSearchTitle(mics, query) {
     : 'Search results';
 }
 
+function getOpenMicCitySuggestions(cityCounts, query) {
+  const compactQuery = compactOpenMicSearchText(query);
+  if (!compactQuery) return [];
+  const matches = cityCounts.filter(({ city }) => compactOpenMicSearchText(city).startsWith(compactQuery));
+  if (matches.length === 1 && compactOpenMicSearchText(matches[0].city) === compactQuery) return [];
+  return matches.slice(0, 6);
+}
+
+function getOpenMicSuggestionSplit(city, query) {
+  let remaining = compactOpenMicSearchText(query).length;
+  let index = 0;
+  while (index < city.length && remaining > 0) {
+    if (/[a-z0-9]/i.test(city[index])) remaining -= 1;
+    index += 1;
+  }
+  return index;
+}
+
 function createOpenMicCityChip(city, count) {
   const button = document.createElement('button');
   button.type = 'button';
@@ -955,6 +994,40 @@ function createOpenMicCityChip(city, count) {
   return button;
 }
 
+function renderOpenMicSearchSuggestions() {
+  const isFocused = document.activeElement === openMicSearchInput;
+  const suggestions = isFocused ? getOpenMicCitySuggestions(openMicSearchCityCounts, openMicSearchQuery) : [];
+  if (openMicSearchSuggestionIndex >= suggestions.length) openMicSearchSuggestionIndex = -1;
+  const items = suggestions.map(({ city, count }, index) => {
+    const isActive = index === openMicSearchSuggestionIndex;
+    const item = document.createElement('li');
+    item.setAttribute('role', 'option');
+    item.setAttribute('aria-selected', String(isActive));
+    item.className = `flex cursor-pointer items-center gap-3 px-3 py-2.5 text-base text-zinc-400 hover:bg-zinc-800${isActive ? ' bg-zinc-800' : ''}`;
+    const split = getOpenMicSuggestionSplit(city, openMicSearchQuery);
+    const typed = document.createElement('span');
+    typed.textContent = city.slice(0, split);
+    const rest = document.createElement('span');
+    rest.className = 'font-bold text-zinc-50';
+    rest.textContent = city.slice(split);
+    const name = document.createElement('span');
+    name.className = 'min-w-0 flex-1 truncate';
+    name.append(typed, rest);
+    const number = document.createElement('span');
+    number.className = 'shrink-0 text-xs font-semibold text-zinc-500';
+    number.textContent = `${count} ${count === 1 ? 'mic' : 'mics'}`;
+    item.append(name, number);
+    item.addEventListener('click', () => {
+      openMicSearchInput.blur();
+      setOpenMicSearchQuery(city);
+    });
+    return item;
+  });
+  openMicSearchSuggestions.replaceChildren(...items);
+  openMicSearchSuggestions.hidden = items.length === 0;
+  openMicSearchInput.setAttribute('aria-expanded', String(items.length > 0));
+}
+
 function setOpenMicSearchQuery(value) {
   openMicSearchQuery = String(value || '').slice(0, 60);
   if (openMicSearchInput.value !== openMicSearchQuery) openMicSearchInput.value = openMicSearchQuery;
@@ -964,6 +1037,8 @@ function setOpenMicSearchQuery(value) {
   if (city) url.searchParams.set('city', city);
   else url.searchParams.delete('city');
   window.history.replaceState(window.history.state, '', url);
+  openMicSearchSuggestionIndex = -1;
+  renderOpenMicSearchSuggestions();
   renderOpenMicMapView();
 }
 
