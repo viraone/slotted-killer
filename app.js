@@ -36,6 +36,9 @@ const openMicMapStatus = document.getElementById('openMicMapStatus');
 const openMicMapList = document.getElementById('openMicMapList');
 const openMicTonightTitle = document.getElementById('openMicTonightTitle');
 const openMicTonightCount = document.getElementById('openMicTonightCount');
+const openMicSearchInput = document.getElementById('openMicSearchInput');
+const openMicSearchClear = document.getElementById('openMicSearchClear');
+const openMicCitySuggestions = document.getElementById('openMicCitySuggestions');
 const openMicTonightNext = document.getElementById('openMicTonightNext');
 const openMicTonightLast = document.getElementById('openMicTonightLast');
 const openMicTonightList = document.getElementById('openMicTonightList');
@@ -430,6 +433,8 @@ const OPEN_MIC_COORDINATE_OVERRIDES = {
 let selectedOpenMicDayName = null;
 let selectedOpenMicType = 'all';
 let userOpenMicLocation = null;
+let openMicSearchQuery = '';
+let openMicSearchCityCounts = [];
 let activeOpenMicId = null;
 const openMicReachabilityRequests = new Set();
 
@@ -437,6 +442,12 @@ openMicDayButtons.forEach((button) => {
   button.addEventListener('click', () => {
     const dayName = button.dataset.openMicDay;
     if (!OPEN_MIC_CALENDAR_DAYS.includes(dayName)) return;
+
+    if (compactOpenMicSearchText(openMicSearchQuery)) {
+      const heading = openMicMapList.querySelector(`[data-open-mic-search-day="${dayName}"]`);
+      if (heading) heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
 
     selectedOpenMicDayName = dayName;
     renderOpenMicMapView();
@@ -449,6 +460,28 @@ openMicTypeButtons.forEach((button) => {
     renderOpenMicMapView();
   });
 });
+
+if (openMicSearchInput && openMicSearchClear && openMicCitySuggestions) {
+  openMicSearchQuery = (new URLSearchParams(window.location.search).get('city') || '').slice(0, 60);
+  openMicSearchInput.value = openMicSearchQuery;
+  openMicSearchClear.hidden = openMicSearchQuery === '';
+  openMicMapDateLabel.setAttribute('aria-live', 'polite');
+  openMicSearchInput.addEventListener('input', () => setOpenMicSearchQuery(openMicSearchInput.value));
+  openMicSearchInput.addEventListener('focus', renderOpenMicCitySuggestions);
+  openMicSearchInput.addEventListener('blur', renderOpenMicCitySuggestions);
+  openMicSearchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') openMicSearchInput.blur();
+    if (event.key === 'Escape') {
+      setOpenMicSearchQuery('');
+      openMicSearchInput.blur();
+    }
+  });
+  openMicSearchClear.addEventListener('click', () => {
+    setOpenMicSearchQuery('');
+    openMicSearchInput.focus();
+  });
+  openMicCitySuggestions.addEventListener('mousedown', (event) => event.preventDefault());
+}
 
 const isLocalOpenMicDevelopment = ['localhost', '127.0.0.1', '::1']
   .includes(window.location.hostname);
@@ -908,6 +941,135 @@ function getOpenMicSearchTitle(mics, query) {
   return cities.length === 1 && compactQuery && compactOpenMicSearchText(cities[0]).startsWith(compactQuery)
     ? cities[0]
     : 'Search results';
+}
+
+function createOpenMicCityChip(city, count) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'mr-1.5 mb-1.5 inline-block rounded-full border border-zinc-700 px-3 py-1.5 text-xs font-bold text-zinc-300 transition hover:border-[#00C805]/50 hover:text-zinc-100';
+  button.setAttribute('aria-label', `${city}, ${count} ${count === 1 ? 'open mic' : 'open mics'}`);
+  const number = document.createElement('span');
+  number.className = 'font-semibold text-zinc-500';
+  number.textContent = String(count);
+  button.append(`${city} `, number);
+  button.addEventListener('click', () => {
+    openMicSearchInput.blur();
+    setOpenMicSearchQuery(city);
+  });
+  return button;
+}
+
+function renderOpenMicCitySuggestions() {
+  const compactQuery = compactOpenMicSearchText(openMicSearchQuery);
+  const isFocused = document.activeElement === openMicSearchInput;
+  const cities = openMicSearchCityCounts
+    .filter(({ city }) => compactOpenMicSearchText(city).startsWith(compactQuery));
+  const isExactCity = cities.length === 1 && compactOpenMicSearchText(cities[0].city) === compactQuery;
+  const chips = isFocused && !isExactCity
+    ? cities.map(({ city, count }) => createOpenMicCityChip(city, count))
+    : [];
+  openMicCitySuggestions.replaceChildren(...chips);
+  openMicCitySuggestions.hidden = chips.length === 0;
+}
+
+function setOpenMicSearchQuery(value) {
+  openMicSearchQuery = String(value || '').slice(0, 60);
+  if (openMicSearchInput.value !== openMicSearchQuery) openMicSearchInput.value = openMicSearchQuery;
+  openMicSearchClear.hidden = openMicSearchQuery === '';
+  const url = new URL(window.location.href);
+  const city = openMicSearchQuery.trim();
+  if (city) url.searchParams.set('city', city);
+  else url.searchParams.delete('city');
+  window.history.replaceState(window.history.state, '', url);
+  renderOpenMicCitySuggestions();
+  renderOpenMicMapView();
+}
+
+function renderOpenMicSearchResults(allMics, now) {
+  const query = openMicSearchQuery.trim();
+  const matches = filterOpenMicsBySearch(allMics, query);
+  const seattleNow = getSeattleNow(now);
+  const today = getNextSeattleWeekdayDate(seattleNow.dayName, now).date;
+  const { nextMic } = selectOpenMicsForSeattleDate(allMics, now, true);
+  lastRenderedOpenMicNextId = nextMic ? nextMic.id : null;
+  activeOpenMicId = null;
+
+  const entries = matches
+    .map((mic) => {
+      const isToday = openMicOccursOnSeattleDate(mic, seattleNow);
+      return { mic, isToday, date: isToday ? today : getNextOpenMicOccurrenceDate(mic, now) };
+    })
+    .sort((a, b) => {
+      const timeA = a.date ? a.date.getTime() : Number.POSITIVE_INFINITY;
+      const timeB = b.date ? b.date.getTime() : Number.POSITIVE_INFINITY;
+      if (timeA !== timeB) return timeA - timeB;
+      const startA = a.mic.startMinutes ?? a.mic.signupMinutes ?? 9999;
+      const startB = b.mic.startMinutes ?? b.mic.signupMinutes ?? 9999;
+      if (startA !== startB) return startA - startB;
+      return a.mic.name.localeCompare(b.mic.name);
+    });
+
+  const title = getOpenMicSearchTitle(matches, query);
+  const countText = `${matches.length} ${matches.length === 1 ? 'open mic' : 'open mics'}`;
+  openMicMapDayLabel.textContent = title;
+  openMicMapDateLabel.textContent = title === 'Search results' ? `${countText} for “${query}”` : countText;
+  openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
+  updateOpenMicDaySelector('');
+  renderOpenMicTonightPanel(entries.map(({ mic }) => mic), null, null);
+  refreshOpenMicActiveHighlight();
+
+  const daysWithResults = new Set(
+    entries.filter(({ date }) => date).map(({ date }) => getSeattleNow(date).dayName)
+  );
+  openMicDayButtons.forEach((button) => {
+    button.classList.toggle('opacity-40', !daysWithResults.has(button.dataset.openMicDay));
+  });
+
+  if (entries.length === 0) {
+    const help = document.createElement('div');
+    help.className = 'rounded-xl border border-zinc-800 bg-zinc-900/45 p-4';
+    const message = document.createElement('p');
+    message.className = 'text-base font-bold text-zinc-100';
+    message.textContent = `No open mics listed for “${query}” yet.`;
+    const hint = document.createElement('p');
+    hint.className = 'mt-1 mb-3 text-sm text-zinc-400';
+    hint.textContent = 'Cities with open mics right now:';
+    const chips = document.createElement('div');
+    chips.append(...openMicSearchCityCounts.map(({ city, count }) => createOpenMicCityChip(city, count)));
+    const submit = document.createElement('button');
+    submit.type = 'button';
+    submit.className = 'mt-2 text-left text-sm font-bold text-[#00C805] underline underline-offset-2 hover:text-[#00E006]';
+    submit.textContent = 'Know one we are missing? Submit your open mic';
+    submit.addEventListener('click', () => showAddMicView());
+    help.append(message, hint, chips, submit);
+    openMicMapList.append(help);
+    return;
+  }
+
+  let lastHeadingKey = null;
+  entries.forEach(({ mic, isToday, date }) => {
+    const headingKey = date ? String(date.getTime()) : 'none';
+    if (headingKey !== lastHeadingKey) {
+      lastHeadingKey = headingKey;
+      const heading = document.createElement('h2');
+      heading.className = 'scroll-mt-4 pt-3 text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400';
+      if (date) heading.dataset.openMicSearchDay = getSeattleNow(date).dayName;
+      heading.textContent = date
+        ? `${isToday ? 'Today · ' : ''}${formatUpcomingOpenMicDate(date)}`
+        : 'Date not posted yet';
+      openMicMapList.append(heading);
+    }
+    openMicMapList.append(renderOpenMicCard(
+      mic,
+      false,
+      isToday,
+      isToday ? seattleNow.minutesSinceMidnight : null,
+      null,
+      date || today,
+      !date,
+      true
+    ));
+  });
 }
 
 function filterOpenMicsByType(mics, selectedType) {
@@ -1790,7 +1952,7 @@ function setMicActionContent(button, label, { leading = '', trailing = '' } = {}
   button.replaceChildren(...parts);
 }
 
-function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null, isUnconfirmed = false) {
+function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null, isUnconfirmed = false, isSearchResult = false) {
   const isLockedPreview = Boolean(upcomingDate) || isUnconfirmed;
   const card = document.createElement('article');
   card.id = `open-mic-card-${mic.id}`;
@@ -1849,7 +2011,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj) {
     const confirmBadge = document.createElement('span');
     confirmBadge.className = 'inline-block rounded border border-[#00C805]/50 bg-[#00C805]/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#00C805]';
-    confirmBadge.textContent = isToday ? '✓ Happening tonight!' : `✓ Happening this ${getSeattleNow(selectedDateObj).dayName}!`;
+    confirmBadge.textContent = isToday ? '✓ Happening tonight!' : isSearchResult ? '✓ Happening on this date!' : `✓ Happening this ${getSeattleNow(selectedDateObj).dayName}!`;
     badges.append(confirmBadge);
   }
 
@@ -2176,6 +2338,13 @@ async function renderOpenMicMapView() {
   try {
     const allMics = filterOpenMicsByType(await loadOpenMicData(), selectedOpenMicType);
     if (renderToken !== openMicMapRenderToken) return;
+
+    openMicSearchCityCounts = getOpenMicCityCounts(allMics);
+    openMicDayButtons.forEach((button) => button.classList.remove('opacity-40'));
+    if (compactOpenMicSearchText(openMicSearchQuery)) {
+      renderOpenMicSearchResults(allMics, now);
+      return;
+    }
 
     const { dayName, todays, nextMic, lastMic } = selectOpenMicsForSeattleDate(
       allMics,
