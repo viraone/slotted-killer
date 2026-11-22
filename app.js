@@ -38,7 +38,6 @@ const openMicTonightTitle = document.getElementById('openMicTonightTitle');
 const openMicTonightCount = document.getElementById('openMicTonightCount');
 const openMicSearchInput = document.getElementById('openMicSearchInput');
 const openMicSearchClear = document.getElementById('openMicSearchClear');
-const openMicCitySuggestions = document.getElementById('openMicCitySuggestions');
 const openMicTonightNext = document.getElementById('openMicTonightNext');
 const openMicTonightLast = document.getElementById('openMicTonightLast');
 const openMicTonightList = document.getElementById('openMicTonightList');
@@ -461,14 +460,12 @@ openMicTypeButtons.forEach((button) => {
   });
 });
 
-if (openMicSearchInput && openMicSearchClear && openMicCitySuggestions) {
+if (openMicSearchInput && openMicSearchClear) {
   openMicSearchQuery = (new URLSearchParams(window.location.search).get('city') || '').slice(0, 60);
   openMicSearchInput.value = openMicSearchQuery;
   openMicSearchClear.hidden = openMicSearchQuery === '';
   openMicMapDateLabel.setAttribute('aria-live', 'polite');
   openMicSearchInput.addEventListener('input', () => setOpenMicSearchQuery(openMicSearchInput.value));
-  openMicSearchInput.addEventListener('focus', renderOpenMicCitySuggestions);
-  openMicSearchInput.addEventListener('blur', renderOpenMicCitySuggestions);
   openMicSearchInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') openMicSearchInput.blur();
     if (event.key === 'Escape') {
@@ -480,7 +477,6 @@ if (openMicSearchInput && openMicSearchClear && openMicCitySuggestions) {
     setOpenMicSearchQuery('');
     openMicSearchInput.focus();
   });
-  openMicCitySuggestions.addEventListener('mousedown', (event) => event.preventDefault());
 }
 
 const isLocalOpenMicDevelopment = ['localhost', '127.0.0.1', '::1']
@@ -959,19 +955,6 @@ function createOpenMicCityChip(city, count) {
   return button;
 }
 
-function renderOpenMicCitySuggestions() {
-  const compactQuery = compactOpenMicSearchText(openMicSearchQuery);
-  const isFocused = document.activeElement === openMicSearchInput;
-  const cities = openMicSearchCityCounts
-    .filter(({ city }) => compactOpenMicSearchText(city).startsWith(compactQuery));
-  const isExactCity = cities.length === 1 && compactOpenMicSearchText(cities[0].city) === compactQuery;
-  const chips = isFocused && !isExactCity
-    ? cities.map(({ city, count }) => createOpenMicCityChip(city, count))
-    : [];
-  openMicCitySuggestions.replaceChildren(...chips);
-  openMicCitySuggestions.hidden = chips.length === 0;
-}
-
 function setOpenMicSearchQuery(value) {
   openMicSearchQuery = String(value || '').slice(0, 60);
   if (openMicSearchInput.value !== openMicSearchQuery) openMicSearchInput.value = openMicSearchQuery;
@@ -981,7 +964,6 @@ function setOpenMicSearchQuery(value) {
   if (city) url.searchParams.set('city', city);
   else url.searchParams.delete('city');
   window.history.replaceState(window.history.state, '', url);
-  renderOpenMicCitySuggestions();
   renderOpenMicMapView();
 }
 
