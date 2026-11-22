@@ -83,6 +83,17 @@ assert.equal(title('sea'), 'Search results');
 assert.equal(title('rickshaw'), 'Search results');
 assert.equal(title('portland'), 'Search results');
 
+// A city match wins: "ta" is Tacoma only, and mic names are used when no city starts with the text.
+const tavernMics = [
+  { id: 'tacoma', name: 'Comedy Night', venue: '', address: '933 Market St, Tacoma, WA 98402' },
+  { id: 'tap', name: '1928 Tap & Grill Open Mic', venue: '', address: '14525 Aurora Ave N, Shoreline, WA 98133' }
+];
+const tavernIds = (query) => context.filterOpenMicsBySearch(tavernMics, query).map((mic) => mic.id).join(',');
+assert.equal(tavernIds('ta'), 'tacoma');
+assert.equal(tavernIds('tacoma'), 'tacoma');
+assert.equal(tavernIds('tap'), 'tap');
+assert.equal(tavernIds('grill'), 'tap');
+
 // Suggestions while typing: cities that start with the typed text; none when empty or already complete.
 const counts = context.getOpenMicCityCounts(mics);
 const suggest = (query) => context.getOpenMicCitySuggestions(counts, query).map((entry) => entry.city).join(',');

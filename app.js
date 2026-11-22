@@ -39,6 +39,8 @@ const openMicTonightCount = document.getElementById('openMicTonightCount');
 const openMicSearchInput = document.getElementById('openMicSearchInput');
 const openMicSearchClear = document.getElementById('openMicSearchClear');
 const openMicSearchSuggestions = document.getElementById('openMicSearchSuggestions');
+const openMicMapEyebrow = document.getElementById('openMicMapEyebrow');
+const openMicTonightEyebrow = document.getElementById('openMicTonightEyebrow');
 const openMicTonightNext = document.getElementById('openMicTonightNext');
 const openMicTonightLast = document.getElementById('openMicTonightLast');
 const openMicTonightList = document.getElementById('openMicTonightList');
@@ -937,7 +939,10 @@ function openMicMatchesSearch(mic, query) {
 }
 
 function filterOpenMicsBySearch(mics, query) {
-  if (!compactOpenMicSearchText(query)) return mics;
+  const compactQuery = compactOpenMicSearchText(query);
+  if (!compactQuery) return mics;
+  const cityMatches = mics.filter((mic) => compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactQuery));
+  if (cityMatches.length > 0) return cityMatches;
   return mics.filter((mic) => openMicMatchesSearch(mic, query));
 }
 
@@ -976,22 +981,6 @@ function getOpenMicSuggestionSplit(city, query) {
     index += 1;
   }
   return index;
-}
-
-function createOpenMicCityChip(city, count) {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'mr-1.5 mb-1.5 inline-block rounded-full border border-zinc-700 px-3 py-1.5 text-xs font-bold text-zinc-300 transition hover:border-[#00C805]/50 hover:text-zinc-100';
-  button.setAttribute('aria-label', `${city}, ${count} ${count === 1 ? 'open mic' : 'open mics'}`);
-  const number = document.createElement('span');
-  number.className = 'font-semibold text-zinc-500';
-  number.textContent = String(count);
-  button.append(`${city} `, number);
-  button.addEventListener('click', () => {
-    openMicSearchInput.blur();
-    setOpenMicSearchQuery(city);
-  });
-  return button;
 }
 
 function renderOpenMicSearchSuggestions() {
@@ -1071,6 +1060,8 @@ function renderOpenMicSearchResults(allMics, now) {
   openMicMapDayLabel.textContent = title;
   openMicMapDateLabel.textContent = title === 'Search results' ? `${countText} for “${query}”` : countText;
   openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
+  openMicMapEyebrow.textContent = 'Open Mic Search';
+  openMicTonightEyebrow.textContent = 'Search';
   updateOpenMicDaySelector('');
   renderOpenMicTonightPanel(entries.map(({ mic }) => mic), null, null);
   refreshOpenMicActiveHighlight();
@@ -1088,17 +1079,12 @@ function renderOpenMicSearchResults(allMics, now) {
     const message = document.createElement('p');
     message.className = 'text-base font-bold text-zinc-100';
     message.textContent = `No open mics listed for “${query}” yet.`;
-    const hint = document.createElement('p');
-    hint.className = 'mt-1 mb-3 text-sm text-zinc-400';
-    hint.textContent = 'Cities with open mics right now:';
-    const chips = document.createElement('div');
-    chips.append(...openMicSearchCityCounts.map(({ city, count }) => createOpenMicCityChip(city, count)));
     const submit = document.createElement('button');
     submit.type = 'button';
     submit.className = 'mt-2 text-left text-sm font-bold text-[#00C805] underline underline-offset-2 hover:text-[#00E006]';
     submit.textContent = 'Know one we are missing? Submit your open mic';
     submit.addEventListener('click', () => showAddMicView());
-    help.append(message, hint, chips, submit);
+    help.append(message, submit);
     openMicMapList.append(help);
     return;
   }
@@ -2389,6 +2375,8 @@ async function renderOpenMicMapView() {
   openMicMapDayLabel.textContent = selectedDateParts.dayName;
   openMicMapDateLabel.textContent = formatSeattleCalendarDate(selectedDate.date);
   openMicTonightTitle.textContent = `${selectedDateParts.dayName}'s Mics`;
+  openMicMapEyebrow.textContent = 'Open Mics Today';
+  openMicTonightEyebrow.textContent = 'Selected day';
   updateOpenMicDaySelector(selectedDateParts.dayName);
   updateOpenMicTypeFilter(selectedOpenMicType);
 
