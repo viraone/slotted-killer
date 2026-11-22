@@ -436,7 +436,7 @@ let selectedOpenMicDayName = null;
 let selectedOpenMicType = 'all';
 let userOpenMicLocation = null;
 let openMicSearchQuery = '';
-let openMicSearchCityCounts = [];
+let openMicSearchMics = [];
 let openMicSearchSuggestionIndex = -1;
 let activeOpenMicId = null;
 const openMicReachabilityRequests = new Set();
@@ -478,7 +478,7 @@ if (openMicSearchInput && openMicSearchClear && openMicSearchSuggestions) {
   openMicSearchSuggestions.addEventListener('mousedown', (event) => event.preventDefault());
   openMicSearchInput.addEventListener('input', () => setOpenMicSearchQuery(openMicSearchInput.value));
   openMicSearchInput.addEventListener('keydown', (event) => {
-    const suggestions = getOpenMicCitySuggestions(openMicSearchCityCounts, openMicSearchQuery);
+    const suggestions = getOpenMicSearchSuggestions(openMicSearchMics, openMicSearchQuery);
     if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && suggestions.length > 0) {
       event.preventDefault();
       const next = openMicSearchSuggestionIndex + (event.key === 'ArrowDown' ? 1 : -1);
@@ -489,7 +489,7 @@ if (openMicSearchInput && openMicSearchClear && openMicSearchSuggestions) {
     if (event.key === 'Enter') {
       const picked = suggestions[openMicSearchSuggestionIndex];
       openMicSearchInput.blur();
-      if (picked) setOpenMicSearchQuery(picked.city);
+      if (picked) setOpenMicSearchQuery(picked.label);
     }
     if (event.key === 'Escape') {
       setOpenMicSearchQuery('');
@@ -983,32 +983,50 @@ function getOpenMicSuggestionSplit(city, query) {
   return index;
 }
 
+function getOpenMicSearchSuggestions(mics, query) {
+  if (!compactOpenMicSearchText(query)) return [];
+  const cities = getOpenMicCitySuggestions(getOpenMicCityCounts(mics), query)
+    .map(({ city, count }) => ({ kind: 'city', label: city, detail: `${count} ${count === 1 ? 'mic' : 'mics'}` }));
+  const spacedQuery = spacedOpenMicSearchText(query);
+  const seen = new Set();
+  const names = [];
+  mics.forEach((mic) => {
+    const label = ` ${spacedOpenMicSearchText(mic.name)}`.includes(` ${spacedQuery}`)
+      ? mic.name
+      : ` ${spacedOpenMicSearchText(mic.venue)}`.includes(` ${spacedQuery}`) ? mic.venue : '';
+    if (!label || seen.has(label) || spacedOpenMicSearchText(label) === spacedQuery) return;
+    seen.add(label);
+    names.push({ kind: 'mic', label, detail: getOpenMicCity(mic) });
+  });
+  return [...cities, ...names].slice(0, 6);
+}
+
 function renderOpenMicSearchSuggestions() {
   const isFocused = document.activeElement === openMicSearchInput;
-  const suggestions = isFocused ? getOpenMicCitySuggestions(openMicSearchCityCounts, openMicSearchQuery) : [];
+  const suggestions = isFocused ? getOpenMicSearchSuggestions(openMicSearchMics, openMicSearchQuery) : [];
   if (openMicSearchSuggestionIndex >= suggestions.length) openMicSearchSuggestionIndex = -1;
-  const items = suggestions.map(({ city, count }, index) => {
+  const items = suggestions.map(({ kind, label, detail }, index) => {
     const isActive = index === openMicSearchSuggestionIndex;
     const item = document.createElement('li');
     item.setAttribute('role', 'option');
     item.setAttribute('aria-selected', String(isActive));
     item.className = `flex cursor-pointer items-center gap-3 px-3 py-2.5 text-base text-zinc-400 hover:bg-zinc-800${isActive ? ' bg-zinc-800' : ''}`;
-    const split = getOpenMicSuggestionSplit(city, openMicSearchQuery);
+    const split = kind === 'city' ? getOpenMicSuggestionSplit(label, openMicSearchQuery) : 0;
     const typed = document.createElement('span');
-    typed.textContent = city.slice(0, split);
+    typed.textContent = label.slice(0, split);
     const rest = document.createElement('span');
-    rest.className = 'font-bold text-zinc-50';
-    rest.textContent = city.slice(split);
+    rest.className = kind === 'city' ? 'font-bold text-zinc-50' : 'font-semibold text-zinc-200';
+    rest.textContent = label.slice(split);
     const name = document.createElement('span');
     name.className = 'min-w-0 flex-1 truncate';
     name.append(typed, rest);
-    const number = document.createElement('span');
-    number.className = 'shrink-0 text-xs font-semibold text-zinc-500';
-    number.textContent = `${count} ${count === 1 ? 'mic' : 'mics'}`;
-    item.append(name, number);
+    const note = document.createElement('span');
+    note.className = 'shrink-0 text-xs font-semibold text-zinc-500';
+    note.textContent = detail;
+    item.append(name, note);
     item.addEventListener('click', () => {
       openMicSearchInput.blur();
-      setOpenMicSearchQuery(city);
+      setOpenMicSearchQuery(label);
     });
     return item;
   });
@@ -2384,7 +2402,7 @@ async function renderOpenMicMapView() {
     const allMics = filterOpenMicsByType(await loadOpenMicData(), selectedOpenMicType);
     if (renderToken !== openMicMapRenderToken) return;
 
-    openMicSearchCityCounts = getOpenMicCityCounts(allMics);
+    openMicSearchMics = allMics;
     openMicDayButtons.forEach((button) => button.classList.remove('opacity-40'));
     if (compactOpenMicSearchText(openMicSearchQuery)) {
       renderOpenMicSearchResults(allMics, now);

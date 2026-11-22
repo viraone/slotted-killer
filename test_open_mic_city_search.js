@@ -15,7 +15,8 @@ for (const name of [
   'getOpenMicCityCounts',
   'getOpenMicSearchTitle',
   'getOpenMicCitySuggestions',
-  'getOpenMicSuggestionSplit'
+  'getOpenMicSuggestionSplit',
+  'getOpenMicSearchSuggestions'
 ]) {
   const start = source.indexOf(`function ${name}(`);
   assert.ok(start >= 0, `${name} exists in app.js`);
@@ -107,6 +108,16 @@ assert.equal(suggest('x'), '');
 assert.equal(context.getOpenMicSuggestionSplit('Bellingham', 'bell'), 4);
 assert.equal(context.getOpenMicSuggestionSplit('SeaTac', 'sea t'), 4);
 assert.equal(context.getOpenMicSuggestionSplit('Seattle', ''), 0);
+
+// The drop-down offers cities first, then mic or venue names; nothing once the text is complete.
+const offer = (query) => context.getOpenMicSearchSuggestions(mics, query)
+  .map((entry) => `${entry.kind}:${entry.label}:${entry.detail}`).join('|');
+assert.equal(offer(''), '');
+assert.equal(offer('r'), 'city:Redmond:1 mic|city:Renton:1 mic|mic:Read The Room:Seattle|mic:Redmond Mic:Redmond');
+assert.equal(offer('rick'), 'mic:Rickshaw Restaurant:Seattle');
+assert.equal(offer('white center'), "mic:Mr. B's Mead Center (White Center) Open Mic:Seattle");
+assert.equal(offer('Read The Room'), '');
+assert.equal(offer('bellingham'), '');
 
 // Every mic on the live list must have a city the search can read.
 const records = JSON.parse(fs.readFileSync('data/open-mics.json', 'utf8'));
