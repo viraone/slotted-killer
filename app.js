@@ -1049,6 +1049,18 @@ function setOpenMicSearchQuery(value) {
   renderOpenMicMapView();
 }
 
+function pickOpenMicSearchHighlightId(entries, minutesSinceMidnight) {
+  const effectiveMinutes = (entry) => entry.mic.startMinutes ?? entry.mic.signupMinutes ?? 9999;
+  const todays = entries.filter((entry) => entry.isToday);
+  const started = todays.filter((entry) => effectiveMinutes(entry) <= minutesSinceMidnight);
+  if (started.length > 0) {
+    const currentTier = effectiveMinutes(started[started.length - 1]);
+    return started.find((entry) => effectiveMinutes(entry) === currentTier).mic.id;
+  }
+  const first = todays[0] || entries.find((entry) => entry.date);
+  return first ? first.mic.id : null;
+}
+
 function renderOpenMicSearchResults(allMics, now) {
   const query = openMicSearchQuery.trim();
   const matches = filterOpenMicsBySearch(allMics, query);
@@ -1072,6 +1084,9 @@ function renderOpenMicSearchResults(allMics, now) {
       if (startA !== startB) return startA - startB;
       return a.mic.name.localeCompare(b.mic.name);
     });
+
+  const highlightId = pickOpenMicSearchHighlightId(entries, seattleNow.minutesSinceMidnight);
+  activeOpenMicId = highlightId;
 
   const title = getOpenMicSearchTitle(matches, query);
   const countText = `${matches.length} ${matches.length === 1 ? 'open mic' : 'open mics'}`;
@@ -1122,7 +1137,7 @@ function renderOpenMicSearchResults(allMics, now) {
     }
     openMicMapList.append(renderOpenMicCard(
       mic,
-      false,
+      mic.id === highlightId,
       isToday,
       isToday ? seattleNow.minutesSinceMidnight : null,
       null,
