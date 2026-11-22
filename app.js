@@ -864,6 +864,52 @@ function classifyOpenMicCategory(micType) {
   return mentionsOtherTalent ? 'variety' : 'comedy';
 }
 
+function getOpenMicCity(mic) {
+  const match = /([^,]+),\s*[A-Z]{2}\b/.exec(String((mic && mic.address) || ''));
+  return match ? match[1].trim() : '';
+}
+
+function compactOpenMicSearchText(text) {
+  return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function spacedOpenMicSearchText(text) {
+  return String(text || '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function openMicMatchesSearch(mic, query) {
+  const compactQuery = compactOpenMicSearchText(query);
+  if (!compactQuery) return true;
+  if (compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactQuery)) return true;
+  const spacedQuery = ` ${spacedOpenMicSearchText(query)}`;
+  return ` ${spacedOpenMicSearchText(mic.name)}`.includes(spacedQuery)
+    || ` ${spacedOpenMicSearchText(mic.venue)}`.includes(spacedQuery);
+}
+
+function filterOpenMicsBySearch(mics, query) {
+  if (!compactOpenMicSearchText(query)) return mics;
+  return mics.filter((mic) => openMicMatchesSearch(mic, query));
+}
+
+function getOpenMicCityCounts(mics) {
+  const counts = new Map();
+  mics.forEach((mic) => {
+    const city = getOpenMicCity(mic);
+    if (city) counts.set(city, (counts.get(city) || 0) + 1);
+  });
+  return [...counts.entries()]
+    .map(([city, count]) => ({ city, count }))
+    .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city));
+}
+
+function getOpenMicSearchTitle(mics, query) {
+  const cities = [...new Set(mics.map((mic) => getOpenMicCity(mic)).filter(Boolean))];
+  const compactQuery = compactOpenMicSearchText(query);
+  return cities.length === 1 && compactQuery && compactOpenMicSearchText(cities[0]).startsWith(compactQuery)
+    ? cities[0]
+    : 'Search results';
+}
+
 function filterOpenMicsByType(mics, selectedType) {
   if (selectedType === 'all') return mics;
   return mics.filter((mic) => classifyOpenMicCategory(mic.micType) === selectedType);
