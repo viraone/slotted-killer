@@ -934,16 +934,46 @@ function openMicMatchesSearch(mic, query) {
   if (!compactQuery) return true;
   if (compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactQuery)) return true;
   const spacedQuery = ` ${spacedOpenMicSearchText(query)}`;
-  return ` ${spacedOpenMicSearchText(mic.name)}`.includes(spacedQuery)
-    || ` ${spacedOpenMicSearchText(mic.venue)}`.includes(spacedQuery);
+  return [mic.name, mic.venue, mic.address, mic.host, mic.micType]
+    .some((field) => ` ${spacedOpenMicSearchText(field)}`.includes(spacedQuery));
+}
+
+function stripOpenMicSearchState(query) {
+  const text = String(query || '').trim();
+  const stripped = text.replace(/[\s,]+(wa|wash|washington|or|oregon)\.?$/i, '').trim();
+  return compactOpenMicSearchText(stripped) ? stripped : text;
+}
+
+function isOpenMicSearchTypo(typed, target) {
+  if (typed.length < 4 || !target || typed === target) return false;
+  if (Math.abs(typed.length - target.length) > 1) return false;
+  let start = 0;
+  while (start < typed.length && start < target.length && typed[start] === target[start]) start += 1;
+  let endTyped = typed.length - 1;
+  let endTarget = target.length - 1;
+  while (endTyped >= start && endTarget >= start && typed[endTyped] === target[endTarget]) {
+    endTyped -= 1;
+    endTarget -= 1;
+  }
+  const leftTyped = endTyped - start + 1;
+  const leftTarget = endTarget - start + 1;
+  if (leftTyped <= 1 && leftTarget <= 1) return true;
+  return leftTyped === 2 && leftTarget === 2
+    && typed[start] === target[start + 1] && typed[start + 1] === target[start];
 }
 
 function filterOpenMicsBySearch(mics, query) {
-  const compactQuery = compactOpenMicSearchText(query);
+  const text = stripOpenMicSearchState(query);
+  const compactQuery = compactOpenMicSearchText(text);
   if (!compactQuery) return mics;
   const cityMatches = mics.filter((mic) => compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactQuery));
   if (cityMatches.length > 0) return cityMatches;
-  return mics.filter((mic) => openMicMatchesSearch(mic, query));
+  const wordMatches = mics.filter((mic) => openMicMatchesSearch(mic, text));
+  if (wordMatches.length > 0) return wordMatches;
+  const spacedQuery = ` ${spacedOpenMicSearchText(text)}`;
+  const noteMatches = mics.filter((mic) => ` ${spacedOpenMicSearchText(mic.notes)}`.includes(spacedQuery));
+  if (noteMatches.length > 0) return noteMatches;
+  return mics.filter((mic) => isOpenMicSearchTypo(compactQuery, compactOpenMicSearchText(getOpenMicCity(mic))));
 }
 
 function getOpenMicCityCounts(mics) {
@@ -959,10 +989,49 @@ function getOpenMicCityCounts(mics) {
 
 function getOpenMicSearchTitle(mics, query) {
   const cities = [...new Set(mics.map((mic) => getOpenMicCity(mic)).filter(Boolean))];
-  const compactQuery = compactOpenMicSearchText(query);
-  return cities.length === 1 && compactQuery && compactOpenMicSearchText(cities[0]).startsWith(compactQuery)
+  const compactQuery = compactOpenMicSearchText(stripOpenMicSearchState(query));
+  const compactCity = cities.length === 1 ? compactOpenMicSearchText(cities[0]) : '';
+  return compactCity && compactQuery && (compactCity.startsWith(compactQuery) || isOpenMicSearchTypo(compactQuery, compactCity))
     ? cities[0]
     : 'Search results';
+}
+
+function parseOpenMicSearchQuery(query) {
+  const dayWords = {
+    sunday: 'Sunday', sun: 'Sunday', monday: 'Monday', mon: 'Monday',
+    tuesday: 'Tuesday', tue: 'Tuesday', tues: 'Tuesday', wednesday: 'Wednesday', wed: 'Wednesday',
+    thursday: 'Thursday', thu: 'Thursday', thur: 'Thursday', thurs: 'Thursday',
+    friday: 'Friday', fri: 'Friday', saturday: 'Saturday', sat: 'Saturday',
+    today: 'today', tonight: 'today', tomorrow: 'tomorrow'
+  };
+  let day = '';
+  const kept = [];
+  String(query || '').trim().split(/\s+/).filter(Boolean).forEach((word) => {
+    const key = word.toLowerCase().replace(/[^a-z]/g, '');
+    const found = [key, key.replace(/s$/, '')].find((name) => Object.prototype.hasOwnProperty.call(dayWords, name));
+    if (found && !day) day = dayWords[found];
+    else kept.push(word);
+  });
+  const words = day ? kept.filter((word) => !/^(on|this)$/i.test(word)) : kept;
+  return { text: words.join(' '), day };
+}
+
+function filterOpenMicSearchEntriesByDay(entries, day, tomorrowLabel) {
+  if (day === 'today') return entries.filter((entry) => entry.isToday);
+  if (day === 'tomorrow') return entries.filter((entry) => Boolean(entry.dateLabel) && entry.dateLabel === tomorrowLabel);
+  return entries.filter((entry) => entry.dayName === day || Boolean(entry.mic.days && entry.mic.days[day]));
+}
+
+function planOpenMicSearch(allMics, rawQuery, buildEntries, tomorrowLabel) {
+  const parsed = parseOpenMicSearchQuery(rawQuery);
+  const compactRaw = compactOpenMicSearchText(stripOpenMicSearchState(rawQuery));
+  const namesCity = allMics.some((mic) => compactOpenMicSearchText(getOpenMicCity(mic)).startsWith(compactRaw));
+  if (parsed.day && !namesCity) {
+    const dayMics = compactOpenMicSearchText(parsed.text) ? filterOpenMicsBySearch(allMics, parsed.text) : allMics;
+    const dayEntries = filterOpenMicSearchEntriesByDay(buildEntries(dayMics), parsed.day, tomorrowLabel);
+    if (dayEntries.length > 0) return { query: parsed.text, day: parsed.day, entries: dayEntries };
+  }
+  return { query: rawQuery, day: '', entries: buildEntries(filterOpenMicsBySearch(allMics, rawQuery)) };
 }
 
 function getOpenMicCitySuggestions(cityCounts, query) {
