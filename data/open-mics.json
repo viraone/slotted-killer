@@ -2075,11 +2075,10 @@
     "name": "Elysian Brewing (Capitol Hill) – Open Mic Night",
     "venue": "Elysian Brewing Capitol Hill",
     "location": "1221 E Pike St, Seattle, WA 98122",
-    "timeSignupStart": "6pm/6:30pm",
+    "timeSignupStart": "6pm/6:30pm-10pm",
     "signupType": "in-person",
-    "signupDetails": "Sign ups at 6:00 PM.",
-    "showWhenInactive": true,
-    "monday": "REQ. ->",
+    "signupDetails": "Sign ups at 6:00 PM. Music kicks off around 6:30 PM, but slots are usually open if you come a bit later.",
+    "monday": "Yes",
     "tuesday": "no",
     "wednesday": "no",
     "thursday": "no",
@@ -2089,17 +2088,13 @@
     "priceForTime": "",
     "openMicType": "Mix Mic / Comedy allowed",
     "ageRequirement": "",
-    "requirementsInfo": "Open mic night: comedy, music, spoken word, all forms of expression welcome. 1st and 3rd Monday of the month. Sign ups at 6:00 PM, performances begin at 6:30 PM.",
+    "requirementsInfo": "Open mic night: comedy, music, spoken word, all forms of expression welcome. Every Monday, 6-10 PM. Sign ups at 6:00 PM, performances begin around 6:30 PM.",
     "contact": "https://www.instagram.com/elysianbrewing/",
     "webSignup": "",
-    "recurrenceText": "Every 1st & 3rd Monday",
+    "recurrenceText": "Every Monday",
     "recurrence": {
-      "type": "monthly-multiple-nth-weekdays",
-      "weekday": "Monday",
-      "nth": [
-        1,
-        3
-      ]
+      "type": "weekly",
+      "weekday": "Monday"
     },
     "latitude": 47.614047,
     "longitude": -122.31652
