@@ -426,13 +426,12 @@
       "type": "weekly",
       "weekday": "Tuesday",
       "skipDates": [
-        "2026-11-24",
         "2026-12-08",
         "2026-12-15"
       ],
       "additionalDates": [],
       "confirmedThrough": "2026-12-31",
-      "checkedAt": "2026-11-23"
+      "checkedAt": "2026-11-24"
     },
     "latitude": 47.62026,
     "longitude": -122.320449,
