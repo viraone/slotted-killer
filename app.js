@@ -1359,7 +1359,7 @@ function buildOpenMicSearchHeroTime(mic, date) {
   const dateLabel = date ? formatOpenMicSearchShortDate(date) : 'Date not posted yet';
   const startLabel = formatMinutesToClock(mic.startMinutes);
   if (!startLabel) {
-    return { time: 'TBD', detail: `Time not listed · ${dateLabel}` };
+    return { time: 'TBD', detail: 'Time not listed', dateLabel };
   }
   const [time, period] = startLabel.split(' ');
   const endLabel = formatMinutesToClock(mic.endMinutes);
@@ -1371,7 +1371,7 @@ function buildOpenMicSearchHeroTime(mic, date) {
       : `${endTime} ${endPeriod}`;
     detail = `${period} to ${shortEnd}`;
   }
-  return { time, detail: `${detail} · ${dateLabel}` };
+  return { time, detail, dateLabel };
 }
 
 function createOpenMicSearchDirectionsLink(mic) {
@@ -1735,7 +1735,12 @@ function renderOpenMicSearchFeaturedCard(entry, { highlightId = null, now = new 
   clock.textContent = hero.time;
   const timeDetail = document.createElement('span');
   timeDetail.className = 'open-mic-search-featured__time-detail';
-  timeDetail.textContent = hero.detail;
+  [hero.detail, hero.dateLabel].forEach((line) => {
+    const text = document.createElement('span');
+    text.className = 'open-mic-search-featured__time-line';
+    text.textContent = line;
+    timeDetail.append(text);
+  });
   timeRow.append(clock, timeDetail);
   card.append(timeRow);
 

@@ -676,9 +676,9 @@ details.addmic-card[open] .addmic-summary-chevron {
 
 .open-mic-search-featured__time {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 10px;
   margin-top: 16px;
 }
 
@@ -692,11 +692,19 @@ details.addmic-card[open] .addmic-summary-chevron {
 }
 
 .open-mic-search-featured__time-detail {
-  flex: 1 1 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
   color: #c9f9ce;
   font-size: 15px;
   font-weight: 700;
+  line-height: 1.2;
+}
+
+.open-mic-search-featured__time-line {
+  white-space: nowrap;
 }
 
 .open-mic-search-featured__name {
