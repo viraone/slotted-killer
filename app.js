@@ -532,13 +532,17 @@ function parseTimeStringToMinutes(text) {
 
 function parseSignupStartTimes(rawTime) {
   const text = String(rawTime || '').trim();
-  if (!text) return { signupMinutes: null, startMinutes: null };
+  if (!text) return { signupMinutes: null, startMinutes: null, endMinutes: null };
   const slashIndex = text.indexOf('/');
   const signupPart = slashIndex === -1 ? '' : text.slice(0, slashIndex);
   const startPart = slashIndex === -1 ? text : text.slice(slashIndex + 1);
+  const dashIndex = startPart.indexOf('-');
+  const startOnly = dashIndex === -1 ? startPart : startPart.slice(0, dashIndex);
+  const endOnly = dashIndex === -1 ? '' : startPart.slice(dashIndex + 1);
   const signupMinutes = parseTimeStringToMinutes(signupPart);
-  const startMinutes = parseTimeStringToMinutes(startPart) ?? signupMinutes;
-  return { signupMinutes, startMinutes };
+  const startMinutes = parseTimeStringToMinutes(startOnly) ?? signupMinutes;
+  const endMinutes = parseTimeStringToMinutes(endOnly);
+  return { signupMinutes, startMinutes, endMinutes };
 }
 
 // Hosts hand us either a link or a phone number. Links open in a new tab and
@@ -580,7 +584,7 @@ function normalizeOpenMicRecord(record) {
   if (!name) return null;
 
   const rawTime = String(record.timeSignupStart || '').trim();
-  const { signupMinutes, startMinutes } = parseSignupStartTimes(rawTime);
+  const { signupMinutes, startMinutes, endMinutes } = parseSignupStartTimes(rawTime);
 
   const days = {};
   OPEN_MIC_DAY_NAMES.forEach((day) => {
@@ -603,6 +607,7 @@ function normalizeOpenMicRecord(record) {
     rawTime,
     signupMinutes,
     startMinutes,
+    endMinutes,
     days,
     recurrence: record.recurrence && typeof record.recurrence === 'object' && !Array.isArray(record.recurrence)
       ? {
@@ -1546,7 +1551,11 @@ function getOpenMicReachability(mic, travelEstimate, currentSeattleMinutes) {
 
 function buildOpenMicTimeLabel(mic) {
   if (mic.name === 'Spice of Life Variety Open Mic') {
-    return '6:00 PM - Midnight';
+    const startLabel = formatMinutesToClock(mic.startMinutes);
+    if (!startLabel) return 'Time not listed';
+    const endLabel = formatMinutesToClock(mic.endMinutes);
+    if (endLabel) return `${startLabel} - ${endLabel}`;
+    return `Start ${startLabel}`;
   }
   const startLabel = formatMinutesToClock(mic.startMinutes);
   if (startLabel) return `Start ${startLabel}`;
