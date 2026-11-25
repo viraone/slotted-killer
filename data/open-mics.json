@@ -1288,7 +1288,19 @@
     "webSignup": "",
     "latitude": 47.669044,
     "longitude": -122.365986,
-    "host": "Rotating hosts"
+    "host": "Rotating hosts",
+    "featureSchedule": {
+      "2026-11-26": "Alexa Hansen"
+    },
+    "hostSchedule": {
+      "2026-11-26": "Lucy Tollefson"
+    },
+    "holidayConfirmed": {
+      "2026-11-26": {
+        "confirmedOn": "2026-11-25",
+        "source": "venue-post"
+      }
+    }
   },
   {
     "id": "cornercopia-comedy-club-289-nw-chehalis-ave-chehalis-wa-98532",
@@ -1525,7 +1537,10 @@
     "recurrenceText": "Last Thursday of the Month",
     "recurrence": {
       "type": "monthly-last-weekday",
-      "weekday": "Thursday"
+      "weekday": "Thursday",
+      "skipDates": [
+        "2026-11-26"
+      ]
     },
     "latitude": 47.61462,
     "longitude": -122.31825
