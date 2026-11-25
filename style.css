@@ -1770,6 +1770,77 @@ body.trip-intel-open {
   }
 }
 
+@media (max-width: 640px) {
+  .open-mic-search-featured {
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: none;
+  }
+
+  .open-mic-search-countdown {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .open-mic-search-price {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .open-mic-search-round {
+    width: 36px;
+    height: 36px;
+  }
+
+  .open-mic-search-round svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .open-mic-search-featured__time {
+    margin-top: 8px;
+  }
+
+  .open-mic-search-featured__clock {
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .open-mic-search-featured__time-detail {
+    font-size: 13px;
+  }
+
+  .open-mic-search-featured__name {
+    font-size: 17px;
+    margin-top: 8px;
+  }
+
+  .open-mic-search-featured__venue,
+  .open-mic-search-featured__host {
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .open-mic-search-actions {
+    margin-top: 12px;
+  }
+
+  .open-mic-search-directions {
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  .open-mic-search-directions svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .open-mic-search-calendar {
+    width: 42px;
+    height: 42px;
+  }
+}
+
 #lineup-section {
   min-height: 100vh;
   padding: clamp(12px, 1.8vw, 30px);
