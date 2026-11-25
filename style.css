@@ -434,6 +434,53 @@ details.addmic-card[open] .addmic-summary-chevron {
   scroll-margin-top: 24px;
 }
 
+/* Holiday warning above the day list and search results. Amber reads as a
+   caution against the dark list without competing with the green "confirmed"
+   badge or the red "off" badge. */
+.open-mic-holiday-banner {
+  padding: 12px 14px;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(120, 53, 15, 0.55), rgba(24, 24, 27, 0.9));
+}
+
+.open-mic-holiday-banner__title {
+  color: #fef3c7;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.open-mic-holiday-banner__text {
+  margin-top: 2px;
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.open-mic-holiday-note {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.open-mic-holiday-note--confirmed {
+  color: #86efac;
+}
+
+.open-mic-holiday-note--unconfirmed {
+  color: #fde68a;
+}
+
+.open-mic-holiday-note__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .open-mic-card--active {
   border-color: #00C805 !important;
   border-left-width: 4px !important;
@@ -766,6 +813,12 @@ details.addmic-card[open] .addmic-summary-chevron {
   color: #f5d0fe;
 }
 
+.open-mic-search-status__chip--confirmed {
+  border: 1px solid rgba(0, 200, 5, 0.55);
+  background: rgba(0, 200, 5, 0.12);
+  color: #86efac;
+}
+
 .open-mic-search-actions {
   display: flex;
   flex-wrap: wrap;
@@ -934,6 +987,24 @@ details.addmic-card[open] .addmic-summary-chevron {
   color: #00c805;
   font-size: 13px;
   font-weight: 800;
+}
+
+.open-mic-search-details__holiday {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.open-mic-search-details__holiday--confirmed {
+  color: #86efac;
+}
+
+.open-mic-search-details__holiday--unconfirmed {
+  color: #fde68a;
+}
+
+.open-mic-search-details__holiday--off {
+  color: #fecaca;
 }
 
 .open-mic-search-details__venue,

@@ -600,6 +600,21 @@ function normalizeOpenMicRecord(record) {
   const latitude = Number(record.latitude ?? coordinateOverride?.latitude);
   const longitude = Number(record.longitude ?? coordinateOverride?.longitude);
 
+  // Per-holiday confirmations keyed YYYY-MM-DD. Checked inline because the
+  // vm-based tests load this function on its own, without extra helpers. A
+  // malformed entry is dropped rather than shown as a confirmation.
+  const holidayConfirmed = {};
+  if (record.holidayConfirmed && typeof record.holidayConfirmed === 'object' && !Array.isArray(record.holidayConfirmed)) {
+    Object.entries(record.holidayConfirmed).forEach(([holidayDate, entry]) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(holidayDate)) return;
+      if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return;
+      const confirmedOn = typeof entry.confirmedOn === 'string' ? entry.confirmedOn.trim() : '';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(confirmedOn)) return;
+      if (entry.source !== 'host' && entry.source !== 'venue-post') return;
+      holidayConfirmed[holidayDate] = { confirmedOn, source: entry.source };
+    });
+  }
+
   return {
     id: String(record.id || '').trim(),
     name,
@@ -631,6 +646,7 @@ function normalizeOpenMicRecord(record) {
     signupType: String(record.signupType || '').trim().toLowerCase(),
     signupDetails: String(record.signupDetails || record.signupInstructions || '').trim(),
     showWhenInactive: record.showWhenInactive === true,
+    holidayConfirmed,
     price: String(record.priceForTime || '').trim(),
     micType: String(record.openMicType || '').trim(),
     ageRequirement: String(record.ageRequirement || '').trim(),
@@ -769,6 +785,22 @@ function getSeattleNow(date = new Date()) {
     dayOfMonth: Number(values.day),
     minutesSinceMidnight: Number(values.hour) * 60 + Number(values.minute)
   };
+}
+
+// The five holidays the open mic list labels. Thanksgiving is the fourth
+// Thursday of November, which always falls on Nov 22-28. The check reads the
+// Seattle calendar date, so a late-night page visit cannot roll the holiday.
+function getOpenMicHoliday(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+  const { month, dayOfMonth, dayName } = getSeattleNow(date);
+  if (month === 11 && dayName === 'Thursday' && dayOfMonth >= 22 && dayOfMonth <= 28) {
+    return { name: 'Thanksgiving' };
+  }
+  if (month === 12 && dayOfMonth === 24) return { name: 'Christmas Eve' };
+  if (month === 12 && dayOfMonth === 25) return { name: 'Christmas Day' };
+  if (month === 12 && dayOfMonth === 31) return { name: "New Year's Eve" };
+  if (month === 1 && dayOfMonth === 1) return { name: "New Year's Day" };
+  return null;
 }
 
 function getWeekdayOccurrenceInMonth(dayOfMonth) {
@@ -1412,10 +1444,23 @@ function buildOpenMicSearchMetaLine(mic, date) {
   return parts.join(' · ');
 }
 
-function renderOpenMicSearchStatusChips(mic, entry, seattleNow) {
+function renderOpenMicSearchStatusChips(mic, entry, seattleNow, now = null) {
   const chips = [];
+  const entryDate = entry.date instanceof Date && !Number.isNaN(entry.date.getTime()) ? entry.date : null;
+  const entryHoliday = entryDate ? getOpenMicHoliday(entryDate) : null;
+  const holidayStatus = entryHoliday ? getOpenMicHolidayStatus(mic, entryDate) : null;
+  const todayHoliday = getOpenMicHoliday(now);
   if (openMicSearchWasSkippedToday(mic, seattleNow)) {
-    chips.push({ label: 'Skipped today', tone: 'danger' });
+    chips.push({
+      label: todayHoliday ? `Off for ${todayHoliday.name}` : 'Skipped today',
+      tone: 'danger'
+    });
+  } else if (holidayStatus === 'off') {
+    chips.push({ label: `Off for ${entryHoliday.name}`, tone: 'danger' });
+  } else if (holidayStatus === 'confirmed') {
+    chips.push({ label: '✓ Confirmed on', tone: 'confirmed' });
+  } else if (holidayStatus === 'unconfirmed') {
+    chips.push({ label: 'Not confirmed', tone: 'warn' });
   } else if (!entry.date) {
     chips.push({ label: 'Schedule not posted yet', tone: 'warn' });
   }
@@ -1462,6 +1507,8 @@ function renderOpenMicSearchTravelBadge(mic) {
 
 function renderOpenMicSearchDetails(mic, date, { includePrimaryActions = true } = {}) {
   const validDate = date instanceof Date && !Number.isNaN(date.getTime()) ? date : null;
+  const holiday = validDate ? getOpenMicHoliday(validDate) : null;
+  const holidayStatus = holiday ? getOpenMicHolidayStatus(mic, validDate) : null;
   const details = document.createElement('div');
   details.className = 'open-mic-search-details';
 
@@ -1505,11 +1552,48 @@ function renderOpenMicSearchDetails(mic, date, { includePrimaryActions = true } 
     details.append(meta);
   }
 
-  if (validDate && mic.recurrence && mic.recurrence.type !== 'weekly') {
+  if (validDate && mic.recurrence && mic.recurrence.type !== 'weekly'
+    && (!holiday || holidayStatus === 'confirmed')) {
     const confirmed = document.createElement('p');
     confirmed.className = 'open-mic-search-details__confirmed';
     confirmed.textContent = '✓ Happening on this date';
     details.append(confirmed);
+  }
+
+  if (holiday && holidayStatus) {
+    const holidayLine = document.createElement('p');
+    holidayLine.className = `open-mic-search-details__holiday open-mic-search-details__holiday--${holidayStatus}`;
+    if (holidayStatus === 'confirmed') {
+      const confirmation = mic.holidayConfirmed?.[formatSeattleIsoDate(validDate)];
+      const checkedLabel = formatCheckedAtDate(confirmation?.confirmedOn);
+      const confirmationLabel = confirmation?.source === 'venue-post'
+        ? 'Venue posted it · checked'
+        : 'Host confirmed';
+      holidayLine.textContent = checkedLabel
+        ? `✓ Confirmed on · ${confirmationLabel} ${checkedLabel}`
+        : '✓ Confirmed on';
+    } else if (holidayStatus === 'off') {
+      holidayLine.textContent = `Off for ${holiday.name}`;
+    } else {
+      holidayLine.textContent = 'Not confirmed · Ask before you go';
+      const contactHref = String(mic.contact || '');
+      if (/^https?:\/\//i.test(contactHref)) {
+        const link = document.createElement('a');
+        link.href = contactHref;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'open-mic-holiday-note__link';
+        link.textContent = 'Message host';
+        holidayLine.append(document.createTextNode(' · '), link);
+      } else if (/^tel:/i.test(contactHref)) {
+        const link = document.createElement('a');
+        link.href = contactHref;
+        link.className = 'open-mic-holiday-note__link';
+        link.textContent = 'Call host';
+        holidayLine.append(document.createTextNode(' · '), link);
+      }
+    }
+    details.append(holidayLine);
   }
 
   if (mic.address) {
@@ -1763,7 +1847,7 @@ function renderOpenMicSearchFeaturedCard(entry, { highlightId = null, now = new 
     card.append(line);
   }
 
-  const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now));
+  const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now), now);
   if (status) card.append(status);
 
   const actions = document.createElement('div');
@@ -1823,7 +1907,7 @@ function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Dat
   meta.className = 'open-mic-search-row__meta';
   meta.textContent = buildOpenMicSearchMetaLine(mic, validDate);
   body.append(name, meta);
-  const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now));
+  const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now), now);
   if (status) body.append(status);
 
   const chevron = document.createElement('span');
@@ -2036,6 +2120,13 @@ function renderOpenMicSearchResults(allMics, now) {
     return;
   }
 
+  const holidayEntry = entries.find(({ date }) => getOpenMicHoliday(date));
+  if (holidayEntry) {
+    const holiday = getOpenMicHoliday(holidayEntry.date);
+    const banner = buildOpenMicHolidayBanner(holiday, holidayEntry.date, now);
+    if (banner) openMicMapList.append(banner);
+  }
+
   const renderedDayNames = new Set();
   entries.forEach((entry, index) => {
     let scrollTarget = false;
@@ -2064,12 +2155,12 @@ function filterOpenMicsByType(mics, selectedType) {
   return mics.filter((mic) => classifyOpenMicCategory(mic.micType) === selectedType);
 }
 
-function openMicOccursOnSeattleDate(mic, seattleNow) {
+function openMicOccursOnSeattleDate(mic, seattleNow, { ignoreSkipDates = false, ignoreConfirmedThrough = false } = {}) {
   const recurrence = mic.recurrence;
   const dateKey = `${seattleNow.year}-${String(seattleNow.month).padStart(2, '0')}-${String(seattleNow.dayOfMonth).padStart(2, '0')}`;
 
   // A per-date skip beats every kind of recurrence, including a one-off date.
-  if (recurrence && Array.isArray(recurrence.skipDates) && recurrence.skipDates.includes(dateKey)) {
+  if (!ignoreSkipDates && recurrence && Array.isArray(recurrence.skipDates) && recurrence.skipDates.includes(dateKey)) {
     return false;
   }
 
@@ -2080,7 +2171,7 @@ function openMicOccursOnSeattleDate(mic, seattleNow) {
     && /^\d{4}-\d{2}-\d{2}$/.test(recurrence.confirmedThrough.trim())
     ? recurrence.confirmedThrough.trim()
     : null;
-  if (confirmedThrough && dateKey > confirmedThrough) return false;
+  if (!ignoreConfirmedThrough && confirmedThrough && dateKey > confirmedThrough) return false;
 
   if (!recurrence) return Boolean(mic.days[seattleNow.dayName]);
 
@@ -2136,6 +2227,60 @@ function openMicOccursOnSeattleDate(mic, seattleNow) {
     default:
       return false;
   }
+}
+
+// Labels a mic's status on a holiday. It is null on a normal day, and also on
+// a holiday the mic would not normally run anyway. Recurrence is checked with
+// skipDates and confirmedThrough ignored, so a skipped holiday is "off" rather
+// than invisible, and an unposted venue calendar is "unconfirmed" rather than
+// a cancellation.
+function getOpenMicHolidayStatus(mic, date) {
+  const holiday = getOpenMicHoliday(date);
+  if (!holiday || !mic || typeof mic !== 'object') return null;
+  const seattleNow = getSeattleNow(date);
+  const dateKey = `${seattleNow.year}-${String(seattleNow.month).padStart(2, '0')}-${String(seattleNow.dayOfMonth).padStart(2, '0')}`;
+  if (!openMicOccursOnSeattleDate(mic, seattleNow, { ignoreSkipDates: true, ignoreConfirmedThrough: true })) {
+    return null;
+  }
+
+  // A skip wins even when the host also marked the holiday confirmed.
+  const skipDates = Array.isArray(mic.recurrence?.skipDates) ? mic.recurrence.skipDates : [];
+  if (skipDates.includes(dateKey)) return 'off';
+
+  const confirmed = mic.holidayConfirmed
+    && typeof mic.holidayConfirmed === 'object'
+    && !Array.isArray(mic.holidayConfirmed)
+    ? mic.holidayConfirmed[dateKey]
+    : null;
+  if (confirmed && typeof confirmed === 'object' && !Array.isArray(confirmed)
+    && typeof confirmed.confirmedOn === 'string'
+    && /^\d{4}-\d{2}-\d{2}$/.test(confirmed.confirmedOn.trim())
+    && (confirmed.source === 'host' || confirmed.source === 'venue-post')) {
+    return 'confirmed';
+  }
+  return 'unconfirmed';
+}
+
+// The warning above the list on a holiday. It is a plain element rather than a
+// permanent slot in index.html so every render starts from a clean list.
+function buildOpenMicHolidayBanner(holiday, date, now = new Date()) {
+  if (!holiday || !(date instanceof Date) || Number.isNaN(date.getTime())) return null;
+  const target = getSeattleNow(date);
+  const today = getSeattleNow(now);
+  const isToday = target.year === today.year
+    && target.month === today.month
+    && target.dayOfMonth === today.dayOfMonth;
+  const banner = document.createElement('section');
+  banner.className = 'open-mic-holiday-banner';
+  banner.setAttribute('role', 'status');
+  const title = document.createElement('p');
+  title.className = 'open-mic-holiday-banner__title';
+  title.textContent = isToday ? `Today is ${holiday.name}` : `${target.dayName} is ${holiday.name}`;
+  const text = document.createElement('p');
+  text.className = 'open-mic-holiday-banner__text';
+  text.textContent = 'Many mics cancel. Check the label before you drive.';
+  banner.append(title, text);
+  return banner;
 }
 
 // A locked preview card is for a mic that normally runs on the selected day
@@ -2944,7 +3089,14 @@ function setMicActionContent(button, label, { leading = '', trailing = '' } = {}
 }
 
 function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = null, upcomingDate = null, selectedDateObj = null, isUnconfirmed = false, isSearchResult = false) {
-  const isLockedPreview = Boolean(upcomingDate) || isUnconfirmed;
+  const selectedHoliday = selectedDateObj instanceof Date && !Number.isNaN(selectedDateObj.getTime())
+    ? getOpenMicHoliday(selectedDateObj)
+    : null;
+  const holidayStatus = selectedHoliday ? getOpenMicHolidayStatus(mic, selectedDateObj) : null;
+  const holidayConfirmation = holidayStatus === 'confirmed'
+    ? mic.holidayConfirmed?.[formatSeattleIsoDate(selectedDateObj)]
+    : null;
+  const isLockedPreview = Boolean(upcomingDate) || isUnconfirmed || holidayStatus === 'off';
   const card = document.createElement('article');
   card.id = `open-mic-card-${mic.id}`;
   card.tabIndex = -1;
@@ -2962,14 +3114,28 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   badges.className = 'mb-2 flex min-h-5 flex-wrap items-center gap-1.5';
 
   if (isLockedPreview) {
-    if (isUnconfirmed) {
+    if (holidayStatus === 'off') {
+      // The mic normally runs this holiday but the host marked it off. Keep the
+      // locked-preview styling and say which holiday, then when it returns.
+      const badge = document.createElement('span');
+      badge.className = 'inline-block rounded-lg border border-red-500 bg-red-600/30 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-red-200 shadow-sm';
+      badge.textContent = `Off for ${selectedHoliday.name}`;
+      badges.append(badge);
+
+      if (upcomingDate) {
+        const nextBadge = document.createElement('span');
+        nextBadge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
+        nextBadge.textContent = `Next one: ${formatUpcomingOpenMicDate(upcomingDate)}`;
+        badges.append(nextBadge);
+      }
+    } else if (!holidayStatus && isUnconfirmed) {
       // Beyond the venue's posted calendar this is not a cancellation, so one
       // amber note replaces the red "not happening" and "next one" badges.
       const badge = document.createElement('span');
       badge.className = 'inline-block rounded-lg border border-amber-400/70 bg-amber-500/15 px-3.5 py-2 text-sm font-black uppercase tracking-wider text-amber-200 shadow-sm';
       badge.textContent = 'Schedule not posted yet - check the venue';
       badges.append(badge);
-    } else {
+    } else if (!holidayStatus) {
       const badge = document.createElement('span');
       // Monthly mics have odd schedules, so the card just says whether the mic is
       // on for the selected day rather than quoting a date the reader has to check.
@@ -2989,7 +3155,7 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
     badge.textContent = 'Next Open Mic';
     badges.append(badge);
 
-    if (isToday) {
+    if (isToday && (!selectedHoliday || holidayStatus === 'confirmed')) {
       const todayBadge = document.createElement('span');
       todayBadge.className = 'inline-block rounded border border-zinc-700 bg-zinc-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-300';
       todayBadge.textContent = 'Happening Today';
@@ -2999,11 +3165,55 @@ function renderOpenMicCard(mic, isNext, isToday = true, currentSeattleMinutes = 
   card.append(badges);
 
   const isNonWeeklyRecurring = Boolean(mic.recurrence && mic.recurrence.type !== 'weekly');
-  if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj) {
+  if (!isLockedPreview && isNonWeeklyRecurring && selectedDateObj
+    && (!selectedHoliday || holidayStatus === 'confirmed')) {
     const confirmBadge = document.createElement('span');
     confirmBadge.className = 'inline-block rounded border border-[#00C805]/50 bg-[#00C805]/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#00C805]';
     confirmBadge.textContent = isToday ? '✓ Happening tonight!' : isSearchResult ? '✓ Happening on this date!' : `✓ Happening this ${getSeattleNow(selectedDateObj).dayName}!`;
     badges.append(confirmBadge);
+  }
+
+  if (selectedHoliday && holidayStatus === 'confirmed') {
+    const badge = document.createElement('span');
+    badge.className = 'inline-block rounded border border-[#00C805]/50 bg-[#00C805]/10 px-2.5 py-1 text-xs font-black uppercase tracking-wider text-[#00C805]';
+    badge.textContent = '✓ Confirmed on';
+    badges.append(badge);
+
+    const note = document.createElement('p');
+    note.className = 'open-mic-holiday-note open-mic-holiday-note--confirmed';
+    const checkedLabel = formatCheckedAtDate(holidayConfirmation?.confirmedOn);
+    if (holidayConfirmation?.source === 'venue-post') {
+      note.textContent = checkedLabel ? `Venue posted it · checked ${checkedLabel}` : 'Venue posted it';
+    } else {
+      note.textContent = checkedLabel ? `Host confirmed ${checkedLabel}` : 'Host confirmed';
+    }
+    card.append(note);
+  } else if (selectedHoliday && holidayStatus === 'unconfirmed') {
+    const badge = document.createElement('span');
+    badge.className = 'inline-block rounded border border-amber-400/70 bg-amber-500/15 px-2.5 py-1 text-xs font-black uppercase tracking-wider text-amber-200';
+    badge.textContent = 'Not confirmed';
+    badges.append(badge);
+
+    const note = document.createElement('p');
+    note.className = 'open-mic-holiday-note open-mic-holiday-note--unconfirmed';
+    note.append(document.createTextNode('Ask before you go'));
+    const contactHref = String(mic.contact || '');
+    if (/^https?:\/\//i.test(contactHref)) {
+      const link = document.createElement('a');
+      link.href = contactHref;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'open-mic-holiday-note__link';
+      link.textContent = 'Message host';
+      note.append(document.createTextNode(' · '), link);
+    } else if (/^tel:/i.test(contactHref)) {
+      const link = document.createElement('a');
+      link.href = contactHref;
+      link.className = 'open-mic-holiday-note__link';
+      link.textContent = 'Call host';
+      note.append(document.createTextNode(' · '), link);
+    }
+    card.append(note);
   }
 
   const headingRow = document.createElement('div');
@@ -3351,6 +3561,10 @@ async function renderOpenMicMapView() {
     }
 
     resetOpenMicSearchChrome();
+    const selectedHoliday = getOpenMicHoliday(selectedDate.date);
+    if (selectedHoliday) {
+      openMicMapList.append(buildOpenMicHolidayBanner(selectedHoliday, selectedDate.date, now));
+    }
     const { dayName, todays, nextMic, lastMic } = selectOpenMicsForSeattleDate(
       allMics,
       selectedDate.isToday ? now : selectedDate.date,
@@ -3359,8 +3573,15 @@ async function renderOpenMicMapView() {
     lastRenderedOpenMicNextId = nextMic ? nextMic.id : null;
     activeOpenMicId = nextMic ? nextMic.id : null;
     const selectedSeattleDate = getSeattleNow(selectedDate.date);
+    // A skipped holiday still earns a visible card, even when the mic has
+    // showWhenInactive turned off. It is never counted with today's mics.
+    const holidayOffMics = selectedHoliday
+      ? allMics.filter((mic) => getOpenMicHolidayStatus(mic, selectedDate.date) === 'off')
+      : [];
+    const holidayOffIds = new Set(holidayOffMics.map((mic) => mic.id));
     const upcomingPreviews = allMics
       .filter((mic) => openMicIsPreviewCandidateForDate(mic, selectedSeattleDate))
+      .filter((mic) => !holidayOffIds.has(mic.id))
       .map((mic) => ({
         mic,
         date: getNextOpenMicOccurrenceDate(mic, selectedDate.date),
@@ -3380,7 +3601,7 @@ async function renderOpenMicMapView() {
     renderOpenMicTonightPanel(todays, nextMic, lastMic);
     refreshOpenMicActiveHighlight();
 
-    if (todays.length === 0 && upcomingPreviews.length === 0) {
+    if (todays.length === 0 && upcomingPreviews.length === 0 && holidayOffMics.length === 0) {
       const dayPhrase = selectedDate.isToday ? 'today' : 'this day';
       openMicMapStatus.textContent = selectedOpenMicType === 'all'
         ? `No open mics listed for ${dayPhrase}.`
@@ -3394,9 +3615,15 @@ async function renderOpenMicMapView() {
       openMicMapStatus.hidden = false;
     }
 
+    const holidayOffCards = holidayOffMics.map((mic) => ({
+      mic,
+      upcomingDate: getNextOpenMicOccurrenceDate(mic, selectedDate.date),
+      isUnconfirmed: false
+    }));
     const cardsToRender = [
       ...todays.map((mic) => ({ mic, upcomingDate: null, isUnconfirmed: false })),
-      ...upcomingPreviews.map(({ mic, date, isUnconfirmed }) => ({ mic, upcomingDate: date, isUnconfirmed }))
+      ...upcomingPreviews.map(({ mic, date, isUnconfirmed }) => ({ mic, upcomingDate: date, isUnconfirmed })),
+      ...holidayOffCards
     ].sort((a, b) => {
       const timeA = a.mic.startMinutes ?? a.mic.signupMinutes ?? 9999;
       const timeB = b.mic.startMinutes ?? b.mic.signupMinutes ?? 9999;
