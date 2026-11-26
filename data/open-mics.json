@@ -1268,7 +1268,14 @@
     "webSignup": "",
     "latitude": 47.755732,
     "longitude": -122.152678,
-    "host": "Rotating hosts"
+    "host": "Rotating hosts",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday",
+      "skipDates": [
+        "2026-11-26"
+      ]
+    }
   },
   {
     "id": "ballard-mandarin-5500-8th-ave-nw-seattle-wa-98107",
