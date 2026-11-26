@@ -2114,5 +2114,41 @@
     },
     "latitude": 47.614047,
     "longitude": -122.31652
+  },
+  {
+    "id": "neighbours-nightclub-1509-broadway-seattle-wa-98122",
+    "name": "Dollhouse Open Mic",
+    "venue": "Neighbours Nightclub",
+    "location": "1509 Broadway, Seattle, WA 98122",
+    "timeSignupStart": "online/10pm",
+    "signupType": "online",
+    "signupDetails": "RSVP by email to claim a spot. 10 spots a week, first come, first served. Doors 9pm, show 10pm.",
+    "monday": "no",
+    "tuesday": "no",
+    "wednesday": "no",
+    "thursday": "Yes",
+    "friday": "no",
+    "saturday": "no",
+    "sunday": "no",
+    "priceForTime": "Free",
+    "openMicType": "Variety / All Talents Welcome",
+    "ageRequirement": "21+",
+    "requirementsInfo": "All talents welcome, comedy included. Sets are 6 minutes max. No cover. No show on holidays.",
+    "host": "",
+    "contact": "",
+    "webSignup": "",
+    "recurrenceText": "Every Thursday",
+    "recurrence": {
+      "type": "weekly",
+      "weekday": "Thursday",
+      "skipDates": [
+        "2026-11-26",
+        "2027-11-11",
+        "2027-11-25"
+      ]
+    },
+    "showWhenInactive": true,
+    "latitude": 47.614216,
+    "longitude": -122.320869
   }
 ]
