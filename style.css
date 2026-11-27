@@ -2092,3 +2092,8 @@ body.verification-mode main {
 #admin-section .addmic-card__subtitle {
   color: #52525b;
 }
+
+.open-mic-search-day-heading { display: flex; align-items: baseline; gap: 10px; padding: 8px 4px 0; }
+.open-mic-search-day-heading::after { content: ''; flex: 1; height: 1px; align-self: center; background: #27272a; }
+.open-mic-search-day-heading-name { margin: 0; color: #00C805; font-size: 22px; font-weight: 900; letter-spacing: 0.04em; line-height: 1.2; text-transform: uppercase; }
+.open-mic-search-day-heading-detail { color: #a1a1aa; font-size: 14px; font-weight: 600; white-space: nowrap; }

@@ -381,7 +381,7 @@ openMicLocationButton.addEventListener('click', () => {
     userOpenMicLocation = null;
     openMicReachabilityRequests.clear();
     buttonText.textContent = 'Show Distance';
-    openMicLocationStatus.textContent = '👆 Tap the green button to see how far each mic is.';
+    openMicLocationStatus.textContent = '👆 Tap Show Distance to see how far each mic is.';
     renderOpenMicMapView();
     return;
   }
@@ -1211,6 +1211,41 @@ function formatOpenMicSearchCountdownLabel(date, now = new Date()) {
   return `Next up · in ${daysAway} days`;
 }
 
+function buildOpenMicSearchDayHeading(date, now = new Date()) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return { day: 'Date not posted', detail: '' };
+  }
+  const seattle = getSeattleNow(date);
+  const monthDay = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    month: 'short',
+    day: 'numeric'
+  }).format(date);
+  const target = getSeattleNow(date);
+  const today = getSeattleNow(now);
+  const targetUtc = Date.UTC(target.year, target.month - 1, target.dayOfMonth);
+  const todayUtc = Date.UTC(today.year, today.month - 1, today.dayOfMonth);
+  const daysAway = Math.round((targetUtc - todayUtc) / 86400000);
+  const when = daysAway <= 0 ? 'Today' : daysAway === 1 ? 'Tomorrow' : `in ${daysAway} days`;
+  return { day: seattle.dayName, detail: `${monthDay} · ${when}` };
+}
+
+function renderOpenMicSearchDayHeading(heading) {
+  const wrap = document.createElement('div');
+  wrap.className = 'open-mic-search-day-heading';
+  const name = document.createElement('h3');
+  name.className = 'open-mic-search-day-heading-name';
+  name.textContent = heading.day;
+  wrap.append(name);
+  if (heading.detail) {
+    const detail = document.createElement('span');
+    detail.className = 'open-mic-search-day-heading-detail';
+    detail.textContent = heading.detail;
+    wrap.append(detail);
+  }
+  return wrap;
+}
+
 function getOpenMicSearchStartMinutes(mic) {
   const minutes = mic ? (mic.startMinutes ?? mic.signupMinutes) : null;
   return Number.isFinite(minutes) ? minutes : null;
@@ -1783,18 +1818,7 @@ function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Dat
   name.textContent = mic.name;
   const meta = document.createElement('span');
   meta.className = 'open-mic-search-row__meta';
-  let metaText = buildOpenMicSearchMetaLine(mic, validDate);
-  if (isNextUp) {
-    if (validDate) {
-      const label = formatOpenMicSearchCountdownLabel(validDate, now);
-      if (label === 'Today' || label === 'Tomorrow') {
-        metaText += ` · ${label}`;
-      } else {
-        metaText += ' · Next up';
-      }
-    }
-  }
-  meta.textContent = metaText;
+  meta.textContent = [mic.micType, mic.price, mic.ageRequirement].filter(Boolean).join(' · ');
   body.append(name, meta);
   const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now), now);
   if (status) body.append(status);
@@ -2008,47 +2032,10 @@ function renderOpenMicSearchResults(allMics, now) {
     if (!dayNamesInOrder.includes(dayName)) dayNamesInOrder.push(dayName);
   });
   const searchCity = cityTitle === 'Search results' ? '' : cityTitle;
-  buildOpenMicSearchCountSentence(matches.length, dayNamesInOrder, searchCity).forEach((part) => {
-    if (part.type === 'count') {
-      const count = document.createElement('span');
-      count.className = 'open-mic-search-count';
-      count.textContent = part.text;
-      openMicMapDateLabel.append(count);
-      return;
-    }
-    if (part.type === 'space') {
-      openMicMapDateLabel.append(document.createTextNode(' '));
-      return;
-    }
-    if (part.type === 'separator') {
-      const separator = document.createElement('span');
-      separator.className = 'open-mic-search-day-sep';
-      separator.textContent = part.text;
-      openMicMapDateLabel.append(separator);
-      return;
-    }
-    if (part.type !== 'day') return;
-    const pill = document.createElement('button');
-    pill.type = 'button';
-    pill.className = 'open-mic-search-day-pill';
-    pill.textContent = part.name;
-    pill.title = `Jump to ${part.name} results`;
-    pill.addEventListener('click', () => {
-      openMicMapList.querySelector(`[data-open-mic-search-day="${part.name}"]`)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    if (!part.commaAfter) {
-      openMicMapDateLabel.append(pill);
-      return;
-    }
-    const group = document.createElement('span');
-    group.className = 'open-mic-search-day-group';
-    const comma = document.createElement('span');
-    comma.className = 'open-mic-search-day-sep';
-    comma.textContent = ',';
-    group.append(pill, comma);
-    openMicMapDateLabel.append(group);
-  });
+  const count = document.createElement('span');
+  count.className = 'open-mic-search-count';
+  count.textContent = buildOpenMicSearchCountSentence(matches.length, [], searchCity)[0].text;
+  openMicMapDateLabel.append(count);
 
   openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
   if (openMicMapEyebrow) openMicMapEyebrow.textContent = 'Open Mic Search';
@@ -2091,6 +2078,7 @@ function renderOpenMicSearchResults(allMics, now) {
   }
 
   const renderedDayNames = new Set();
+  let previousHeadingKey = '';
   entries.forEach((entry, index) => {
     let scrollTarget = false;
     if (entry.date) {
@@ -2099,6 +2087,12 @@ function renderOpenMicSearchResults(allMics, now) {
         renderedDayNames.add(dayName);
         scrollTarget = true;
       }
+    }
+    const heading = buildOpenMicSearchDayHeading(entry.date, now);
+    const headingKey = `${heading.day}|${heading.detail}`;
+    if (headingKey !== previousHeadingKey) {
+      previousHeadingKey = headingKey;
+      openMicMapList.append(renderOpenMicSearchDayHeading(heading));
     }
     const options = { highlightId, now, scrollTarget, isNextUp: index === 0 };
     openMicMapList.append(renderOpenMicSearchResultRow(entry, options));
