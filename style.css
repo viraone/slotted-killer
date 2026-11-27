@@ -668,12 +668,7 @@ details.addmic-card[open] .addmic-summary-chevron {
   font-size: 15px;
   font-weight: 600;
   text-transform: none;
-}
-
-@media (max-width: 639px) {
-  .openmicmap-search-mode .open-mic-search-count {
-    flex-basis: 100%;
-  }
+  flex-basis: 100%;
 }
 
 .open-mic-search-day-sep {

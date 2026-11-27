@@ -27,15 +27,19 @@ const separatorParts = (parts) => parts.filter((part) => part.type === 'separato
 const toHost = (value) => JSON.parse(JSON.stringify(value));
 const assertDeepEqual = (actual, expected) => assert.deepEqual(toHost(actual), expected);
 
-// One day: the count line ends with "on" and the day pill.
-assert.equal(sentenceOf(build(1, ['Tuesday'])), '1 open mic found on Tuesday');
-assert.equal(sentenceOf(build(3, ['Tuesday'])), '3 open mics found on Tuesday');
-assert.equal(separatorParts(build(1, ['Tuesday'])).length, 0);
+// One day: "Happening" and the day pill.
+assert.equal(sentenceOf(build(1, ['Tuesday'])), '1 open mic found Happening Tuesday');
+assert.equal(sentenceOf(build(3, ['Tuesday'])), '3 open mics found Happening Tuesday');
+assert.equal(separatorParts(build(1, ['Tuesday'])).length, 1);
+assertDeepEqual(separatorParts(build(1, ['Tuesday'])), [{ type: 'separator', text: 'Happening' }]);
 
 // Two days: "and" is a separator span.
 const twoDays = build(2, ['Sunday', 'Monday']);
-assert.equal(sentenceOf(twoDays), '2 open mics found on Sunday and Monday');
-assertDeepEqual(separatorParts(twoDays), [{ type: 'separator', text: 'and' }]);
+assert.equal(sentenceOf(twoDays), '2 open mics found Happening Sunday and Monday');
+assertDeepEqual(separatorParts(twoDays), [
+  { type: 'separator', text: 'Happening' },
+  { type: 'separator', text: 'and' }
+]);
 assertDeepEqual(dayParts(twoDays).map(({ name, commaAfter }) => [name, commaAfter]), [
   ['Sunday', false],
   ['Monday', false]
@@ -44,19 +48,22 @@ assertDeepEqual(dayParts(twoDays).map(({ name, commaAfter }) => [name, commaAfte
 // Three days: the comma has no space before it and is wrapped with its pill;
 // only the last pair gets "and".
 const threeDays = build(3, ['Sunday', 'Monday', 'Friday']);
-assert.equal(sentenceOf(threeDays), '3 open mics found on Sunday, Monday and Friday');
+assert.equal(sentenceOf(threeDays), '3 open mics found Happening Sunday, Monday and Friday');
 assertDeepEqual(dayParts(threeDays).map(({ name, commaAfter }) => [name, commaAfter]), [
   ['Sunday', true],
   ['Monday', false],
   ['Friday', false]
 ]);
-assertDeepEqual(separatorParts(threeDays), [{ type: 'separator', text: 'and' }]);
+assertDeepEqual(separatorParts(threeDays), [
+  { type: 'separator', text: 'Happening' },
+  { type: 'separator', text: 'and' }
+]);
 
-// Four or more days: "Jump to:" and then the pills with no commas or "and".
+// Four or more days: "Happening" and then the pills with no commas or "and".
 const fourDays = build(12, ['Sunday', 'Monday', 'Tuesday', 'Wednesday']);
 assert.equal(
   sentenceOf(fourDays),
-  '12 open mics found. Jump to: Sunday Monday Tuesday Wednesday'
+  '12 open mics found Happening Sunday Monday Tuesday Wednesday'
 );
 assertDeepEqual(dayParts(fourDays).map(({ name }) => name), [
   'Sunday',
@@ -64,9 +71,9 @@ assertDeepEqual(dayParts(fourDays).map(({ name }) => name), [
   'Tuesday',
   'Wednesday'
 ]);
-assert.equal(separatorParts(fourDays).length, 0);
+assertDeepEqual(separatorParts(fourDays), [{ type: 'separator', text: 'Happening' }]);
 assert.equal(dayParts(fourDays).some(({ commaAfter }) => commaAfter), false);
-assertDeepEqual(fourDays[0], { type: 'count', text: '12 open mics found. Jump to:' });
+assertDeepEqual(fourDays[0], { type: 'count', text: '12 open mics found' });
 
 // No day names: just the count sentence.
 assert.equal(sentenceOf(build(2, [])), '2 open mics found');
@@ -78,12 +85,12 @@ assertDeepEqual(build(0, []), [{ type: 'count', text: '0 open mics' }]);
 assert.equal(sentenceOf(build(0, ['Sunday'])), '0 open mics');
 
 // City name cases
-assert.equal(sentenceOf(build(1, ['Tuesday'], 'Renton')), '1 open mic found in Renton on Tuesday');
-assert.equal(sentenceOf(build(2, ['Sunday', 'Monday'], 'Renton')), '2 open mics found in Renton on Sunday and Monday');
-assert.equal(sentenceOf(build(3, ['Sunday', 'Monday', 'Friday'], 'Renton')), '3 open mics found in Renton on Sunday, Monday and Friday');
+assert.equal(sentenceOf(build(1, ['Tuesday'], 'Renton')), '1 open mic found in Renton Happening Tuesday');
+assert.equal(sentenceOf(build(2, ['Sunday', 'Monday'], 'Renton')), '2 open mics found in Renton Happening Sunday and Monday');
+assert.equal(sentenceOf(build(3, ['Sunday', 'Monday', 'Friday'], 'Renton')), '3 open mics found in Renton Happening Sunday, Monday and Friday');
 assert.equal(
   sentenceOf(build(12, ['Sunday', 'Monday', 'Tuesday', 'Wednesday'], 'Renton')),
-  '12 open mics found in Renton. Jump to: Sunday Monday Tuesday Wednesday'
+  '12 open mics found in Renton Happening Sunday Monday Tuesday Wednesday'
 );
 assert.equal(sentenceOf(build(2, [], 'Renton')), '2 open mics found in Renton');
 assert.equal(sentenceOf(build(1, [], 'Renton')), '1 open mic found in Renton');

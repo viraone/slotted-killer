@@ -1892,8 +1892,8 @@ function renderOpenMicSearchNearby(nearby) {
   return section;
 }
 
-// Ordered parts for the city/venue search count line, which reads as one
-// sentence with the day pills inside it. `count` is the number of matching
+// Ordered parts for the city/venue search count line, which reads as two
+// lines: the count sentence and the day pills. `count` is the number of matching
 // mics and `dayNames` are the distinct result days in display order.
 // Parts: { type: 'count', text } is the span.open-mic-search-count text,
 // { type: 'day', name, commaAfter } is a jump pill (with a comma attached
@@ -1909,42 +1909,36 @@ function buildOpenMicSearchCountSentence(count, dayNames, cityName) {
   }
   const found = `${count} ${noun} found${citySuffix}`;
   if (names.length === 0) return [{ type: 'count', text: found }];
+  
+  const parts = [{ type: 'count', text: found }];
+  parts.push({ type: 'space' });
+  parts.push({ type: 'separator', text: 'Happening' });
+  
   if (names.length === 1) {
-    return [
-      { type: 'count', text: `${found} on` },
-      { type: 'space' },
-      { type: 'day', name: names[0], commaAfter: false }
-    ];
-  }
-  if (names.length === 2) {
-    return [
-      { type: 'count', text: `${found} on` },
-      { type: 'space' },
-      { type: 'day', name: names[0], commaAfter: false },
-      { type: 'space' },
-      { type: 'separator', text: 'and' },
-      { type: 'space' },
-      { type: 'day', name: names[1], commaAfter: false }
-    ];
-  }
-  if (names.length === 3) {
-    return [
-      { type: 'count', text: `${found} on` },
-      { type: 'space' },
-      { type: 'day', name: names[0], commaAfter: true },
-      { type: 'space' },
-      { type: 'day', name: names[1], commaAfter: false },
-      { type: 'space' },
-      { type: 'separator', text: 'and' },
-      { type: 'space' },
-      { type: 'day', name: names[2], commaAfter: false }
-    ];
-  }
-  const parts = [{ type: 'count', text: `${found}. Jump to:` }];
-  names.forEach((name, index) => {
     parts.push({ type: 'space' });
-    parts.push({ type: 'day', name, commaAfter: false });
-  });
+    parts.push({ type: 'day', name: names[0], commaAfter: false });
+  } else if (names.length === 2) {
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name: names[0], commaAfter: false });
+    parts.push({ type: 'space' });
+    parts.push({ type: 'separator', text: 'and' });
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name: names[1], commaAfter: false });
+  } else if (names.length === 3) {
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name: names[0], commaAfter: true });
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name: names[1], commaAfter: false });
+    parts.push({ type: 'space' });
+    parts.push({ type: 'separator', text: 'and' });
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name: names[2], commaAfter: false });
+  } else {
+    names.forEach((name) => {
+      parts.push({ type: 'space' });
+      parts.push({ type: 'day', name, commaAfter: false });
+    });
+  }
   return parts;
 }
 
