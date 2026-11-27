@@ -2010,11 +2010,15 @@ function renderOpenMicSearchNearby(nearby) {
 // { type: 'day', name, commaAfter } is a jump pill (with a comma attached
 // when commaAfter), { type: 'separator', text } is a
 // span.open-mic-search-day-sep, and { type: 'space' } is a literal space.
-function buildOpenMicSearchCountSentence(count, dayNames) {
+function buildOpenMicSearchCountSentence(count, dayNames, cityName) {
   const names = Array.isArray(dayNames) ? dayNames.filter(Boolean) : [];
   const noun = count === 1 ? 'open mic' : 'open mics';
-  if (count === 0) return [{ type: 'count', text: `0 ${noun}` }];
-  const found = `${count} ${noun} found`;
+  const citySuffix = cityName ? ` in ${cityName}` : '';
+  if (count === 0) {
+    const text = cityName ? `0 ${noun} found${citySuffix}` : `0 ${noun}`;
+    return [{ type: 'count', text }];
+  }
+  const found = `${count} ${noun} found${citySuffix}`;
   if (names.length === 0) return [{ type: 'count', text: found }];
   if (names.length === 1) {
     return [
@@ -2120,7 +2124,8 @@ function renderOpenMicSearchResults(allMics, now) {
     const dayName = getSeattleNow(date).dayName;
     if (!dayNamesInOrder.includes(dayName)) dayNamesInOrder.push(dayName);
   });
-  buildOpenMicSearchCountSentence(matches.length, dayNamesInOrder).forEach((part) => {
+  const searchCity = cityTitle === 'Search results' ? '' : cityTitle;
+  buildOpenMicSearchCountSentence(matches.length, dayNamesInOrder, searchCity).forEach((part) => {
     if (part.type === 'count') {
       const count = document.createElement('span');
       count.className = 'open-mic-search-count';

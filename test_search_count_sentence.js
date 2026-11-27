@@ -77,4 +77,18 @@ assertDeepEqual(build(2, []), [{ type: 'count', text: '2 open mics found' }]);
 assertDeepEqual(build(0, []), [{ type: 'count', text: '0 open mics' }]);
 assert.equal(sentenceOf(build(0, ['Sunday'])), '0 open mics');
 
+// City name cases
+assert.equal(sentenceOf(build(1, ['Tuesday'], 'Renton')), '1 open mic found in Renton on Tuesday');
+assert.equal(sentenceOf(build(2, ['Sunday', 'Monday'], 'Renton')), '2 open mics found in Renton on Sunday and Monday');
+assert.equal(sentenceOf(build(3, ['Sunday', 'Monday', 'Friday'], 'Renton')), '3 open mics found in Renton on Sunday, Monday and Friday');
+assert.equal(
+  sentenceOf(build(12, ['Sunday', 'Monday', 'Tuesday', 'Wednesday'], 'Renton')),
+  '12 open mics found in Renton. Jump to: Sunday Monday Tuesday Wednesday'
+);
+assert.equal(sentenceOf(build(2, [], 'Renton')), '2 open mics found in Renton');
+assert.equal(sentenceOf(build(1, [], 'Renton')), '1 open mic found in Renton');
+assertDeepEqual(build(2, [], 'Renton'), [{ type: 'count', text: '2 open mics found in Renton' }]);
+assertDeepEqual(build(0, [], 'Renton'), [{ type: 'count', text: '0 open mics found in Renton' }]);
+assert.equal(sentenceOf(build(0, ['Sunday'], 'Renton')), '0 open mics found in Renton');
+
 console.log('test_search_count_sentence.js passed');
