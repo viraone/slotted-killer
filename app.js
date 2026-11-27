@@ -381,7 +381,7 @@ openMicLocationButton.addEventListener('click', () => {
     userOpenMicLocation = null;
     openMicReachabilityRequests.clear();
     buttonText.textContent = 'Show Distance';
-    openMicLocationStatus.textContent = 'Turn on location to see distance and drive times.';
+    openMicLocationStatus.textContent = '👆 Tap the green button to see how far each mic is.';
     renderOpenMicMapView();
     return;
   }
