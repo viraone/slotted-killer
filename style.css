@@ -540,8 +540,7 @@ details.addmic-card[open] .addmic-summary-chevron {
 }
 
 #openmicmap-section.openmicmap-search-mode > header > div:has(> #openMicDaySelector) {
-  order: 3;
-  margin-top: 12px;
+  display: none;
 }
 
 #openmicmap-section.openmicmap-search-mode > header > div:first-child > div:first-child > div {
@@ -558,12 +557,20 @@ details.addmic-card[open] .addmic-summary-chevron {
   order: 6;
 }
 
-/* Desktop (>=640px): the Show Distance button keeps its natural width, left
-   aligned, instead of stretching full width. */
-@media (min-width: 640px) {
-  #openmicmap-section.openmicmap-search-mode #openMicLocationButton {
-    align-self: flex-start;
-  }
+/* In search mode the location button is a compact outlined chip at every width. */
+#openmicmap-section.openmicmap-search-mode #openMicLocationButton {
+  width: auto;
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid #3f3f46;
+  font-size: 12px;
+  min-height: 36px;
+  box-shadow: none;
+}
+
+#openmicmap-section.openmicmap-search-mode #openMicLocationButton svg,
+#openmicmap-section.openmicmap-search-mode #openMicLocationButton span {
+  color: #e4e4e7;
 }
 
 /* The summary uses Tailwind's display:grid, which outranks the browser's
@@ -645,7 +652,8 @@ details.addmic-card[open] .addmic-summary-chevron {
   flex-basis: 100%;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  column-gap: 6px;
+  row-gap: 8px;
   margin-top: 8px;
   color: #fff;
   font-size: 18px;
@@ -656,33 +664,55 @@ details.addmic-card[open] .addmic-summary-chevron {
 }
 
 .open-mic-search-count {
-  margin-right: 2px;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 800;
+  color: #e4e4e7;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+@media (max-width: 639px) {
+  .openmicmap-search-mode .open-mic-search-count {
+    flex-basis: 100%;
+  }
+}
+
+.open-mic-search-day-sep {
+  color: #e4e4e7;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.open-mic-search-day-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
 }
 
 .open-mic-search-day-pill {
   appearance: none;
-  min-height: 34px;
+  min-height: 36px;
   padding: 7px 14px;
-  border: 0;
+  border: 1px solid #00C805;
   border-radius: 999px;
-  background: #00c805;
-  color: #031006;
+  background: transparent;
+  color: #00C805;
   font: inherit;
-  font-size: 15px;
-  font-weight: 900;
+  font-size: 14px;
+  font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease;
 }
 
-.open-mic-search-day-pill:hover,
+.open-mic-search-day-pill:hover {
+  background: rgba(0, 200, 5, 0.1);
+}
+
 .open-mic-search-day-pill:focus-visible {
-  background: #00e006;
-  outline: none;
+  outline: 2px solid #00C805;
+  outline-offset: 2px;
 }
 
 .open-mic-search-day-pill:active {

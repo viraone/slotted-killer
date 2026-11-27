@@ -2003,6 +2003,58 @@ function renderOpenMicSearchNearby(nearby) {
   return section;
 }
 
+// Ordered parts for the city/venue search count line, which reads as one
+// sentence with the day pills inside it. `count` is the number of matching
+// mics and `dayNames` are the distinct result days in display order.
+// Parts: { type: 'count', text } is the span.open-mic-search-count text,
+// { type: 'day', name, commaAfter } is a jump pill (with a comma attached
+// when commaAfter), { type: 'separator', text } is a
+// span.open-mic-search-day-sep, and { type: 'space' } is a literal space.
+function buildOpenMicSearchCountSentence(count, dayNames) {
+  const names = Array.isArray(dayNames) ? dayNames.filter(Boolean) : [];
+  const noun = count === 1 ? 'open mic' : 'open mics';
+  if (count === 0) return [{ type: 'count', text: `0 ${noun}` }];
+  const found = `${count} ${noun} found`;
+  if (names.length === 0) return [{ type: 'count', text: found }];
+  if (names.length === 1) {
+    return [
+      { type: 'count', text: `${found} on` },
+      { type: 'space' },
+      { type: 'day', name: names[0], commaAfter: false }
+    ];
+  }
+  if (names.length === 2) {
+    return [
+      { type: 'count', text: `${found} on` },
+      { type: 'space' },
+      { type: 'day', name: names[0], commaAfter: false },
+      { type: 'space' },
+      { type: 'separator', text: 'and' },
+      { type: 'space' },
+      { type: 'day', name: names[1], commaAfter: false }
+    ];
+  }
+  if (names.length === 3) {
+    return [
+      { type: 'count', text: `${found} on` },
+      { type: 'space' },
+      { type: 'day', name: names[0], commaAfter: true },
+      { type: 'space' },
+      { type: 'day', name: names[1], commaAfter: false },
+      { type: 'space' },
+      { type: 'separator', text: 'and' },
+      { type: 'space' },
+      { type: 'day', name: names[2], commaAfter: false }
+    ];
+  }
+  const parts = [{ type: 'count', text: `${found}. Jump to:` }];
+  names.forEach((name, index) => {
+    parts.push({ type: 'space' });
+    parts.push({ type: 'day', name, commaAfter: false });
+  });
+  return parts;
+}
+
 function renderOpenMicSearchResults(allMics, now) {
   const rawQuery = openMicSearchQuery.trim();
   clearTimeout(openMicSearchMissTimer);
@@ -2059,14 +2111,8 @@ function renderOpenMicSearchResults(allMics, now) {
 
   const cityTitle = getOpenMicSearchTitle(matches, query);
   const title = dayLabel && cityTitle === 'Search results' && !compactOpenMicSearchText(query) ? dayLabel : cityTitle;
-  const countText = `${matches.length} ${matches.length === 1 ? 'open mic' : 'open mics'}`;
-
   openMicMapDayLabel.textContent = title;
   openMicMapDateLabel.replaceChildren();
-  const count = document.createElement('span');
-  count.className = 'open-mic-search-count';
-  count.textContent = countText;
-  openMicMapDateLabel.append(count);
 
   const dayNamesInOrder = [];
   entries.forEach(({ date }) => {
@@ -2074,17 +2120,46 @@ function renderOpenMicSearchResults(allMics, now) {
     const dayName = getSeattleNow(date).dayName;
     if (!dayNamesInOrder.includes(dayName)) dayNamesInOrder.push(dayName);
   });
-  dayNamesInOrder.forEach((dayName) => {
+  buildOpenMicSearchCountSentence(matches.length, dayNamesInOrder).forEach((part) => {
+    if (part.type === 'count') {
+      const count = document.createElement('span');
+      count.className = 'open-mic-search-count';
+      count.textContent = part.text;
+      openMicMapDateLabel.append(count);
+      return;
+    }
+    if (part.type === 'space') {
+      openMicMapDateLabel.append(document.createTextNode(' '));
+      return;
+    }
+    if (part.type === 'separator') {
+      const separator = document.createElement('span');
+      separator.className = 'open-mic-search-day-sep';
+      separator.textContent = part.text;
+      openMicMapDateLabel.append(separator);
+      return;
+    }
+    if (part.type !== 'day') return;
     const pill = document.createElement('button');
     pill.type = 'button';
     pill.className = 'open-mic-search-day-pill';
-    pill.textContent = dayName;
-    pill.title = `Jump to ${dayName} results`;
+    pill.textContent = part.name;
+    pill.title = `Jump to ${part.name} results`;
     pill.addEventListener('click', () => {
-      openMicMapList.querySelector(`[data-open-mic-search-day="${dayName}"]`)
+      openMicMapList.querySelector(`[data-open-mic-search-day="${part.name}"]`)
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    openMicMapDateLabel.append(pill);
+    if (!part.commaAfter) {
+      openMicMapDateLabel.append(pill);
+      return;
+    }
+    const group = document.createElement('span');
+    group.className = 'open-mic-search-day-group';
+    const comma = document.createElement('span');
+    comma.className = 'open-mic-search-day-sep';
+    comma.textContent = ',';
+    group.append(pill, comma);
+    openMicMapDateLabel.append(group);
   });
 
   openMicTonightTitle.textContent = title === 'Search results' ? title : `${title}'s Mics`;
