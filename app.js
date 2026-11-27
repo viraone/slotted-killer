@@ -1387,25 +1387,6 @@ function downloadOpenMicCalendar(mic, date) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function buildOpenMicSearchHeroTime(mic, date) {
-  const dateLabel = date ? formatOpenMicSearchShortDate(date) : 'Date not posted yet';
-  const startLabel = formatMinutesToClock(mic.startMinutes);
-  if (!startLabel) {
-    return { time: 'TBD', detail: 'Time not listed', dateLabel };
-  }
-  const [time, period] = startLabel.split(' ');
-  const endLabel = formatMinutesToClock(mic.endMinutes);
-  let detail = period;
-  if (endLabel) {
-    const [endTime, endPeriod] = endLabel.split(' ');
-    const shortEnd = endTime.endsWith(':00')
-      ? `${Number(endTime.split(':')[0])} ${endPeriod}`
-      : `${endTime} ${endPeriod}`;
-    detail = `${period} to ${shortEnd}`;
-  }
-  return { time, detail, dateLabel };
-}
-
 function createOpenMicSearchDirectionsLink(mic) {
   const url = buildOpenMicDirectionsUrl(mic);
   if (!url) return null;
@@ -1772,111 +1753,7 @@ function renderOpenMicSearchShareButton(title) {
   return button;
 }
 
-function renderOpenMicSearchFeaturedCard(entry, { highlightId = null, now = new Date(), scrollTarget = false } = {}) {
-  const { mic, date } = entry;
-  const validDate = date instanceof Date && !Number.isNaN(date.getTime()) ? date : null;
-  const detailsId = `open-mic-details-${mic.id}`;
-  const card = document.createElement('article');
-  card.id = `open-mic-card-${mic.id}`;
-  card.tabIndex = -1;
-  card.className = 'open-mic-card open-mic-search-featured';
-  if (mic.id === highlightId) card.classList.add('open-mic-card--active');
-  if (scrollTarget && validDate) card.dataset.openMicSearchDay = getSeattleNow(validDate).dayName;
-  card.addEventListener('click', () => setActiveOpenMic(mic.id));
-
-  const top = document.createElement('div');
-  top.className = 'open-mic-search-featured__top';
-  const countdown = document.createElement('span');
-  countdown.className = 'open-mic-search-countdown';
-  countdown.textContent = validDate
-    ? formatOpenMicSearchCountdownLabel(validDate, now)
-    : 'Date not posted yet';
-  top.append(countdown);
-
-  if (mic.price) {
-    const price = document.createElement('span');
-    price.className = 'open-mic-search-price';
-    price.textContent = mic.price;
-    top.append(price);
-  }
-
-  const toggle = document.createElement('button');
-  toggle.type = 'button';
-  toggle.className = 'open-mic-search-round open-mic-search-featured__toggle';
-  toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-controls', detailsId);
-  toggle.setAttribute('aria-label', 'Show details');
-  toggle.title = 'Show details';
-  toggle.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
-  top.append(toggle);
-  card.append(top);
-
-  const hero = buildOpenMicSearchHeroTime(mic, validDate);
-  const timeRow = document.createElement('div');
-  timeRow.className = 'open-mic-search-featured__time';
-  const clock = document.createElement('span');
-  clock.className = 'open-mic-search-featured__clock';
-  clock.textContent = hero.time;
-  const timeDetail = document.createElement('span');
-  timeDetail.className = 'open-mic-search-featured__time-detail';
-  [hero.detail, hero.dateLabel].forEach((line) => {
-    const text = document.createElement('span');
-    text.className = 'open-mic-search-featured__time-line';
-    text.textContent = line;
-    timeDetail.append(text);
-  });
-  timeRow.append(clock, timeDetail);
-  card.append(timeRow);
-
-  const name = document.createElement('h3');
-  name.className = 'open-mic-search-featured__name';
-  name.textContent = mic.name;
-  card.append(name);
-
-  const venueName = mic.venue || String(mic.address || '').split(',')[0].trim();
-  const venueIsRedundant = venueName && mic.name.toLowerCase().includes(venueName.toLowerCase());
-  const host = getOpenMicHost(mic, validDate);
-  const byline = [
-    venueName && !venueIsRedundant ? venueName : '',
-    host ? `Host: ${host}` : ''
-  ].filter(Boolean).join(' · ');
-  if (byline) {
-    const line = document.createElement('p');
-    line.className = 'open-mic-search-featured__venue';
-    line.textContent = byline;
-    card.append(line);
-  }
-
-  const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now), now);
-  if (status) card.append(status);
-
-  const actions = document.createElement('div');
-  actions.className = 'open-mic-search-actions';
-  const directions = createOpenMicSearchDirectionsLink(mic);
-  if (directions) actions.append(directions);
-  actions.append(createOpenMicSearchCalendarButton(mic, validDate, 'open-mic-search-round open-mic-search-calendar'));
-  card.append(actions);
-
-  const details = renderOpenMicSearchDetails(mic, validDate, { includePrimaryActions: false });
-  details.id = detailsId;
-  details.hidden = true;
-  card.append(details);
-
-  toggle.addEventListener('click', (event) => {
-    event.stopPropagation();
-    const willOpen = details.hidden;
-    details.hidden = !willOpen;
-    toggle.setAttribute('aria-expanded', String(willOpen));
-    toggle.setAttribute('aria-label', willOpen ? 'Hide details' : 'Show details');
-    toggle.title = willOpen ? 'Hide details' : 'Show details';
-    toggle.classList.toggle('is-open', willOpen);
-    setActiveOpenMic(mic.id);
-  });
-
-  return card;
-}
-
-function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Date(), scrollTarget = false } = {}) {
+function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Date(), scrollTarget = false, isNextUp = false } = {}) {
   const { mic, date } = entry;
   const validDate = date instanceof Date && !Number.isNaN(date.getTime()) ? date : null;
   const detailsId = `open-mic-details-${mic.id}`;
@@ -1884,6 +1761,7 @@ function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Dat
   card.id = `open-mic-card-${mic.id}`;
   card.tabIndex = -1;
   card.className = 'open-mic-card open-mic-search-row';
+  if (isNextUp) card.classList.add('open-mic-search-row--next');
   if (mic.id === highlightId) card.classList.add('open-mic-card--active');
   if (scrollTarget && validDate) card.dataset.openMicSearchDay = getSeattleNow(validDate).dayName;
   card.addEventListener('click', () => setActiveOpenMic(mic.id));
@@ -1905,7 +1783,18 @@ function renderOpenMicSearchResultRow(entry, { highlightId = null, now = new Dat
   name.textContent = mic.name;
   const meta = document.createElement('span');
   meta.className = 'open-mic-search-row__meta';
-  meta.textContent = buildOpenMicSearchMetaLine(mic, validDate);
+  let metaText = buildOpenMicSearchMetaLine(mic, validDate);
+  if (isNextUp) {
+    if (validDate) {
+      const label = formatOpenMicSearchCountdownLabel(validDate, now);
+      if (label === 'Today' || label === 'Tomorrow') {
+        metaText += ` · ${label}`;
+      } else {
+        metaText += ' · Next up';
+      }
+    }
+  }
+  meta.textContent = metaText;
   body.append(name, meta);
   const status = renderOpenMicSearchStatusChips(mic, entry, getSeattleNow(now), now);
   if (status) body.append(status);
@@ -2217,10 +2106,8 @@ function renderOpenMicSearchResults(allMics, now) {
         scrollTarget = true;
       }
     }
-    const options = { highlightId, now, scrollTarget };
-    openMicMapList.append(index === 0
-      ? renderOpenMicSearchFeaturedCard(entry, options)
-      : renderOpenMicSearchResultRow(entry, options));
+    const options = { highlightId, now, scrollTarget, isNextUp: index === 0 };
+    openMicMapList.append(renderOpenMicSearchResultRow(entry, options));
   });
 
   // A day-only query has no place to measure from, so it gets the results only.

@@ -719,54 +719,6 @@ details.addmic-card[open] .addmic-summary-chevron {
   transform: scale(0.97);
 }
 
-.open-mic-search-featured {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0, 200, 5, 0.6);
-  border-radius: 24px;
-  background:
-    radial-gradient(120% 90% at 100% 0%, rgba(0, 200, 5, 0.16), transparent 55%),
-    linear-gradient(180deg, rgba(0, 200, 5, 0.08), rgba(0, 200, 5, 0.02)),
-    #080b08;
-  padding: 16px;
-  box-shadow: 0 18px 40px -28px rgba(0, 200, 5, 0.55);
-}
-
-.open-mic-search-featured__top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.open-mic-search-countdown {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: #00c805;
-  color: #031006;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.open-mic-search-price {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 11px;
-  border: 1px solid #2b3a2d;
-  border-radius: 999px;
-  background: #0e120f;
-  color: #e4ffe7;
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-}
-
 .open-mic-search-round {
   display: inline-flex;
   width: 46px;
@@ -803,61 +755,6 @@ details.addmic-card[open] .addmic-summary-chevron {
 
 .open-mic-search-round.is-open svg {
   transform: rotate(180deg);
-}
-
-.open-mic-search-featured__time {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-end;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.open-mic-search-featured__clock {
-  flex: 0 0 auto;
-  color: #fff;
-  font-size: 56px;
-  font-weight: 900;
-  letter-spacing: -0.045em;
-  line-height: 0.85;
-}
-
-.open-mic-search-featured__time-detail {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-  color: #c9f9ce;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.open-mic-search-featured__time-line {
-  white-space: nowrap;
-}
-
-.open-mic-search-featured__name {
-  margin-top: 14px;
-  color: #fff;
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.open-mic-search-featured__venue,
-.open-mic-search-featured__host {
-  margin-top: 4px;
-  color: #d4d4d8;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.open-mic-search-featured__host {
-  color: #a1a1aa;
 }
 
 .open-mic-search-status {
@@ -951,6 +848,10 @@ details.addmic-card[open] .addmic-summary-chevron {
   border: 1px solid #1d231e;
   border-radius: 18px;
   background: #080a08;
+}
+
+.open-mic-search-row--next {
+  border-left: 4px solid #00c805;
 }
 
 .open-mic-search-row__button,
@@ -1218,19 +1119,6 @@ details.addmic-card[open] .addmic-summary-chevron {
 }
 
 @media (min-width: 640px) {
-  .open-mic-search-featured {
-    border-radius: 28px;
-    padding: 20px;
-  }
-
-  .open-mic-search-featured__clock {
-    font-size: 68px;
-  }
-
-  .open-mic-search-featured__name {
-    font-size: 28px;
-  }
-
   .open-mic-search-row__button,
   .open-mic-nearby-row__button {
     padding: 16px 18px;
@@ -1908,7 +1796,6 @@ body.trip-intel-open {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .trip-intel-modal__backdrop,
   .trip-intel-modal__panel,
   .trip-intel-trigger,
@@ -1926,22 +1813,6 @@ body.trip-intel-open {
 }
 
 @media (max-width: 640px) {
-  .open-mic-search-featured {
-    padding: 14px;
-    border-radius: 18px;
-    box-shadow: none;
-  }
-
-  .open-mic-search-countdown {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-
-  .open-mic-search-price {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-
   .open-mic-search-round {
     width: 36px;
     height: 36px;
@@ -1950,30 +1821,6 @@ body.trip-intel-open {
   .open-mic-search-round svg {
     width: 16px;
     height: 16px;
-  }
-
-  .open-mic-search-featured__time {
-    margin-top: 8px;
-  }
-
-  .open-mic-search-featured__clock {
-    font-size: 34px;
-    line-height: 1;
-  }
-
-  .open-mic-search-featured__time-detail {
-    font-size: 13px;
-  }
-
-  .open-mic-search-featured__name {
-    font-size: 17px;
-    margin-top: 8px;
-  }
-
-  .open-mic-search-featured__venue,
-  .open-mic-search-featured__host {
-    font-size: 13px;
-    margin-top: 2px;
   }
 
   .open-mic-search-actions {
