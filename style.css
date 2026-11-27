@@ -512,6 +512,60 @@ details.addmic-card[open] .addmic-summary-chevron {
   color-scheme: dark;
 }
 
+/* CSS-only reorder of the header card while a city/venue search is showing.
+   The markup nests the eyebrow, title and location button inside wrapper divs,
+   so the wrappers become display:contents and the flex `order` values place the
+   children in the required top-to-bottom sequence at every width. */
+#openmicmap-section.openmicmap-search-mode > header {
+  display: flex;
+  flex-direction: column;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:first-child {
+  display: contents;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:first-child > div:first-child {
+  display: contents;
+}
+
+#openmicmap-section.openmicmap-search-mode #openMicMapEyebrow {
+  order: 1;
+  margin-top: 0;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:has(#openMicSearchInput) {
+  order: 2;
+  margin-top: 12px;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:has(> #openMicDaySelector) {
+  order: 3;
+  margin-top: 12px;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:first-child > div:first-child > div {
+  order: 4;
+  margin-top: 16px;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:first-child > div:last-child {
+  order: 5;
+  margin-top: 12px;
+}
+
+#openmicmap-section.openmicmap-search-mode > header > div:not(:first-child):not(:has(> #openMicDaySelector)):not(:has(#openMicSearchInput)) {
+  order: 6;
+}
+
+/* Desktop (>=640px): the Show Distance button keeps its natural width, left
+   aligned, instead of stretching full width. */
+@media (min-width: 640px) {
+  #openmicmap-section.openmicmap-search-mode #openMicLocationButton {
+    align-self: flex-start;
+  }
+}
+
 /* The summary uses Tailwind's display:grid, which outranks the browser's
    [hidden] rule, so search mode has to hide it explicitly. */
 .openmicmap-search-mode #openMicTonightPanel dl[hidden] {
