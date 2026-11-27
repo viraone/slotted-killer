@@ -1680,9 +1680,9 @@
     "name": "Le Voyeur – Vomity",
     "venue": "Le Voyeur",
     "location": "404 4th Ave E, Olympia, WA 98501",
-    "timeSignupStart": "/8pm",
-    "signupType": "in-person",
-    "signupDetails": "Sign up in person.",
+    "timeSignupStart": "7:30pm/8pm",
+    "signupType": "both",
+    "signupDetails": "Sign up online: comment on the Monday sign-up post on Instagram (@hey_vomity) or Facebook. 3 drop-in bucket spots at the show from 7:30pm. Check in by 7:50pm.",
     "monday": "no",
     "tuesday": "no",
     "wednesday": "REQ. ->",
@@ -1697,12 +1697,15 @@
     "host": "rotating",
     "webSignup": "https://www.facebook.com/vomity/",
     "contact": "https://www.facebook.com/vomity/",
-    "recurrenceText": "Every Other Wednesday",
+    "recurrenceText": "Every 2nd & last Wednesday",
     "showWhenInactive": true,
     "recurrence": {
-      "type": "biweekly",
+      "type": "monthly-multiple-nth-weekdays",
       "weekday": "Wednesday",
-      "anchorDate": "2026-09-09"
+      "nth": [
+        2,
+        -1
+      ]
     },
     "latitude": 47.04523,
     "longitude": -122.89539
